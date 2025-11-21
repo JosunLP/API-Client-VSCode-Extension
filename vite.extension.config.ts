@@ -44,7 +44,7 @@ export default defineConfig({
         entryFileNames: "[name].js",
       },
     },
-    sourcemap: "hidden",
+    sourcemap: process.env.NODE_ENV === "production" ? "hidden" : "inline",
   },
   resolve: {
     extensions: [".ts", ".js"],
