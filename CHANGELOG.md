@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.0
+
+#### Modernize build system and update dependencies
+
+- Migrate from Webpack to Vite for faster builds (~45% improvement)
+- Update ESLint to v9 with flat config format
+- Update React, Zustand, and other core dependencies
+- Improve TypeScript configuration for modern module resolution
+- Add terser optimization for better minification
+- Reduce extension bundle size by 78% (218 KB → 47.68 KB)
+- Add code splitting for optimal chunk sizes
+- Fix deprecated zustand import patterns
+
 ## 1.1.4
 
 #### Migrate project code from javascript to typescript

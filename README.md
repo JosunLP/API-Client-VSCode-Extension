@@ -140,11 +140,9 @@ Simply click Open Menu button or open the Command Palette and type the command b
 #### This project was created using the following tech stacks:
 
 <p>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/></a>&nbsp
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/></a>&nbsp
-  <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"/></a>&nbsp
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/></a>&nbsp
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/></a>&nbsp
-  <img src="https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white"/></a>&nbsp
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/></a>&nbsp
   <img src="https://img.shields.io/badge/Babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=white"/></a>&nbsp
 </p>
 
@@ -155,7 +153,7 @@ Simply click Open Menu button or open the Command Palette and type the command b
 - **Editor** : [Monaco Editor](https://www.npmjs.com/package/monaco-editor)
 - **Local DB** : [VSCode extension global state API](https://code.visualstudio.com/api/extension-capabilities/common-capabilities#:~:text=globalState%20%3A%20A%20global%20storage%20where,using%20setKeysForSync%20method%20on%20globalState%20.)
 - **Code Snippet Generator** : [Postman-collection](https://www.npmjs.com/package/postman-collection), [Postman-Code-Generators](https://www.npmjs.com/package/postman-code-generators)
-- **Bundler**: [Webpack](https://webpack.js.org/)
+- **Bundler**: [Vite](https://vitejs.dev/) (modernized from Webpack for faster builds)
 - **Compiler**: [Babel](https://babeljs.io/)
 - **Test:** [Jest](https://jestjs.io/)**,** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 
@@ -184,9 +182,16 @@ I appreciate even the tiniest suggestion or contribution you make to this projec
 
 1. Run `git clone` from this [repository](https://github.com/REST-API-Client/API-Client-VSCode-Extension)
 2. Run `npm install`
-3. Run `npm run dev`
+3. Run `npm run dev` (builds webview with Vite in watch mode) OR `npm run dev:extension` (builds extension in watch mode)
 4. Press F5 to launch extension development mode
 5. `command + p` or `ctrl + p` and type `> Developer: Toggle Developer Tools` to open browser console for easy debugging
+
+**Build commands:**
+- `npm run package` - Build for production (builds both extension and webview)
+- `npm run build:extension` - Build extension only
+- `npm run build:webview` - Build webview only
+- `npm run dev` - Development mode with watch (webview)
+- `npm run dev:extension` - Development mode with watch (extension)
 
 #### ⚠️ Bugs or Suggestions
 
