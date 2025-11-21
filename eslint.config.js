@@ -73,7 +73,7 @@ export default [
         beforeAll: "readonly",
         afterAll: "readonly",
         test: "readonly",
-        jest: "readonly", // Vitest provides Jest-compatible API
+        jest: "readonly", // Backward compatibility - Vitest provides Jest-compatible globals
       },
     },
   },
