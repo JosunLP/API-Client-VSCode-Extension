@@ -2,8 +2,9 @@
 
 ## 1.2.0
 
-#### Modernize build system and update dependencies
+#### Modernize build system, improve architecture, and enhance code quality
 
+**Build System & Dependencies:**
 - Migrate from Webpack to Vite for faster builds (~45% improvement)
 - Migrate from Jest to Vitest for better Vite integration
 - Update ESLint to v9 with flat config format
@@ -14,6 +15,24 @@
 - Reduce webview bundle size by 53% (8.4 MB → 3.95 MB)
 - Add code splitting for optimal chunk sizes
 - Fix deprecated zustand import patterns
+
+**Code Quality & Architecture:**
+- Fix typo in ExtensionStateManager class name (was ExtentionStateManager)
+- Use TypeScript `import type` syntax for type-only imports
+- Add missing global variables to ESLint config (setTimeout, URLSearchParams, FormData, etc.)
+- Improve no-unused-vars ESLint rule to better handle TypeScript patterns
+- Add "type": "module" to package.json for proper ES module handling
+
+**Security:**
+- Fix all security vulnerabilities in dependencies (0 vulnerabilities)
+- Update brace-expansion and semver packages to secure versions
+
+**Performance & Bundle Optimization:**
+- Implement improved manual chunking strategy for better code organization
+- Separate postman-code-generators (2.9 MB) into dedicated chunk
+- Lazy load postman-code-generators only when code snippet feature is used
+- Better organize chunks: react, monaco, ui, vendors, postman, vendor-libs
+- Reduce initial bundle load time by deferring heavy dependencies
 
 ## 1.1.4
 
