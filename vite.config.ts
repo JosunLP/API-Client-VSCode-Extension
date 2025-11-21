@@ -6,7 +6,10 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Enable React Refresh for better development experience
+      fastRefresh: true,
+    }),
     nodePolyfills({
       // Enable polyfills for specific globals and modules
       globals: {
@@ -20,6 +23,13 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: false, // Don't empty dist folder to preserve extension.js
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: false, // Keep console for debugging
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       input: {
         bundle: resolve(__dirname, "webview/index.tsx"),
@@ -46,5 +56,10 @@ export default defineConfig({
       path: "path-browserify",
       buffer: "buffer",
     },
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: ["react", "react-dom", "styled-components"],
+    exclude: ["@vscode"],
   },
 });

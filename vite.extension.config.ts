@@ -11,6 +11,13 @@ export default defineConfig({
       formats: ["cjs"],
       fileName: () => "extension.js",
     },
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: false, // Keep console for debugging extension issues
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       external: [
         "vscode",
@@ -38,7 +45,6 @@ export default defineConfig({
       },
     },
     sourcemap: "hidden",
-    minify: true,
   },
   resolve: {
     extensions: [".ts", ".js"],
