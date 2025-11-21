@@ -31,9 +31,8 @@
 
 **Performance & Bundle Optimization:**
 - Implement improved manual chunking strategy for better code organization
-- Separate postman-code-generators (2.9 MB) into dedicated chunk
-- Lazy load postman-code-generators only when code snippet feature is used
-- Better organize chunks: react, monaco, ui, vendors, postman, vendor-libs
+- Lazy load postman-code-generators (2.9 MB) via dynamic import only when code snippet feature is used, reducing initial bundle size
+- Better organize chunks: react, monaco, ui, vendors, postman (collection only), vendor-libs
 - Reduce initial bundle load time by deferring heavy dependencies
 
 ## 1.1.4

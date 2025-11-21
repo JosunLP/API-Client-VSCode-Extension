@@ -62,7 +62,7 @@ export default defineConfig({
             ) {
               return "vendors";
             }
-            // Other node_modules go to vendors
+            // Other node_modules go to vendor-libs
             return "vendor-libs";
           }
         },

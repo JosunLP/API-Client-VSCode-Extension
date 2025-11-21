@@ -52,13 +52,14 @@ const RequestCodeSnippet = () => {
     convert: (
       language: string,
       variant: string,
-      request: any,
-      options: any,
+      request: Request,
+      options: Record<string, unknown>,
       callback: (error: string | null, snippet: string) => void
     ) => void;
   };
   
   const [codegen, setCodegen] = useState<CodegenModule | null>(null);
+  const [codegenError, setCodegenError] = useState<boolean>(false);
 
   // Lazy load postman-code-generators only when component mounts to reduce initial bundle size
   useEffect(() => {
@@ -68,6 +69,11 @@ const RequestCodeSnippet = () => {
       })
       .catch((error) => {
         console.error("Failed to load code generators:", error);
+        setCodegenError(true);
+        vscode.postMessage({
+          command: "error",
+          message: "Failed to load code snippet generator. Please reload the extension.",
+        });
       });
   }, []);
 
