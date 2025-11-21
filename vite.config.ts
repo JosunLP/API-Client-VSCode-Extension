@@ -52,10 +52,7 @@ export default defineConfig({
             ) {
               return "ui";
             }
-            if (
-              id.includes("postman-collection") ||
-              id.includes("postman-code-generators")
-            ) {
+            if (id.includes("postman-collection")) {
               return "postman";
             }
             if (
@@ -72,9 +69,9 @@ export default defineConfig({
       },
     },
     sourcemap: "hidden",
-    // Increase chunk size limit to 2000 KB since postman-code-generators library is 2.9 MB
-    // This is now properly lazy-loaded and split into a separate chunk
-    chunkSizeWarningLimit: 2000,
+    // Set chunk size warning limit to 1000 KB (default is 500 KB).
+    // Large libraries such as postman-code-generators are now lazy-loaded and do not affect initial bundle size.
+    chunkSizeWarningLimit: 1000,
     reportCompressedSize: true,
   },
   resolve: {
