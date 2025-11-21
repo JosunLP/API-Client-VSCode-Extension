@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
-import { filterObjectKey, generateResponseObject, getNonce } from "./utils";
 import ExtentionStateManager from "./ExtensionStateManger";
+import { filterObjectKey, generateResponseObject, getNonce } from "./utils";
 import { IUserRequestSidebarState } from "./utils/type";
 
 class SidebarWebViewPanel {

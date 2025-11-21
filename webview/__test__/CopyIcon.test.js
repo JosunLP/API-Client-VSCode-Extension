@@ -26,7 +26,9 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.resetAllMocks();
-  global.navigator?.clipboard = originalClipboard;
+  if (global.navigator) {
+    global.navigator.clipboard = originalClipboard;
+  }
 });
 
 describe("CopyIcon component test", () => {

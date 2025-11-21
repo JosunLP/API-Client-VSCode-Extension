@@ -1,10 +1,10 @@
 // @ts-ignore
 import codegen from "postman-code-generators";
 import { Request } from "postman-collection";
-import React, { useEffect, useMemo, ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import CopyIcon from "../../../components/CopyIcon";
 import SelectWrapper from "../../../components/SelectWrapper";
@@ -104,6 +104,7 @@ const RequestCodeSnippet = () => {
       {},
       (error: string, snippet: string) => {
         if (error) {
+          console.error("Code generation error:", error);
         } else {
           setCodeSnippetValue(snippet);
         }

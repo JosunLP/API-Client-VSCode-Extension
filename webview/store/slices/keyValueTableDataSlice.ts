@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+
 import { COMMON, REQUEST } from "../../constants";
 import { IKeyValueTableDataSlice, KeyValueTableDaum } from "./type";
 

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import { IDetailOptionProps } from "./type";
 
 const DetailOption = ({ children, requestMenu }: IDetailOptionProps) => {

@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { CgAddR } from "react-icons/cg";
 import { FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
+
 import { IResponseDataHeader } from "../store/slices/type";
 
 interface IKeyValueTableProps {

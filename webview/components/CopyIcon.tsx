@@ -1,6 +1,7 @@
 import React from "react";
 import { FiCopy } from "react-icons/fi";
 import styled from "styled-components";
+
 import { ICopyIconProps } from "./type";
 
 const CopyIcon = ({ handleClick, value }: ICopyIconProps) => {

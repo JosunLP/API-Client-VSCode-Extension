@@ -1,6 +1,6 @@
-import { TYPE } from "../constants";
 import { Buffer } from "buffer";
 
+import { TYPE } from "../constants";
 import {
   IHeaderAuth,
   IParameterKeyValueData,

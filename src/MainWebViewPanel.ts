@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
+import ExtentionStateManager from "./ExtensionStateManger";
+import SidebarWebViewPanel from "./SidebarWebViewPanel";
 import {
   generateResponseObject,
   getBody,
@@ -10,8 +12,6 @@ import {
   getUrl,
 } from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
-import SidebarWebViewPanel from "./SidebarWebViewPanel";
-import ExtentionStateManager from "./ExtensionStateManger";
 
 class MainWebViewPanel {
   private url: string = "";
