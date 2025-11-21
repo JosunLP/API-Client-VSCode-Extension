@@ -6,6 +6,7 @@
   "description": "Simple and intuitive API Client made into a VSCode extension.",
   "version": "1.2.0",
   "license": "MIT",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/REST-API-Client/API-Client-VSCode-Extension/issues"
   },

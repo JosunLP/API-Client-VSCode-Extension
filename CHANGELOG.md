@@ -7,11 +7,12 @@
 **Build System & Dependencies:**
 - Migrate from Webpack to Vite for faster builds (~45% improvement)
 - Migrate from Jest to Vitest for better Vite integration
+- **Migrate from CommonJS to ES Modules (ESM)** for modern JavaScript standards
 - Update ESLint to v9 with flat config format
 - Update React, Zustand, and other core dependencies
 - Improve TypeScript configuration for modern module resolution
 - Add terser optimization for better minification
-- Reduce extension bundle size by 78% (218 KB → 47.68 KB)
+- Reduce extension bundle size by 78% (218 KB → 47.58 KB)
 - Reduce webview bundle size by 53% (8.4 MB → 3.95 MB)
 - Add code splitting for optimal chunk sizes
 - Fix deprecated zustand import patterns
@@ -21,7 +22,8 @@
 - Use TypeScript `import type` syntax for type-only imports
 - Add missing global variables to ESLint config (setTimeout, URLSearchParams, FormData, etc.)
 - Improve no-unused-vars ESLint rule to better handle TypeScript patterns
-- Add "type": "module" to package.json for proper ES module handling
+- Add `"type": "module"` to package.json for proper ES module handling
+- Configure Vite to output ES modules (`formats: ["es"]`) instead of CommonJS
 
 **Security:**
 - Fix all security vulnerabilities in dependencies (0 vulnerabilities)

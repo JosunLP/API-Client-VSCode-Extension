@@ -8,7 +8,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "src/extension.ts"),
-      formats: ["cjs"],
+      formats: ["es"],
       fileName: () => "extension.js",
     },
     minify: "terser",
