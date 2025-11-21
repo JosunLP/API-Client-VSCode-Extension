@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 import keyValueTableDataSlice from "./slices/keyValueTableDataSlice";
 import requestDataSlice from "./slices/requestDataSlice";
