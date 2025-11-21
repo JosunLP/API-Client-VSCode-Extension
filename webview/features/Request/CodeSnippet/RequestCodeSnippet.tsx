@@ -46,14 +46,25 @@ const RequestCodeSnippet = () => {
   );
   const DEBOUNCE_TIME_VALUE = 800;
   const [debouncedUrlValue] = useDebounce(requestUrl, DEBOUNCE_TIME_VALUE);
-  const [codegen, setCodegen] = useState<any>(null);
+  
+  // Type definition for postman-code-generators module
+  type CodegenModule = {
+    convert: (
+      language: string,
+      variant: string,
+      request: any,
+      options: any,
+      callback: (error: string | null, snippet: string) => void
+    ) => void;
+  };
+  
+  const [codegen, setCodegen] = useState<CodegenModule | null>(null);
 
-  // Lazy load postman-code-generators only when component mounts
+  // Lazy load postman-code-generators only when component mounts to reduce initial bundle size
   useEffect(() => {
     import("postman-code-generators")
       .then((module) => {
-        // @ts-ignore
-        setCodegen(module.default || module);
+        setCodegen((module.default || module) as CodegenModule);
       })
       .catch((error) => {
         console.error("Failed to load code generators:", error);
