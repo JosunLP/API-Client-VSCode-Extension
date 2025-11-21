@@ -149,6 +149,14 @@ const RequestCodeSnippet = () => {
     codeSnippetOption.variant,
   ]);
 
+  if (codegenError) {
+    return (
+      <ErrorMessage>
+        Failed to load code snippet generator. Please reload the extension to try again.
+      </ErrorMessage>
+    );
+  }
+
   return (
     <>
       <SelectWrapper primary={false} secondary={false} requestMenu={false}>
@@ -209,6 +217,16 @@ const SelectOptionWrapper = styled.select`
   font-weight: 500;
   background-color: var(--vscode-editor-background);
   color: rgba(255, 255, 255, 0.78);
+`;
+
+const ErrorMessage = styled.div`
+  padding: 2rem;
+  text-align: center;
+  color: var(--vscode-errorForeground);
+  background-color: var(--vscode-inputValidation-errorBackground);
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+  border-radius: 0.25rem;
+  margin: 1rem 0;
 `;
 
 export default RequestCodeSnippet;
