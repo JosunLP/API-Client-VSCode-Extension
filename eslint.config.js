@@ -1,6 +1,5 @@
 import babelParser from "@babel/eslint-parser";
 import js from "@eslint/js";
-import jest from "eslint-plugin-jest";
 import react from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 
@@ -41,7 +40,6 @@ export default [
     plugins: {
       react,
       "simple-import-sort": simpleImportSort,
-      jest,
     },
     rules: {
       "no-const-assign": "warn",
@@ -66,7 +64,7 @@ export default [
     files: ["**/*.test.{js,jsx,ts,tsx}", "**/__test__/**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       globals: {
-        jest: "readonly",
+        vi: "readonly",
         describe: "readonly",
         it: "readonly",
         expect: "readonly",
@@ -75,6 +73,7 @@ export default [
         beforeAll: "readonly",
         afterAll: "readonly",
         test: "readonly",
+        jest: "readonly", // Vitest provides Jest-compatible API
       },
     },
   },

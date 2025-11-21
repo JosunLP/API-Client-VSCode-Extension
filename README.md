@@ -155,7 +155,7 @@ Simply click Open Menu button or open the Command Palette and type the command b
 - **Code Snippet Generator** : [Postman-collection](https://www.npmjs.com/package/postman-collection), [Postman-Code-Generators](https://www.npmjs.com/package/postman-code-generators)
 - **Bundler**: [Vite](https://vitejs.dev/) (modernized from Webpack for faster builds)
 - **Compiler**: [Babel](https://babeljs.io/)
-- **Test:** [Jest](https://jestjs.io/)**,** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Test:** [Vitest](https://vitest.dev/) (migrated from Jest for better Vite integration)**,** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 
 ## 🗒 Changelog
 
