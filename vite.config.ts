@@ -72,7 +72,7 @@ export default defineConfig({
       },
     },
     sourcemap: "hidden",
-    // Increase chunk size limit to 2000 KB since postman-code-generators library is ~3MB
+    // Increase chunk size limit to 2000 KB since postman-code-generators library is 2.9 MB
     // This is now properly lazy-loaded and split into a separate chunk
     chunkSizeWarningLimit: 2000,
     reportCompressedSize: true,
