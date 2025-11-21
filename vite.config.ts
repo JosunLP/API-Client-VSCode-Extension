@@ -6,10 +6,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Enable React Refresh for better development experience
-      fastRefresh: true,
-    }),
+    react(),
     nodePolyfills({
       // Enable polyfills for specific globals and modules
       globals: {
@@ -32,8 +29,8 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        bundle: resolve(__dirname, "webview/index.tsx"),
-        sidebar: resolve(__dirname, "webview/sidebar.tsx"),
+        bundle: resolve(__dirname, "webview/index.html"),
+        sidebar: resolve(__dirname, "webview/sidebar.html"),
       },
       output: {
         entryFileNames: "[name].js",
