@@ -1,5 +1,6 @@
-import { COMMON, REQUEST } from "../constants";
 import { Buffer } from "buffer";
+
+import { COMMON, REQUEST } from "../constants";
 import { IAuthData, IBodyRawData, IParameterString } from "./type";
 
 const generateSdkRequestObject = (

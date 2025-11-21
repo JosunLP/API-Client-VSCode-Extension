@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import { IInformationProps, IInformationStyledProps } from "./type";
 
 const Information = ({ children, textColor }: IInformationProps) => {

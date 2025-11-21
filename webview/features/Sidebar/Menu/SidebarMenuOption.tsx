@@ -2,10 +2,9 @@ import React from "react";
 import { shallow } from "zustand/shallow";
 
 import { REQUEST, SIDEBAR } from "../../../constants";
+import { ISidebarSliceList } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import SidebarCollection from "../Collection/SidebarCollection";
-
-import { ISidebarSliceList } from "../../../store/slices/type";
 
 const SidebarMenuOption = () => {
   const {
