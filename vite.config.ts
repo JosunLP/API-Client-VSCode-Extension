@@ -36,17 +36,44 @@ export default defineConfig({
         entryFileNames: "[name].js",
         chunkFileNames: "chunks/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash].[ext]",
-        manualChunks: {
+        manualChunks: (id) => {
           // Split large dependencies into separate chunks
-          react: ["react", "react-dom"],
-          monaco: ["@monaco-editor/react"],
-          ui: ["styled-components", "react-icons", "react-spinners"],
-          vendors: ["axios", "zustand", "use-debounce"],
+          if (id.includes("node_modules")) {
+            if (id.includes("react") || id.includes("react-dom")) {
+              return "react";
+            }
+            if (id.includes("@monaco-editor") || id.includes("monaco-editor")) {
+              return "monaco";
+            }
+            if (
+              id.includes("styled-components") ||
+              id.includes("react-icons") ||
+              id.includes("react-spinners")
+            ) {
+              return "ui";
+            }
+            if (
+              id.includes("postman-collection") ||
+              id.includes("postman-code-generators")
+            ) {
+              return "postman";
+            }
+            if (
+              id.includes("axios") ||
+              id.includes("zustand") ||
+              id.includes("use-debounce")
+            ) {
+              return "vendors";
+            }
+            // Other node_modules go to vendors
+            return "vendor-libs";
+          }
         },
       },
     },
     sourcemap: "hidden",
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000, // Increase limit since we're splitting chunks properly
+    reportCompressedSize: true,
   },
   resolve: {
     alias: {

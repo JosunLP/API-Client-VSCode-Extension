@@ -1,7 +1,5 @@
-// @ts-ignore
-import codegen from "postman-code-generators";
 import { Request } from "postman-collection";
-import React, { ChangeEvent, useEffect, useMemo } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 import { shallow } from "zustand/shallow";
@@ -48,6 +46,19 @@ const RequestCodeSnippet = () => {
   );
   const DEBOUNCE_TIME_VALUE = 800;
   const [debouncedUrlValue] = useDebounce(requestUrl, DEBOUNCE_TIME_VALUE);
+  const [codegen, setCodegen] = useState<any>(null);
+
+  // Lazy load postman-code-generators only when component mounts
+  useEffect(() => {
+    import("postman-code-generators")
+      .then((module) => {
+        // @ts-ignore
+        setCodegen(module.default || module);
+      })
+      .catch((error) => {
+        console.error("Failed to load code generators:", error);
+      });
+  }, []);
 
   const handleCopyIconClick = (value: string | undefined) => {
     vscode.postMessage({ command: COMMON.ALERT_COPY });
@@ -97,6 +108,9 @@ const RequestCodeSnippet = () => {
   };
 
   useEffect(() => {
+    // Only generate code snippet if codegen is loaded
+    if (!codegen) return;
+
     codegen.convert(
       codeSnippetOption.language.toLowerCase(),
       codeSnippetOption.variant,
@@ -111,6 +125,7 @@ const RequestCodeSnippet = () => {
       },
     );
   }, [
+    codegen,
     debouncedUrlValue,
     requestMethod,
     codeSnippetOption.language,
