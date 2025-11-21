@@ -1,4 +1,4 @@
-import { IRequestHeaderInformation } from "./type";
+import type { IRequestHeaderInformation } from "./type";
 
 function generateArrayObjectFromData(objectData: IRequestHeaderInformation) {
   const array = [];

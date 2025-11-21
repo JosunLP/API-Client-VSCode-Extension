@@ -35,6 +35,12 @@ export default [
         navigator: "readonly",
         acquireVsCodeApi: "readonly",
         vscode: "writable",
+        setTimeout: "readonly",
+        setInterval: "readonly",
+        clearTimeout: "readonly",
+        clearInterval: "readonly",
+        URLSearchParams: "readonly",
+        FormData: "readonly",
       },
     },
     plugins: {
@@ -46,7 +52,14 @@ export default [
       "no-this-before-super": "warn",
       "no-undef": "warn",
       "no-unreachable": "warn",
-      "no-unused-vars": "warn",
+      "no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
       "constructor-super": "warn",
       "valid-typeof": "warn",
       "simple-import-sort/imports": "error",

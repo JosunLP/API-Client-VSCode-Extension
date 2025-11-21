@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 
 import { TYPE } from "../constants";
-import {
+import type {
   IHeaderAuth,
   IParameterKeyValueData,
   IRequestHeaderInformation,

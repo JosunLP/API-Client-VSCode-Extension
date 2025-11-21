@@ -2,9 +2,9 @@ import * as vscode from "vscode";
 
 import { COLLECTION } from "./constants";
 import { filterDuplicatesFromObject } from "./utils";
-import { IUserRequestSidebarState } from "./utils/type";
+import type { IUserRequestSidebarState } from "./utils/type";
 
-class ExtentionStateManager {
+class ExtensionStateManager {
   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
@@ -79,4 +79,4 @@ class ExtentionStateManager {
   }
 }
 
-export default ExtentionStateManager;
+export default ExtensionStateManager;

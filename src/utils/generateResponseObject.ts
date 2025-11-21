@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { MESSAGE, TYPE } from "../constants";
 import { generateArrayObjectFromData } from "./index";
-import { IRequestData, IUserRequestSidebarState } from "./type";
+import type { IRequestData, IUserRequestSidebarState } from "./type";
 
 async function generateResponseObject(
   configuration: IUserRequestSidebarState | IRequestData | undefined,

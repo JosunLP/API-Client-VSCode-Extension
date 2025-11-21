@@ -1,4 +1,4 @@
-import { IUserRequestSidebarState } from "./type";
+import type { IUserRequestSidebarState } from "./type";
 
 const filterDuplicatesFromObject = (
   currentCollection: IUserRequestSidebarState[],

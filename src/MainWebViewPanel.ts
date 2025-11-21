@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
-import ExtentionStateManager from "./ExtensionStateManger";
+import ExtensionStateManager from "./ExtensionStateManager";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
 import {
   generateResponseObject,
@@ -11,7 +11,7 @@ import {
   getNonce,
   getUrl,
 } from "./utils";
-import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
+import type { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
 
 class MainWebViewPanel {
   private url: string = "";
@@ -25,7 +25,7 @@ class MainWebViewPanel {
 
   constructor(
     extensionUri: vscode.Uri,
-    stateManager: ExtentionStateManager,
+    stateManager: ExtensionStateManager,
     sidebarWebViewPanel: SidebarWebViewPanel,
   ) {
     this.extensionUri = extensionUri;

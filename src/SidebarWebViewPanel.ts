@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
-import ExtentionStateManager from "./ExtensionStateManger";
+import ExtensionStateManager from "./ExtensionStateManager";
 import { filterObjectKey, generateResponseObject, getNonce } from "./utils";
-import { IUserRequestSidebarState } from "./utils/type";
+import type { IUserRequestSidebarState } from "./utils/type";
 
 class SidebarWebViewPanel {
   private sidebarWebview: vscode.WebviewView | null = null;
@@ -11,7 +11,7 @@ class SidebarWebViewPanel {
   public mainWebViewPanel: vscode.WebviewPanel | null = null;
   public stateManager;
 
-  constructor(extensionUri: vscode.Uri, stateManager: ExtentionStateManager) {
+  constructor(extensionUri: vscode.Uri, stateManager: ExtensionStateManager) {
     this.extensionUri = extensionUri;
     this.stateManager = stateManager;
   }

@@ -1,7 +1,7 @@
 import FormData from "form-data";
 
 import { TYPE } from "../constants";
-import { IBodyRawData, IParameterKeyValueData } from "./type";
+import type { IBodyRawData, IParameterKeyValueData } from "./type";
 
 function getBody(
   keyValueData: IParameterKeyValueData[],
