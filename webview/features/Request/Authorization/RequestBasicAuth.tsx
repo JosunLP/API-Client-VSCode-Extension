@@ -54,6 +54,7 @@ const RequestBasicAuth = () => {
           type="checkbox"
           checked={shouldShowPassword}
           onChange={handleShouldShowPassword}
+          title="Show Password"
         />
         <label>Show Password</label>
       </InputWrapper>

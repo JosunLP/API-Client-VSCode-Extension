@@ -13,7 +13,6 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "vscode",
-        "serialport",
         "ws",
         "socket.io-client",
         "axios",

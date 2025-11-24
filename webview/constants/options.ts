@@ -8,9 +8,7 @@ const OPTION = {
     "DELETE",
     "HEAD",
     "OPTIONS",
-    "SOCKET",
     "WEBSOCKET",
-    "SERIAL",
   ],
   REQUEST_MENU_OPTIONS: [
     "Params",

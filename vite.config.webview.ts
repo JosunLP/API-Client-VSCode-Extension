@@ -4,6 +4,13 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  base: "./",
+  define: {
+    "process.env": {},
+    "process.platform": JSON.stringify("browser"),
+    "process.version": JSON.stringify(""),
+    "process.browser": true,
+  },
   build: {
     target: "es2020",
     rollupOptions: {

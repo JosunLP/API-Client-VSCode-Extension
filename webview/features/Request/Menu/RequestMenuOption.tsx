@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import LoadButtonsBlock from "../../../components/LoadButtonsBlock";
 import Loader from "../../../components/Loader";
@@ -14,23 +14,43 @@ const RequestCodeSnippet = React.lazy(
 );
 
 const RequestMenuOption = () => {
-  const { requestOption, keyValueProps } = useStore(
-    (state) => ({
+  const {
+    requestOption,
+    addNewTableRow,
+    deleteTableRow,
+    handleRequestKey,
+    keyValueTableData,
+    handleRequestValue,
+    addRequestBodyHeaders,
+    handleRequestCheckbox,
+    handleRequestDescription,
+    removeRequestBodyHeaders,
+  } = useStore(
+    useShallow((state) => ({
       requestOption: state.requestOption,
-      keyValueProps: {
-        addNewTableRow: state.addNewTableRow,
-        deleteTableRow: state.deleteTableRow,
-        handleRequestKey: state.handleRequestKey,
-        keyValueTableData: state.keyValueTableData,
-        handleRequestValue: state.handleRequestValue,
-        addRequestBodyHeaders: state.addRequestBodyHeaders,
-        handleRequestCheckbox: state.handleRequestCheckbox,
-        handleRequestDescription: state.handleRequestDescription,
-        removeRequestBodyHeaders: state.removeRequestBodyHeaders,
-      },
-    }),
-    shallow,
+      addNewTableRow: state.addNewTableRow,
+      deleteTableRow: state.deleteTableRow,
+      handleRequestKey: state.handleRequestKey,
+      keyValueTableData: state.keyValueTableData,
+      handleRequestValue: state.handleRequestValue,
+      addRequestBodyHeaders: state.addRequestBodyHeaders,
+      handleRequestCheckbox: state.handleRequestCheckbox,
+      handleRequestDescription: state.handleRequestDescription,
+      removeRequestBodyHeaders: state.removeRequestBodyHeaders,
+    })),
   );
+
+  const keyValueProps = {
+    addNewTableRow,
+    deleteTableRow,
+    handleRequestKey,
+    keyValueTableData,
+    handleRequestValue,
+    addRequestBodyHeaders,
+    handleRequestCheckbox,
+    handleRequestDescription,
+    removeRequestBodyHeaders,
+  };
 
   switch (requestOption) {
     case REQUEST.PARAMS:

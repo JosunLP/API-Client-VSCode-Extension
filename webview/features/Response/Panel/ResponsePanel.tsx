@@ -63,11 +63,16 @@ const ResponsePanel = () => {
         responseSize: 0,
       });
     } else if (type === "socket-event") {
-      // Append or show event data
-      // For now, just replace response data to show the latest event
+      const timestamp = new Date().toLocaleTimeString();
+      const newEventString = JSON.stringify(payload, null, 2);
+      const logEntry = `[${timestamp}] Event Received:\n${newEventString}`;
+
+      const currentResponseData = useStore.getState().responseData;
+      const currentData = currentResponseData?.data || "";
+
       handleResponseData({
         type: RESPONSE.RESPONSE,
-        data: JSON.stringify(payload, null, 2),
+        data: currentData ? `${currentData}\n\n${logEntry}` : logEntry,
         headers: [],
         headersLength: 0,
         statusCode: 200,
@@ -127,7 +132,6 @@ const ResponsePanel = () => {
     return () => {
       window.removeEventListener("message", handleExtensionMessage);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   switch (requestInProcess) {

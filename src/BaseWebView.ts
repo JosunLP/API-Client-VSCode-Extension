@@ -42,7 +42,12 @@ export abstract class BaseWebView {
 
     // Content Security Policy (CSP)
     // Allow scripts with the specific nonce, and styles from the extension.
-    const csp = `default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src ${webview.cspSource} https:; font-src ${webview.cspSource};`;
+    // Added 'unsafe-eval' to script-src to allow Monaco Editor to work if needed (though ideally avoid it).
+    // Added https: to script-src to allow loading external scripts if necessary (like Monaco from CDN).
+    // Added blob: to script-src and worker-src to allow Monaco Editor to create web workers.
+    // Added https: to style-src to allow loading external styles (like Monaco from CDN).
+    // Added data: to font-src to allow loading fonts from data URIs (Monaco uses this).
+    const csp = `default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline' https:; script-src 'nonce-${nonce}' https: 'unsafe-eval' blob:; worker-src blob:; img-src ${webview.cspSource} https: data:; font-src ${webview.cspSource} https: data:; connect-src https:;`;
 
     return `
       <!DOCTYPE html>

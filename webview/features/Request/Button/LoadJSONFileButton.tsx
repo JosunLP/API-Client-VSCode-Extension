@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import Button from "../../../components/Button";
 import useStore from "../../../store/useStore";
@@ -14,8 +14,7 @@ const LoadJSONFileButton = ({
   replaceValues = false,
 }: ILoadJSONFileButtonProps) => {
   const { handleFileUpload } = useStore(
-    (state) => ({ handleFileUpload: state.handleFileUpload }),
-    shallow,
+    useShallow((state) => ({ handleFileUpload: state.handleFileUpload })),
   );
 
   async function loadSettingsFromJSONFile(

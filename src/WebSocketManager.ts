@@ -1,22 +1,24 @@
 import * as vscode from "vscode";
-// import WebSocket from "ws";
+import type { WebSocket } from "ws";
 
 export class WebSocketManager {
-  private ws: any | null = null;
+  private ws: WebSocket | null = null;
   private panel: vscode.WebviewPanel;
 
   constructor(panel: vscode.WebviewPanel) {
     this.panel = panel;
   }
 
-  public async connect(url: string) {
+  public async connect(url: string, headers?: Record<string, string>) {
     if (this.ws) {
       this.disconnect();
     }
 
     try {
       const { default: WebSocket } = await import("ws");
-      this.ws = new WebSocket(url);
+      // Pass headers if provided
+      const options = headers ? { headers } : undefined;
+      this.ws = new WebSocket(url, options);
 
       this.ws.on("open", () => {
         this.postMessage("socket-connected", { type: "websocket" });
@@ -33,8 +35,13 @@ export class WebSocketManager {
         this.postMessage("socket-error", { message: err.message });
       });
 
-      this.ws.on("message", (data) => {
-        this.postMessage("socket-event", { data: data.toString() });
+      this.ws.on("message", (data, isBinary) => {
+        // Handle binary data
+        const messageData = isBinary ? data.toString("hex") : data.toString();
+        this.postMessage("socket-event", {
+          data: messageData,
+          isBinary,
+        });
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -52,7 +59,8 @@ export class WebSocketManager {
     }
   }
 
-  public send(data: unknown) {
+  public async send(data: unknown) {
+    const { default: WebSocket } = await import("ws");
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       const message =
         typeof data === "object" ? JSON.stringify(data) : String(data);

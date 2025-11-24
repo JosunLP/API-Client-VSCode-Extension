@@ -1,10 +1,15 @@
 import React from "react";
+import styled from "styled-components";
 import { useShallow } from "zustand/react/shallow";
 
 import Button from "../../../components/Button";
 import useStore from "../../../store/useStore";
 
-const RequestButton = () => {
+interface RequestButtonProps {
+  onDisconnect?: () => void;
+}
+
+const RequestButton = ({ onDisconnect }: RequestButtonProps) => {
   const { requestInProcess, requestMethod, socketConnected } = useStore(
     useShallow((state) => ({
       requestInProcess: state.requestInProcess,
@@ -13,9 +18,27 @@ const RequestButton = () => {
     })),
   );
 
+  if (["WEBSOCKET"].includes(requestMethod) && socketConnected) {
+    return (
+      <ButtonGroup>
+        <Button
+          primary={false}
+          buttonType="button"
+          buttonStatus={requestInProcess}
+          handleButtonClick={onDisconnect}
+        >
+          Disconnect
+        </Button>
+        <Button primary buttonType="submit" buttonStatus={requestInProcess}>
+          Send
+        </Button>
+      </ButtonGroup>
+    );
+  }
+
   const getButtonText = () => {
-    if (["SOCKET", "WEBSOCKET", "SERIAL"].includes(requestMethod)) {
-      return socketConnected ? "Disconnect" : "Connect";
+    if (["WEBSOCKET"].includes(requestMethod)) {
+      return "Connect";
     }
     return "Send";
   };
@@ -26,5 +49,10 @@ const RequestButton = () => {
     </Button>
   );
 };
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
 
 export default RequestButton;

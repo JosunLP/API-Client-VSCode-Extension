@@ -4,9 +4,7 @@ import * as vscode from "vscode";
 import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
 import ExtentionStateManager from "./ExtensionStateManger";
-import { SerialManager } from "./SerialManager";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
-import { SocketIOManager } from "./SocketIOManager";
 import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
 import { WebSocketManager } from "./WebSocketManager";
@@ -23,9 +21,7 @@ class MainWebViewPanel extends BaseWebView {
   // private extensionUri; // Handled by BaseWebView
   public stateManager;
   public sidebarWebViewPanel;
-  private socketIOManager: SocketIOManager | null = null;
   private webSocketManager: WebSocketManager | null = null;
-  private serialManager: SerialManager | null = null;
 
   constructor(
     extensionUri: vscode.Uri,
@@ -52,9 +48,7 @@ class MainWebViewPanel extends BaseWebView {
       },
     );
 
-    this.socketIOManager = new SocketIOManager(this.mainPanel);
     this.webSocketManager = new WebSocketManager(this.mainPanel);
-    this.serialManager = new SerialManager(this.mainPanel);
 
     this.mainPanel.webview.html = this.getHtmlForWebview(
       this.mainPanel.webview,
@@ -85,7 +79,6 @@ class MainWebViewPanel extends BaseWebView {
         bodyRawData,
         keyValueTableData,
         command,
-        socketEvent,
         socketData,
       } = message;
 
@@ -96,21 +89,13 @@ class MainWebViewPanel extends BaseWebView {
 
         case COMMAND.SOCKET_CONNECT:
           if (requestUrl) {
-            if (requestMethod === "SOCKET") {
+            if (requestMethod === "WEBSOCKET") {
               const headers = getHeaders(
                 keyValueTableData,
                 authOption,
                 authData,
               );
-              const options = {
-                extraHeaders: headers,
-                auth: authData,
-              };
-              this.socketIOManager?.connect(requestUrl, options);
-            } else if (requestMethod === "WEBSOCKET") {
-              this.webSocketManager?.connect(requestUrl);
-            } else if (requestMethod === "SERIAL") {
-              this.serialManager?.connect(requestUrl);
+              this.webSocketManager?.connect(requestUrl, headers);
             }
           } else {
             vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
@@ -118,24 +103,14 @@ class MainWebViewPanel extends BaseWebView {
           return;
 
         case COMMAND.SOCKET_DISCONNECT:
-          if (requestMethod === "SOCKET") {
-            this.socketIOManager?.disconnect();
-          } else if (requestMethod === "WEBSOCKET") {
+          if (requestMethod === "WEBSOCKET") {
             this.webSocketManager?.disconnect();
-          } else if (requestMethod === "SERIAL") {
-            this.serialManager?.disconnect();
           }
           return;
 
         case COMMAND.SOCKET_EMIT:
-          if (requestMethod === "SOCKET") {
-            if (socketEvent) {
-              this.socketIOManager?.emit(socketEvent, socketData);
-            }
-          } else if (requestMethod === "WEBSOCKET") {
+          if (requestMethod === "WEBSOCKET") {
             this.webSocketManager?.send(socketData);
-          } else if (requestMethod === "SERIAL") {
-            this.serialManager?.send(socketData);
           }
           return;
       }
