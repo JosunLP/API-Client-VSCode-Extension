@@ -22,4 +22,7 @@ export default defineConfig({
     sourcemap: true,
     minify: false,
   },
+  define: {
+    window: "global",
+  },
 });

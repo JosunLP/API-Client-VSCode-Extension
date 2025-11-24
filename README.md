@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://github.com/JosunLP/API-Client-VSCode-Extension">
     <img
-      src="https://github.com/JosunLP/API-Client-VSCode-Extension/blob/b5ab202cdb8c89786408a601f531327d28bd94ab/icons/images/icon.png"
+      src="https://raw.githubusercontent.com/JosunLP/API-Client-VSCode-Extension/8b9e3f6ca2070466d0c2ffa0e3fe552cad7cf228/icons/images/icon.png"
       width="100"
       height="100"
     />
@@ -48,11 +48,11 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
+    - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [👨🏻‍💻 Contributing](#-contributing)
-  - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
-  - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
-  - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
+    - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
+    - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
+    - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
 - [🫧 Contributors](#-contributors)
 - [📋 License](#-license)
 
