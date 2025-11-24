@@ -4,7 +4,7 @@
   "displayName": "Pulse API Client",
   "icon": "icons/images/icon.png",
   "description": "Simple and intuitive API Client made into a VSCode extension.  A fork from REST API Client extension.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JosunLP/API-Client-VSCode-Extension/issues"
