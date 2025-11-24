@@ -1,15 +1,15 @@
-import { SerialPort } from "serialport";
+// import type { SerialPort } from "serialport";
 import * as vscode from "vscode";
 
 export class SerialManager {
-  private port: SerialPort | null = null;
+  private port: any | null = null;
   private panel: vscode.WebviewPanel;
 
   constructor(panel: vscode.WebviewPanel) {
     this.panel = panel;
   }
 
-  public connect(path: string, baudRate: number = 9600) {
+  public async connect(path: string, baudRate: number = 9600) {
     if (this.port) {
       this.disconnect();
     }
@@ -28,6 +28,8 @@ export class SerialManager {
     }
 
     try {
+      const moduleName = "serialport";
+      const { SerialPort } = await import(moduleName);
       this.port = new SerialPort({
         path: portPath,
         baudRate: portBaudRate,
