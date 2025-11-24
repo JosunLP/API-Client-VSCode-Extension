@@ -13,6 +13,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "vscode",
+        "serialport",
         ...builtinModules,
         ...builtinModules.map((m) => `node:${m}`),
       ],

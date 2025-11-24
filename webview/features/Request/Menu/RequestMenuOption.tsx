@@ -1,13 +1,17 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { shallow } from "zustand/shallow";
 
 import LoadButtonsBlock from "../../../components/LoadButtonsBlock";
+import Loader from "../../../components/Loader";
 import { COMMON, REQUEST } from "../../../constants";
 import KeyValueTable from "../../../shared/KeyValueTable";
 import useStore from "../../../store/useStore";
 import RequestAuthSelectMenu from "../Authorization/RequestAuthSelectMenu";
 import RequestBodySelectMenu from "../Body/RequestBodySelectMenu";
-import RequestCodeSnippet from "../CodeSnippet/RequestCodeSnippet";
+
+const RequestCodeSnippet = React.lazy(
+  () => import("../CodeSnippet/RequestCodeSnippet"),
+);
 
 const RequestMenuOption = () => {
   const { requestOption, keyValueProps } = useStore(
@@ -47,7 +51,11 @@ const RequestMenuOption = () => {
     case COMMON.BODY:
       return <RequestBodySelectMenu />;
     default:
-      return <RequestCodeSnippet />;
+      return (
+        <Suspense fallback={<Loader />}>
+          <RequestCodeSnippet />
+        </Suspense>
+      );
   }
 };
 
