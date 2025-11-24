@@ -22,17 +22,47 @@ const ProjectGroup: React.FC<IProjectGroupProps> = ({
   onRename,
   onDelete,
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
     <ProjectGroupWrapper>
       <ProjectHeader>
-        <ProjectTitleSection onClick={onToggleCollapse}>
+        <ProjectTitleSection
+          onClick={onToggleCollapse}
+          onKeyDown={(e) => handleKeyDown(e, onToggleCollapse)}
+          role="button"
+          aria-expanded={!collapsed}
+          aria-label={`${collapsed ? "Expand" : "Collapse"} project ${projectName}`}
+          tabIndex={0}
+        >
           {collapsed ? <AiFillFolder /> : <AiFillFolderOpen />}
           <h4>{projectName}</h4>
           <span className="item-count">({itemCount})</span>
         </ProjectTitleSection>
         <ProjectActions>
-          <MdEdit className="action-icon" onClick={onRename} title="Rename project" />
-          <FaTrashAlt className="action-icon" onClick={onDelete} title="Delete project" />
+          <MdEdit
+            className="action-icon"
+            onClick={onRename}
+            onKeyDown={(e) => handleKeyDown(e, onRename)}
+            role="button"
+            aria-label="Rename project"
+            tabIndex={0}
+            title="Rename project"
+          />
+          <FaTrashAlt
+            className="action-icon"
+            onClick={onDelete}
+            onKeyDown={(e) => handleKeyDown(e, onDelete)}
+            role="button"
+            aria-label="Delete project"
+            tabIndex={0}
+            title="Delete project"
+          />
         </ProjectActions>
       </ProjectHeader>
     </ProjectGroupWrapper>
@@ -64,6 +94,12 @@ const ProjectTitleSection = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex: 1;
+  cursor: pointer;
+
+  &:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+    outline-offset: 2px;
+  }
 
   svg {
     font-size: 1.2rem;
@@ -101,6 +137,11 @@ const ProjectActions = styled.div`
 
     &:hover {
       color: var(--vscode-foreground);
+    }
+
+    &:focus {
+      outline: 1px solid var(--vscode-focusBorder);
+      outline-offset: 2px;
     }
   }
 `;

@@ -32,9 +32,16 @@ export default defineConfig({
           if (id.includes("@monaco-editor")) {
             return "monaco-editor";
           }
-          // Keep other large node_modules in a vendor chunk
+          // Only include core libraries in the vendor chunk to avoid overly large bundle
           if (id.includes("node_modules")) {
-            return "vendor";
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("zustand") ||
+              id.includes("styled-components")
+            ) {
+              return "vendor";
+            }
           }
         },
       },

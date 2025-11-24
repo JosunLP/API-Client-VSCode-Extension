@@ -37,9 +37,28 @@ const InputDialog: React.FC<IInputDialogProps> = ({
     }
   };
 
+  const handleDialogKeyDown = (e: React.KeyboardEvent) => {
+    // Trap Tab key within dialog
+    if (e.key === "Tab") {
+      const focusableElements = e.currentTarget.querySelectorAll(
+        'button, input, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement?.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement?.focus();
+      }
+    }
+  };
+
   return (
     <Overlay onClick={onCancel} role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-      <DialogContent onClick={(e) => e.stopPropagation()}>
+      <DialogContent onClick={(e) => e.stopPropagation()} onKeyDown={handleDialogKeyDown}>
         <DialogHeader>
           <h4 id="dialog-title">{title}</h4>
           <CloseButton onClick={onCancel} aria-label="Close dialog">

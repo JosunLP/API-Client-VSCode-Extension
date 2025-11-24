@@ -75,36 +75,53 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
   handleProjects: (projects: IProject[]) =>
     set(() => ({ projects })),
 
-  addProject: (name: string) =>
+  addProject: (name: string) => {
+    const trimmedName = name.trim();
+    if (!trimmedName || trimmedName.length > 100) {
+      console.error("Invalid project name: must be 1-100 characters");
+      return;
+    }
     set((state) => ({
       projects: [
         ...state.projects,
         {
           id: `project-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
-          name,
+          name: trimmedName,
           createdTime: Date.now(),
           collapsed: false,
         },
       ],
-    })),
+    }));
+  },
 
-  updateProject: (id: string, name: string) =>
+  updateProject: (id: string, name: string) => {
+    const trimmedName = name.trim();
+    if (!trimmedName || trimmedName.length > 100) {
+      console.error("Invalid project name: must be 1-100 characters");
+      return;
+    }
     set((state) => ({
       projects: state.projects.map((project) =>
-        project.id === id ? { ...project, name } : project,
+        project.id === id ? { ...project, name: trimmedName } : project,
       ),
-    })),
+    }));
+  },
 
   deleteProject: (id: string) =>
-    set((state) => ({
-      projects: state.projects.filter((project) => project.id !== id),
-      // Remove project assignment from favorites
-      userFavorites: state.userFavorites.map((favorite) =>
+    set((state) => {
+      // Atomic update: both project deletion and favorites update in single state change
+      const updatedFavorites = state.userFavorites.map((favorite) =>
         favorite.projectId === id
           ? { ...favorite, projectId: undefined }
           : favorite,
-      ),
-    })),
+      );
+      const updatedProjects = state.projects.filter((project) => project.id !== id);
+      
+      return {
+        projects: updatedProjects,
+        userFavorites: updatedFavorites,
+      };
+    }),
 
   toggleProjectCollapse: (id: string) =>
     set((state) => ({

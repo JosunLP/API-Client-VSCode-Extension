@@ -31,6 +31,8 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   // Lazy initialization of providers - only create when needed
+  // This defers heavyweight initialization until the user actually
+  // opens the sidebar or main panel, improving extension startup time
   let SidebarWebViewProvider: SidebarWebViewPanel | null = null;
   let MainWebViewProvider: MainWebViewPanel | null = null;
   let currentPanel: vscode.WebviewPanel | null = null;
@@ -62,10 +64,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider(
       COMMAND.SIDEBAR_WEB_VIEW_PANEL,
       {
-        resolveWebviewView: (webviewView) => {
+        resolveWebviewView(webviewView: vscode.WebviewView) {
           return getSidebarProvider().resolveWebviewView(webviewView);
         },
-      },
+      } as vscode.WebviewViewProvider,
       { webviewOptions: { retainContextWhenHidden: true } },
     ),
   );

@@ -11,7 +11,9 @@ import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
 import { generateSdkRequestObject } from "../../../utils";
 
-// Lazy load the heavy postman-code-generators module
+// Lazy load the heavy postman-code-generators module (2.8MB)
+// to improve initial bundle size and startup performance.
+// The module is only loaded when the user first accesses the code snippets tab.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let codegenModule: any = null;
 const loadCodegen = async () => {
@@ -24,6 +26,7 @@ const loadCodegen = async () => {
 
 const RequestCodeSnippet = () => {
   const [isCodegenLoaded, setIsCodegenLoaded] = useState(false);
+  const [codegenError, setCodegenError] = useState<string | null>(null);
   const {
     authData,
     requestUrl,
@@ -108,11 +111,18 @@ const RequestCodeSnippet = () => {
   // Load codegen module on first render
   useEffect(() => {
     let mounted = true;
-    loadCodegen().then(() => {
-      if (mounted) {
-        setIsCodegenLoaded(true);
-      }
-    });
+    loadCodegen()
+      .then(() => {
+        if (mounted) {
+          setIsCodegenLoaded(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load code generator:", error);
+        if (mounted) {
+          setCodegenError("Failed to load code generator. Please refresh the page.");
+        }
+      });
     return () => {
       mounted = false;
     };
@@ -177,8 +187,11 @@ const RequestCodeSnippet = () => {
         </SelectOptionWrapper>
         <CopyIcon handleClick={handleCopyIconClick} value={codeSnippetValue} />
       </SelectWrapper>
-      {!isCodegenLoaded && (
+      {!isCodegenLoaded && !codegenError && (
         <LoadingMessage>Loading code generator...</LoadingMessage>
+      )}
+      {codegenError && (
+        <ErrorMessage>{codegenError}</ErrorMessage>
       )}
       <CodeEditor
         codeEditorValue={codeSnippetValue}
@@ -215,6 +228,16 @@ const LoadingMessage = styled.div`
   text-align: center;
   color: var(--vscode-descriptionForeground);
   font-style: italic;
+`;
+
+const ErrorMessage = styled.div`
+  padding: 1rem;
+  text-align: center;
+  color: var(--vscode-errorForeground);
+  background-color: var(--vscode-inputValidation-errorBackground);
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+  border-radius: 0.25rem;
+  margin: 0.5rem 0;
 `;
 
 export default RequestCodeSnippet;

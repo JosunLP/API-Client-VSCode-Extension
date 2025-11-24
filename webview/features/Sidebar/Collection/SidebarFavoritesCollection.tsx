@@ -212,9 +212,10 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
                               if (e.key === "Escape") cancelRenameProject();
                             }}
                             autoFocus
+                            aria-label="Project name"
                           />
-                          <button onClick={confirmRenameProject}>✓</button>
-                          <button onClick={cancelRenameProject}>✗</button>
+                          <button onClick={confirmRenameProject} aria-label="Confirm rename">✓</button>
+                          <button onClick={cancelRenameProject} aria-label="Cancel rename">✗</button>
                         </RenameProjectWrapper>
                       ) : (
                         <ProjectGroup
