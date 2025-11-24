@@ -102,27 +102,12 @@ class SidebarWebViewPanel
         if (command === COMMAND.START_APP) {
           vscode.commands.executeCommand(COMMAND.MAIN_WEB_VIEW_PANEL);
         } else if (command === COMMAND.ADD_TO_FAVORITES) {
-          await this.stateManager.updateExtensionContext(
-            COLLECTION.HISTORY_COLLECTION,
-            id,
-            COMMAND.ADD,
-          );
+          await this.stateManager.addToFavorites(id);
         } else if (command === COMMAND.REMOVE_FROM_FAVORITES) {
-          await this.stateManager.updateExtensionContext(
-            COLLECTION.HISTORY_COLLECTION,
-            id,
-          );
-
-          await this.stateManager.deleteExtensionContext(
-            COLLECTION.FAVORITES_COLLECTION,
-            id,
-          );
+          await this.stateManager.removeFromFavorites(id);
         } else if (command === COMMAND.DELETE) {
           if (target === COLLECTION.FAVORITES_COLLECTION) {
-            await this.stateManager.updateExtensionContext(
-              COLLECTION.HISTORY_COLLECTION,
-              id,
-            );
+            await this.stateManager.unfavoriteInHistory(id);
           }
 
           await this.stateManager.deleteExtensionContext(target, id);

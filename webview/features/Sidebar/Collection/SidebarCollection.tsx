@@ -80,14 +80,8 @@ const SidebarCollection = ({
                       <div key={folder}>
                         <FolderHeader>{folder}</FolderHeader>
                         {items.map((collection) => {
-                          const {
-                            url,
-                            method,
-                            id,
-                            requestedTime,
-                            favoritedTime,
-                            folder,
-                          } = collection;
+                          const { url, method, id, favoritedTime, folder } =
+                            collection;
                           const methodColor = generateMethodColor(
                             method.toLowerCase(),
                           );
@@ -112,13 +106,8 @@ const SidebarCollection = ({
                                   <p>Added {favoriteListedTime}</p>
                                 </div>
                                 {handleUpdateFavoriteFolder && (
-                                  <div
-                                    style={{
-                                      marginTop: "0.5rem",
-                                      marginBottom: "0.5rem",
-                                    }}
-                                  >
-                                    <input
+                                  <FolderInputWrapper>
+                                    <FolderInput
                                       type="text"
                                       placeholder="Folder"
                                       defaultValue={folder || ""}
@@ -128,17 +117,10 @@ const SidebarCollection = ({
                                           e.target.value,
                                         )
                                       }
-                                      style={{
-                                        background: "transparent",
-                                        border: "1px solid #404040",
-                                        color: "inherit",
-                                        padding: "0.2rem",
-                                        width: "95%",
-                                      }}
                                     />
-                                  </div>
+                                  </FolderInputWrapper>
                                 )}
-                                <div role="iconWrapper">
+                                <div className="iconWrapper">
                                   <FaTrashAlt
                                     className="sidebarIcon"
                                     onClick={() => handleDeleteButton(id)}
@@ -193,7 +175,7 @@ const SidebarCollection = ({
                                     <p>Added {favoriteListedTime}</p>
                                   )}
                                 </div>
-                                <div role="iconWrapper">
+                                <div className="iconWrapper">
                                   {sidebarOption === SIDEBAR.HISTORY ? (
                                     isUserFavorite ? (
                                       <AiFillHeart
@@ -280,6 +262,20 @@ const FolderHeader = styled.h3`
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+`;
+
+const FolderInputWrapper = styled.div`
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const FolderInput = styled.input`
+  width: 100%;
+  padding: 0.2rem;
+  border-radius: 0.2rem;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
 `;
 
 export default SidebarCollection;

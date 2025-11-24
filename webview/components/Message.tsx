@@ -45,8 +45,8 @@ const MessageWrapper = styled.div<IMessageStyledProps>`
   }
 
   img {
-    margin-top: ${(props) => (props.primary ? "2rem" : " 0.5rem")};
-    width: ${(props) => (props.primary ? "13rem" : " 2.5rem")};
+    margin-top: ${(props) => (props.$primary ? "2rem" : " 0.5rem")};
+    width: ${(props) => (props.$primary ? "13rem" : " 2.5rem")};
     opacity: 0.75;
   }
 

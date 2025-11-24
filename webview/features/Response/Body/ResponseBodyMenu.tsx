@@ -37,7 +37,7 @@ const RequestBodyMenu = () => {
       {OPTION.RESPONSE_BODY_OPTIONS.map((option, index) => (
         <OptionContainer
           key={RESPONSE.RESPONSE_BODY + index}
-          primary={responseBodyOption === option}
+          $primary={responseBodyOption === option}
           radius={index}
           onClick={handleOptionChange}
         >
@@ -55,10 +55,10 @@ const RequestBodyMenu = () => {
   );
 };
 
-const OptionContainer = styled.div<{ primary: boolean; radius: number }>`
+const OptionContainer = styled.div<{ $primary: boolean; radius: number }>`
   padding: 0.6rem 0.9rem;
   background: ${(props) =>
-    props.primary
+    props.$primary
       ? "var(--vscode-button-hoverBackground)"
       : "rgba(97, 97, 97, 0.15)"};
   border-radius: ${(props) =>
@@ -67,7 +67,7 @@ const OptionContainer = styled.div<{ primary: boolean; radius: number }>`
       : props.radius === 2
       ? "0 0.5rem 0.5rem 0"
       : "0"};
-  font-weight: ${(props) => (props.primary ? "400" : "300")};
+  font-weight: ${(props) => (props.$primary ? "400" : "300")};
   color: var(--default-text);
   cursor: pointer;
 `;

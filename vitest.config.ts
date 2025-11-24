@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ["./jest.setup.js"],
     include: [
       "webview/**/__test__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
+      "src/**/__test__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
     ],
     alias: {
       // Handle svg/png imports in tests if needed, though Vite handles them usually.

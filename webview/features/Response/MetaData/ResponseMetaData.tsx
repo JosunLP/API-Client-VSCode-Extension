@@ -24,7 +24,7 @@ const ResponseMetaData = ({
     <ResponseMetaDataContainer>
       {OPTION.RESPONSE_RESULT_INFORMATION.map((option, index) => (
         <MetaDataContainer
-          secondary={index === 0 && statusCode === 404}
+          $secondary={index === 0 && statusCode === 404}
           key={RESPONSE.META_DATA + index}
         >
           <span>{option}:</span>
@@ -42,7 +42,7 @@ const ResponseMetaDataContainer = styled.div`
   margin: 0 0 0 auto;
 `;
 
-const MetaDataContainer = styled.div<{ secondary: boolean }>`
+const MetaDataContainer = styled.div<{ $secondary: boolean }>`
   display: flex;
   align-items: center;
   margin: 0 0.7rem;
@@ -55,7 +55,7 @@ const MetaDataContainer = styled.div<{ secondary: boolean }>`
 
   .metaDataColor {
     color: ${(props) =>
-      props.secondary ? "rgb(255 100 100)" : "rgb(66 245 66)"};
+      props.$secondary ? "rgb(255 100 100)" : "rgb(66 245 66)"};
     font-weight: 300;
   }
 `;
