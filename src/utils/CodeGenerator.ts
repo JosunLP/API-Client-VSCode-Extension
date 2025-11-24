@@ -2,6 +2,26 @@ import { IRequestHeaderInformation } from "./type";
 
 export class CodeGenerator {
   /**
+   * Escapes a string for use in shell single-quoted strings.
+   */
+  private static escapeShellSingleQuote(str: string): string {
+    return str.replace(/'/g, "'\\''");
+  }
+
+  /**
+   * Escapes a string for use in shell double-quoted strings.
+   */
+  private static escapeShellDoubleQuote(str: string): string {
+    // Escape backslashes, double quotes, dollar signs, backticks, and exclamation marks
+    return str
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+      .replace(/\$/g, "\\$")
+      .replace(/`/g, "\\`")
+      .replace(/!/g, "\\!");
+  }
+
+  /**
    * Generates a cURL command for the request.
    */
   static generateCurl(
@@ -10,12 +30,15 @@ export class CodeGenerator {
     headers: IRequestHeaderInformation,
     body?: string,
   ): string {
-    let command = `curl -X ${method.toUpperCase()} "${url}"`;
+    const escapedUrl = CodeGenerator.escapeShellDoubleQuote(url);
+    let command = `curl -X ${method.toUpperCase()} "${escapedUrl}"`;
 
     // Add headers
     for (const [key, value] of Object.entries(headers)) {
       if (key && value) {
-        command += ` \\\n  -H "${key}: ${value}"`;
+        const escapedKey = CodeGenerator.escapeShellDoubleQuote(key);
+        const escapedValue = CodeGenerator.escapeShellDoubleQuote(value);
+        command += ` \\\n  -H "${escapedKey}: ${escapedValue}"`;
       }
     }
 
@@ -26,7 +49,7 @@ export class CodeGenerator {
       method.toUpperCase() !== "HEAD"
     ) {
       // Escape single quotes for shell
-      const escapedBody = body.replace(/'/g, "'\\''");
+      const escapedBody = CodeGenerator.escapeShellSingleQuote(body);
       command += ` \\\n  -d '${escapedBody}'`;
     }
 
@@ -121,6 +144,15 @@ export class CodeGenerator {
   }
 
   /**
+   * Escapes a string for use in Go string literals.
+   */
+  private static escapeGoString(str: string): string {
+    // Use JSON.stringify and strip the surrounding quotes to properly escape all special characters
+    const jsonEscaped = JSON.stringify(str);
+    return jsonEscaped.substring(1, jsonEscaped.length - 1);
+  }
+
+  /**
    * Generates a Go code snippet.
    */
   static generateGo(
@@ -129,15 +161,16 @@ export class CodeGenerator {
     headers: IRequestHeaderInformation,
     body?: string,
   ): string {
-    let code = `package main\n\nimport (\n\t"fmt"\n\t"io/ioutil"\n\t"net/http"\n\t"strings"\n)\n\nfunc main() {\n\n\turl := "${url}"\n\tmethod := "${method.toUpperCase()}"\n\n`;
+    const escapedUrl = CodeGenerator.escapeGoString(url);
+    let code = `package main\n\nimport (\n\t"fmt"\n\t"io"\n\t"net/http"\n\t"strings"\n)\n\nfunc main() {\n\n\turl := "${escapedUrl}"\n\tmethod := "${method.toUpperCase()}"\n\n`;
 
     if (
       body &&
       method.toUpperCase() !== "GET" &&
       method.toUpperCase() !== "HEAD"
     ) {
-      // Escape double quotes
-      const escapedBody = body.replace(/"/g, '\\"');
+      // Robustly escape body for Go string literal using JSON.stringify
+      const escapedBody = CodeGenerator.escapeGoString(body);
       code += `\tpayload := strings.NewReader("${escapedBody}")\n\n`;
       code += `\tclient := &http.Client {}\n`;
       code += `\treq, err := http.NewRequest(method, url, payload)\n`;
@@ -150,13 +183,31 @@ export class CodeGenerator {
 
     for (const [key, value] of Object.entries(headers)) {
       if (key && value) {
-        code += `\treq.Header.Add("${key}", "${value}")\n`;
+        // Escape backslashes and double quotes for Go string literals
+        const escapedKey = CodeGenerator.escapeGoString(key);
+        const escapedValue = CodeGenerator.escapeGoString(value);
+        code += `\treq.Header.Add("${escapedKey}", "${escapedValue}")\n`;
       }
     }
 
-    code += `\n\tres, err := client.Do(req)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tdefer res.Body.Close()\n\n\tbody, err := ioutil.ReadAll(res.Body)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tfmt.Println(string(body))\n}`;
+    code += `\n\tres, err := client.Do(req)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tdefer res.Body.Close()\n\n\tbody, err := io.ReadAll(res.Body)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tfmt.Println(string(body))\n}`;
 
     return code;
+  }
+
+  /**
+   * Escapes a string for use in C# string literals.
+   */
+  private static escapeCSharpString(str: string): string {
+    return str.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+
+  /**
+   * Escapes a string for use in C# verbatim string literals (@"...").
+   */
+  private static escapeCSharpVerbatimString(str: string): string {
+    // In verbatim strings, only double quotes need to be doubled
+    return str.replace(/"/g, '""');
   }
 
   /**
@@ -168,11 +219,14 @@ export class CodeGenerator {
     headers: IRequestHeaderInformation,
     body?: string,
   ): string {
-    let code = `using System;\nusing System.Net.Http;\nusing System.Text;\nusing System.Threading.Tasks;\n\nnamespace PulseApiClient\n{\n    class Program\n    {\n        static async Task Main(string[] args)\n        {\n            var client = new HttpClient();\n            var request = new HttpRequestMessage(new HttpMethod("${method.toUpperCase()}"), "${url}");\n`;
+    const escapedUrl = CodeGenerator.escapeCSharpString(url);
+    let code = `using System;\nusing System.Net.Http;\nusing System.Text;\nusing System.Threading.Tasks;\n\nnamespace PulseApiClient\n{\n    class Program\n    {\n        static async Task Main(string[] args)\n        {\n            var client = new HttpClient();\n            var request = new HttpRequestMessage(new HttpMethod("${method.toUpperCase()}"), "${escapedUrl}");\n`;
 
     for (const [key, value] of Object.entries(headers)) {
       if (key && value) {
-        code += `            request.Headers.TryAddWithoutValidation("${key}", "${value}");\n`;
+        const escapedKey = CodeGenerator.escapeCSharpString(key);
+        const escapedValue = CodeGenerator.escapeCSharpString(value);
+        code += `            request.Headers.TryAddWithoutValidation("${escapedKey}", "${escapedValue}");\n`;
       }
     }
 
@@ -181,9 +235,9 @@ export class CodeGenerator {
       method.toUpperCase() !== "GET" &&
       method.toUpperCase() !== "HEAD"
     ) {
-      // Escape double quotes
-      const escapedBody = body.replace(/"/g, '\\"');
-      code += `\n            request.Content = new StringContent("${escapedBody}");\n`;
+      // Use C# verbatim string literal: double all double quotes, wrap in @"".
+      const verbatimBody = CodeGenerator.escapeCSharpVerbatimString(body);
+      code += `\n            request.Content = new StringContent(@"${verbatimBody}");\n`;
       // Try to set content type if present in headers, though HttpClient handles it on content usually.
       // For simplicity, we assume application/json or text/plain if not specified, but StringContent defaults to text/plain.
       // If Content-Type header is present, we should set it on the content.
@@ -191,7 +245,10 @@ export class CodeGenerator {
         ([k]) => k.toLowerCase() === "content-type",
       );
       if (contentType) {
-        code += `            request.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("${contentType[1]}");\n`;
+        const escapedContentType = CodeGenerator.escapeCSharpString(
+          contentType[1],
+        );
+        code += `            request.Content.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("${escapedContentType}");\n`;
       }
     }
 
@@ -233,9 +290,7 @@ export class CodeGenerator {
       // Try to parse as JSON to print as a dict if possible, otherwise string
       try {
         JSON.parse(body);
-        code += `payload = ${body}\n`; // If it's valid JSON, python might accept it as a dict representation if it's simple, but JSON.stringify produces JS syntax.
-        // Better to use json.dumps in python or pass as string.
-        // Let's pass as string for safety or json parameter if it is json.
+        // If it's valid JSON, format it as a Python dict-like structure
         code += `payload = ${JSON.stringify(JSON.parse(body), null, 4)}\n`;
         code += `response = requests.request("${method.toUpperCase()}", url, headers=headers, json=payload)\n`;
       } catch {
