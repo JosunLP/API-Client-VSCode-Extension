@@ -1,5 +1,6 @@
-import { COMMON, REQUEST } from "../constants";
 import { Buffer } from "buffer";
+
+import { COMMON, REQUEST } from "../constants";
 import { IAuthData, IBodyRawData, IParameterString } from "./type";
 
 const generateSdkRequestObject = (
@@ -11,6 +12,7 @@ const generateSdkRequestObject = (
   bodyOption: string,
   bodyRawOption: string,
   bodyRawData: IBodyRawData,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   SdkInstance: any,
 ) => {
   const requestHeader = keyValueTableData.filter(

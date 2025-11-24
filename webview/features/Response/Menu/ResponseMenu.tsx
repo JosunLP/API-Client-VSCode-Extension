@@ -1,5 +1,5 @@
 import React, { MouseEvent } from "react";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import DetailOption from "../../../components/DetailOption";
 import MenuOption from "../../../components/MenuOption";
@@ -13,12 +13,11 @@ type OnClickCallback = (event: MouseEvent<HTMLHeadingElement>) => void;
 
 const ResponseMenu = () => {
   const { responseData, responseOption, handleResponseOptionChange } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       responseData: state.responseData,
       responseOption: state.responseOption,
       handleResponseOptionChange: state.handleResponseOptionChange,
-    }),
-    shallow,
+    })),
   );
 
   const handleHeadingTextClick: OnClickCallback = (

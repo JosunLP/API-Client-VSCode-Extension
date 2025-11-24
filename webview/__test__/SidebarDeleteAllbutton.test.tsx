@@ -26,12 +26,15 @@ describe("SidebarDeleteAllButton component test", () => {
     expect(getByText(/delete/i)).toHaveStyle(`border-radius: 1rem`);
   });
 
-  it("should delete everything from array once clicked", () => {
+  it("should delete everything from array once clicked", async () => {
+    const clickHandler = () => {
+      mockData.length = 0;
+    };
     const { getByText } = render(
-      <SidebarDeleteAllButton clickHandler={() => undefined} />,
+      <SidebarDeleteAllButton clickHandler={clickHandler} />,
     );
 
-    userEvent.click(getByText(/delete all/i));
+    await userEvent.click(getByText(/delete all/i));
 
     expect(mockData.length).toBe(0);
   });

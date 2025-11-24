@@ -1,26 +1,39 @@
 import { fireEvent, render } from "@testing-library/react";
-import React from "react";
+import { vi } from "vitest";
 
 import SidebarCollection from "../features/Sidebar/Collection/SidebarCollection";
 
-const mockData = [
-  {
-    url: "http://netflix.com",
-    method: "GET",
-    headers: {
-      "Cache-Control": "no-cache",
-      Accept: "*/*",
-      "Accept-Encoding": "gzip,deflate",
-      Connection: "keep-alive",
-    },
-    requestedTime: 1658086010977,
-    favoritedTime: 1658086023824,
-    isUserFavorite: false,
-    id: "76deed12-b222-45a5-a3ac-18a785fcef7c",
-  },
-];
-
 describe("SidebarCollection component test", () => {
+  let mockData;
+
+  beforeEach(() => {
+    mockData = [
+      {
+        url: "http://netflix.com",
+        method: "GET",
+        headers: {
+          "Cache-Control": "no-cache",
+          Accept: "*/*",
+          "Accept-Encoding": "gzip,deflate",
+          Connection: "keep-alive",
+        },
+        requestedTime: 1658086010977,
+        favoritedTime: 1658086023824,
+        isUserFavorite: false,
+        id: "76deed12-b222-45a5-a3ac-18a785fcef7c",
+      },
+    ];
+    // Mock current time to be 19 hours after favoritedTime (1658086023824)
+    // 19 hours = 19 * 60 * 60 * 1000 = 68400000
+    // 1658086023824 + 68400000 = 1658154423824
+    vi.useFakeTimers();
+    vi.setSystemTime(1658154423824);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should display correct sidebar empty message when props are passed", () => {
     const { getByText } = render(<SidebarCollection sidebarOption="History" />);
 
@@ -81,21 +94,19 @@ describe("SidebarCollection component test", () => {
   });
 
   it("should delete collection when delete button is clicked", async () => {
-    const mockHandleDeleteButton = () => {
-      mockData.splice(0, mockData.length);
-    };
+    const mockHandleDeleteButton = vi.fn();
 
-    const { findByRole } = render(
+    const { getByTestId } = render(
       <SidebarCollection
         userCollection={mockData}
         handleDeleteButton={mockHandleDeleteButton}
       />,
     );
 
-    const icon = await findByRole("iconWrapper");
+    const deleteButton = getByTestId("delete-button");
 
-    fireEvent.click(icon.firstChild);
+    fireEvent.click(deleteButton);
 
-    expect(mockData.length).toBe(0);
+    expect(mockHandleDeleteButton).toHaveBeenCalledWith(mockData[0].id);
   });
 });

@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
-import { COMMON, HEIGHT, OPTION, REQUEST } from "../../../constants";
+import { COMMON, OPTION, REQUEST } from "../../../constants";
 import CodeEditor from "../../../shared/CodeEditor";
 import KeyValueTable from "../../../shared/KeyValueTable";
 import useStore from "../../../store/useStore";
@@ -16,14 +16,13 @@ const ResponseMenuOption = () => {
     responseBodyOption,
     responseBodyViewFormat,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       responseData: state.responseData?.data,
       responseOption: state.responseOption,
       responseHeaders: state.responseData?.headers,
       responseBodyOption: state.responseBodyOption,
       responseBodyViewFormat: state.responseBodyViewFormat,
-    }),
-    shallow,
+    })),
   );
 
   switch (responseOption) {
@@ -48,7 +47,7 @@ const ResponseMenuOption = () => {
             }
             viewOption={responseBodyOption}
             editorOption={OPTION.EDITOR_OPTIONS}
-            editorHeight={HEIGHT.RESPONSE_EDITOR_HEIGHT}
+            editorHeight="100%"
             previewMode
           />
         </>

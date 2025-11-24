@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FaGripLines } from "react-icons/fa";
 import styled from "styled-components";
+import { useShallow } from "zustand/react/shallow";
 
 import { HEIGHT } from "../../constants";
 import useStore from "../../store/useStore";
 
 const ResizeBar = () => {
   const { requestMenuHeight, handleRequestHeightChange } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestMenuHeight: state.requestMenuHeight,
       handleRequestHeightChange: state.handleRequestHeightChange,
-    }),
+    })),
   );
 
   const [isDragging, setIsDragging] = useState(false);

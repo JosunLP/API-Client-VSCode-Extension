@@ -14,7 +14,7 @@ describe("RequestBodyFormatButton component test", () => {
     const { getByText } = render(<RequestBodyFormatButton />);
 
     expect(getByText("Beautify Editor")).toHaveStyle(
-      `background-color: ButtonFace`,
+      `background-color: var(--vscode-input-background)`,
     );
     expect(getByText("Beautify Editor")).toHaveStyle(`width: 12rem`);
     expect(getByText("Beautify Editor")).toHaveStyle(`margin-left: 2.7rem`);

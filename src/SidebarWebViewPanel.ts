@@ -1,22 +1,30 @@
 import * as vscode from "vscode";
 
+import { BaseWebView } from "./BaseWebView";
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
-import { filterObjectKey, generateResponseObject, getNonce } from "./utils";
 import ExtentionStateManager from "./ExtensionStateManger";
+import { filterObjectKey, generateResponseObject } from "./utils";
 import { IUserRequestSidebarState } from "./utils/type";
 
-class SidebarWebViewPanel {
+/**
+ * Manages the sidebar webview panel.
+ */
+class SidebarWebViewPanel
+  extends BaseWebView
+  implements vscode.WebviewViewProvider
+{
   private sidebarWebview: vscode.WebviewView | null = null;
-  private extensionUri;
+  // private extensionUri; // Handled by BaseWebView
   public mainWebViewPanel: vscode.WebviewPanel | null = null;
   public stateManager;
 
   constructor(extensionUri: vscode.Uri, stateManager: ExtentionStateManager) {
-    this.extensionUri = extensionUri;
+    super(extensionUri);
     this.stateManager = stateManager;
   }
 
   resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
+    console.log("Pulse API Client: Resolving sidebar webview...");
     this.sidebarWebview = webviewView;
 
     this.sidebarWebview.webview.options = {
@@ -27,21 +35,36 @@ class SidebarWebViewPanel {
       ],
     };
 
-    this.sidebarWebview.webview.html = this.getHtmlForSidebarWebView(
-      webviewView.webview,
+    const html = this.getHtmlForWebview(webviewView.webview, "sidebar.js");
+    console.log("Pulse API Client: Generated HTML length:", html.length);
+    this.sidebarWebview.webview.html = html;
+
+    const historyData = this.stateManager.getExtensionContext(
+      COLLECTION.HISTORY_COLLECTION,
+    );
+    const favoritesData = this.stateManager.getExtensionContext(
+      COLLECTION.FAVORITES_COLLECTION,
     );
 
-    this.sidebarWebview.webview.postMessage({
-      messageCategory: CATEGORY.COLLECTION_DATA,
-      history: this.stateManager.getExtensionContext(
-        COLLECTION.HISTORY_COLLECTION,
-      ),
-      favorites: this.stateManager.getExtensionContext(
-        COLLECTION.FAVORITES_COLLECTION,
-      ),
-    });
-
     this.receiveSidebarWebViewMessage();
+
+    // Send initial data after a short delay to ensure React has mounted
+    setTimeout(() => {
+      if (this.sidebarWebview) {
+        console.log("Pulse API Client: Sending initial data to sidebar...", {
+          history: historyData,
+          favorites: favoritesData,
+        });
+
+        this.sidebarWebview.webview.postMessage({
+          messageCategory: CATEGORY.COLLECTION_DATA,
+          history: historyData,
+          favorites: favoritesData,
+        });
+      }
+    }, 100);
+
+    console.log("Pulse API Client: Sidebar webview resolved successfully!");
   }
 
   postMainWebViewPanelMessage(
@@ -153,52 +176,6 @@ class SidebarWebViewPanel {
         }
       },
     );
-  }
-
-  private getHtmlForSidebarWebView(webview: vscode.Webview) {
-    const scriptPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "dist",
-      "sidebar.js",
-    );
-    const resetCssPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "media",
-      "reset.css",
-    );
-    const vscodeStylesCssPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "media",
-      "vscode.css",
-    );
-
-    const resetCssSrc = webview.asWebviewUri(resetCssPath);
-    const mainStylesCssSrc = webview.asWebviewUri(vscodeStylesCssPath);
-    const scriptSrc = webview.asWebviewUri(scriptPath);
-    const nonce = getNonce();
-
-    return `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>REST API Tester Sidebar</title>
-          <link href="${resetCssSrc}" rel="stylesheet">
-          <link href="${mainStylesCssSrc}" rel="stylesheet">
-        </head>
-        <body>
-          <div id="root"></div>
-          <script nonce="${nonce}">
-          let vscode;
-
-          if (typeof acquireVsCodeApi !== "undefined") {
-            vscode = acquireVsCodeApi();
-          }
-          </script>
-          <script nonce="${nonce}" src="${scriptSrc}"></script>
-        </body>
-      </html>`;
   }
 }
 

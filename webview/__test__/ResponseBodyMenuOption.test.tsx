@@ -1,10 +1,32 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { vi } from "vitest";
 
 import ResponseBodyMenuOption from "../features/Response/Body/ResponseBodyMenuOption";
+import useStore from "../store/useStore";
+
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("ResponseBodyMenu component test", () => {
+  beforeEach(() => {
+    useStore.mockImplementation((selector) =>
+      selector({
+        responseBodyContent: "JSON",
+        handleResponseBodyContent: vi.fn(),
+        responseOption: "Body",
+        responseBodyOption: "Pretty",
+        responseBodyViewFormat: "JSON",
+        responseData: null,
+        responseHeaders: null,
+        handleResponseBodyOption: vi.fn(),
+        handleResponseBodyViewFormatChange: vi.fn(),
+      }),
+    );
+  });
+
   it("should render correct default response body option", () => {
     const { getByText } = render(<ResponseBodyMenuOption />);
 
@@ -15,11 +37,11 @@ describe("ResponseBodyMenu component test", () => {
 
   it("should render correct default response body pretty option", () => {
     const { getByRole } = render(<ResponseBodyMenuOption />);
-    const SelectElement = getByRole("option", {
+    const optionElement = getByRole("option", {
       name: "JSON",
-    }) as HTMLSelectElement;
+    }) as HTMLOptionElement;
 
-    expect(SelectElement.options).toBe(true);
+    expect(optionElement.selected).toBe(true);
   });
 
   it("should display the correct number of options", () => {
@@ -28,32 +50,28 @@ describe("ResponseBodyMenu component test", () => {
     expect(getAllByRole("option").length).toBe(3);
   });
 
-  it("should allow user to select body menu option", async () => {
+  it("should call handler when user selects body menu option", async () => {
+    const handleResponseBodyViewFormatChange = vi.fn();
+    useStore.mockImplementation((selector) =>
+      selector({
+        responseBodyContent: "JSON",
+        handleResponseBodyContent: vi.fn(),
+        responseOption: "Body",
+        responseBodyOption: "Pretty",
+        responseBodyViewFormat: "JSON",
+        responseData: null,
+        responseHeaders: null,
+        handleResponseBodyOption: vi.fn(),
+        handleResponseBodyViewFormatChange,
+      }),
+    );
     const { getByRole } = render(<ResponseBodyMenuOption />);
 
     await userEvent.selectOptions(
       getByRole("combobox"),
-
       getByRole("option", { name: "HTML" }),
     );
 
-    let selectElement = getByRole("option", {
-      name: "HTML",
-    }) as HTMLSelectElement;
-
-    expect(selectElement.options).toBe(true);
-    expect(selectElement.options).toBe(false);
-
-    await userEvent.selectOptions(
-      getByRole("combobox"),
-
-      getByRole("option", { name: "Text" }),
-    );
-
-    selectElement = getByRole("option", {
-      name: "Text",
-    }) as HTMLSelectElement;
-
-    expect(selectElement.options).toBe(true);
+    expect(handleResponseBodyViewFormatChange).toHaveBeenCalledWith("HTML");
   });
 });

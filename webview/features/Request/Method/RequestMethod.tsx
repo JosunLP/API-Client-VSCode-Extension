@@ -1,17 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { OPTION, REQUEST } from "../../../constants";
 import useStore from "../../../store/useStore";
 
 const RequestMethod = () => {
   const { requestMethod, handleRequestMethodChange } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestMethod: state.requestMethod,
       handleRequestMethodChange: state.handleRequestMethodChange,
-    }),
-    shallow,
+    })),
   );
 
   return (

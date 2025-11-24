@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
-import { COMMON, RESPONSE } from "../../constants";
 
+import { COMMON, RESPONSE } from "../../constants";
 import { IResponseData, IResponseDataSlice } from "./type";
 
 const responseDataSlice: StateCreator<

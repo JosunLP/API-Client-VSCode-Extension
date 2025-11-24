@@ -11,7 +11,7 @@ describe("Information component test", () => {
       </Information>,
     );
 
-    expect(getByText(/GET/i)).toHaveStyle(`color: green;`);
+    expect(getByText(/GET/i)).toHaveStyle(`color: rgb(0, 128, 0);`);
   });
 
   it("should display correct color for request method DELETE", () => {
@@ -21,6 +21,6 @@ describe("Information component test", () => {
       </Information>,
     );
 
-    expect(getByText(/DELETE/i)).toHaveStyle(`color: red;`);
+    expect(getByText(/DELETE/i)).toHaveStyle(`color: rgb(255, 0, 0);`);
   });
 });

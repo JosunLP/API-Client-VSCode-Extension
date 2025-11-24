@@ -35,7 +35,9 @@ describe("Button component test", () => {
   it("should render non-primary button with correct style", () => {
     const { container } = render(<Button primary={false}>Send</Button>);
 
-    expect(container.firstChild).toHaveStyle(`background-color: ButtonFace;`);
+    expect(container.firstChild).toHaveStyle(
+      `background-color: var(--vscode-input-background);`,
+    );
     expect(container.firstChild).toHaveStyle(`width: 12rem`);
     expect(container.firstChild).toHaveStyle(`margin-left: 2.7rem`);
   });

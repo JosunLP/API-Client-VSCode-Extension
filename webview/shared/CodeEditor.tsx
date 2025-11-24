@@ -7,6 +7,7 @@ import ResponsePreview from "../features/Response/Preview/ResponsePreview";
 
 interface ICodeEditorProps {
   language: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   editorOption: any;
   viewOption?: string;
   editorHeight: string;
@@ -30,7 +31,9 @@ const CodeEditor = ({
   shouldBeautifyEditor,
   handleBeautifyButton,
 }: ICodeEditorProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditorOnMount = (editor: any) => {
     editorRef.current = editor;
   };
@@ -88,6 +91,7 @@ const CodeEditor = ({
 
 const EditorWrapper = styled.div`
   margin-top: 2rem;
+  height: calc(100% - 3rem);
 `;
 
 export default CodeEditor;

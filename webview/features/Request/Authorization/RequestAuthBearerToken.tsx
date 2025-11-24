@@ -1,5 +1,5 @@
 import React from "react";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import InputWrapper from "../../../components/InputWrapper";
 import Wrapper from "../../../components/Wrapper";
@@ -8,11 +8,10 @@ import useStore from "../../../store/useStore";
 
 const RequestAuthBearerToken = () => {
   const { authDataToken, handleRequestAuthData } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       authDataToken: state.authData.token,
       handleRequestAuthData: state.handleRequestAuthData,
-    }),
-    shallow,
+    })),
   );
 
   return (

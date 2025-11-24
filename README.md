@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/REST-API-Client/API-Client-VSCode-Extension">
+  <a href="https://github.com/JosunLP/API-Client-VSCode-Extension">
     <img
       src="https://user-images.githubusercontent.com/83770081/179551561-e773aa66-db92-437a-be66-c7480f19d434.png"
       width="100"
@@ -10,19 +10,19 @@
   <h3>REST API Client</h3>
   <h5>Simple and intuitive API Client made into a VSCode extension.</h5>
 
-<a href="https://marketplace.visualstudio.com/items?itemName=unjinjang.rest-api-client">Visual Studio Marketplace</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client">Visual Studio Marketplace</a>
 •
-<a href="https://github.com/REST-API-Client/API-Client-VSCode-Extension">Repository</a>
+<a href="https://github.com/JosunLP/API-Client-VSCode-Extension">Repository</a>
 •
-<a href="https://github.com/REST-API-Client/API-Client-VSCode-Extension/blob/main/CHANGELOG.md">Releases</a>
+<a href="https://github.com/JosunLP/API-Client-VSCode-Extension/blob/main/CHANGELOG.md">Releases</a>
 
 <br>
 
-<a href="https://marketplace.visualstudio.com/items?itemName=unjinjang.rest-api-client&ssr=false#review-details">
-    <img src="https://img.shields.io/visual-studio-marketplace/stars/unjinjang.rest-api-client?color=informational&style=for-the-badge"/>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client&ssr=false#review-details">
+    <img src="https://img.shields.io/visual-studio-marketplace/stars/JosunLP.rest-api-client?color=informational&style=for-the-badge"/>
 </a>
-<a href="https://marketplace.visualstudio.com/items?itemName=unjinjang.rest-api-client&ssr=false#overview">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/unjinjang.rest-api-client?color=blue&style=for-the-badge"/>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client&ssr=false#overview">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/JosunLP.rest-api-client?color=blue&style=for-the-badge"/>
 </a>
 
 </div>
@@ -48,8 +48,9 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-  - [This project was created using the following tech stacks:](#this-project-was-created-using-the-following-tech-stacks)
+  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [🗒 Changelog](#-changelog)
+  - [Current version 1.1.4](#current-version-114)
 - [👨🏻‍💻 Contributing](#-contributing)
   - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
   - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
@@ -137,7 +138,7 @@ Simply click Open Menu button or open the Command Palette and type the command b
 
 ## 📚 Tech Stacks
 
-#### This project was created using the following tech stacks:
+#### This project was created using the following tech stacks
 
 <p>
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/></a>&nbsp
@@ -163,17 +164,17 @@ Simply click Open Menu button or open the Command Palette and type the command b
 
 #### Current version 1.1.4
 
-Visit [here](https://github.com/REST-API-Client/API-Client-VSCode-Extension/blob/main/CHANGELOG.md) for a detailed release notes
+Visit [here](https://github.com/JosunLP/API-Client-VSCode-Extension/blob/main/CHANGELOG.md) for a detailed release notes
 
 ## 👨🏻‍💻 Contributing
 
-If you have a suggestion that would make this project better, please fork this repository from [here](https://github.com/REST-API-Client/API-Client-VSCode-Extension) and create a pull request.
+If you have a suggestion that would make this project better, please fork this repository from [here](https://github.com/JosunLP/API-Client-VSCode-Extension) and create a pull request.
 
 I appreciate even the tiniest suggestion or contribution you make to this project.
 
 #### 🪜 Step-by-step guide on how to make a pull request
 
-1. Fork this Project from [here](https://github.com/REST-API-Client/API-Client-VSCode-Extension)
+1. Fork this Project from [here](https://github.com/JosunLP/API-Client-VSCode-Extension)
 2. Create your Branch &#8594; `git checkout -b feature/newFeature`
 3. Code up your outstanding logic &#8594; `console.log("Hello World")`
 4. Commit your Changes &#8594; `git commit -m "feat: Add some newFeature"`
@@ -182,7 +183,7 @@ I appreciate even the tiniest suggestion or contribution you make to this projec
 
 #### 🏗 Running the extension locally for development
 
-1. Run `git clone` from this [repository](https://github.com/REST-API-Client/API-Client-VSCode-Extension)
+1. Run `git clone` from this [repository](https://github.com/JosunLP/API-Client-VSCode-Extension)
 2. Run `npm install`
 3. Run `npm run dev`
 4. Press F5 to launch extension development mode
@@ -190,12 +191,12 @@ I appreciate even the tiniest suggestion or contribution you make to this projec
 
 #### ⚠️ Bugs or Suggestions
 
-If you found any bugs while using this extension or you have a suggestion please post it in [issues](https://github.com/REST-API-Client/API-Client-VSCode-Extension/issues).
+If you found any bugs while using this extension or you have a suggestion please post it in [issues](https://github.com/JosunLP/API-Client-VSCode-Extension/issues).
 
 ## 🫧 Contributors
 
-[![Contributors](https://contrib.rocks/image?repo=REST-API-Client/API-Client-VSCode-Extension)](https://github.com/REST-API-Client/API-Client-VSCode-Extension/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=JosunLP/API-Client-VSCode-Extension)](https://github.com/JosunLP/API-Client-VSCode-Extension/graphs/contributors)
 
 ## 📋 License
 
-This extension is released under the [MIT license](https://github.com/REST-API-Client/API-Client-VSCode-Extension/blob/main/LICENSE).
+This extension is released under the [MIT license](https://github.com/JosunLP/API-Client-VSCode-Extension/blob/main/LICENSE).

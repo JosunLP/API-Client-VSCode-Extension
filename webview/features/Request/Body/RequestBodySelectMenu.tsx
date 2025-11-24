@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import styled from "styled-components";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
 import { COMMON, OPTION, REQUEST } from "../../../constants";
@@ -17,14 +17,13 @@ const RequestBodySelectMenu = () => {
     addRequestBodyHeaders,
     removeRequestBodyHeaders,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       bodyOption: state.bodyOption,
       bodyRawOption: state.bodyRawOption,
       handleRequestBodyOption: state.handleRequestBodyOption,
       addRequestBodyHeaders: state.addRequestBodyHeaders,
       removeRequestBodyHeaders: state.removeRequestBodyHeaders,
-    }),
-    shallow,
+    })),
   );
 
   const rawOptionHeaderField = OPTION.REQUEST_BODY_RAW_OPTIONS.filter(
@@ -40,7 +39,7 @@ const RequestBodySelectMenu = () => {
     } else {
       removeRequestBodyHeaders();
 
-      addRequestBodyHeaders(inputTarget.getAttribute("header-type") || "");
+      addRequestBodyHeaders(inputTarget.getAttribute("data-header-type") || "");
     }
   };
 
@@ -55,7 +54,7 @@ const RequestBodySelectMenu = () => {
                 name="bodyOption"
                 checked={bodyOption === option}
                 value={option}
-                header-type={
+                data-header-type={
                   option === REQUEST.RAW
                     ? rawOptionHeaderField[0].headerField
                     : headerField

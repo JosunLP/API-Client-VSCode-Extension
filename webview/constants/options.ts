@@ -1,6 +1,15 @@
 const OPTION = {
   AUTHORIZATION_OPTIONS: ["No Auth", "Basic Auth", "Bearer Token"],
-  REQUEST_METHOD_OPTIONS: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+  REQUEST_METHOD_OPTIONS: [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "HEAD",
+    "OPTIONS",
+    "WEBSOCKET",
+  ],
   REQUEST_MENU_OPTIONS: [
     "Params",
     "Authorization",

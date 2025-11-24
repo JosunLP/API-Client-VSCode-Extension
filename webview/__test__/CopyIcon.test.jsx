@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
+import { vi } from "vitest";
 
 import CopyIcon from "../components/CopyIcon";
 
@@ -14,10 +14,10 @@ beforeEach(() => {
   let clipboardData = "";
 
   const mockClipboard = {
-    writeText: jest.fn((data) => {
+    writeText: vi.fn((data) => {
       clipboardData = data;
     }),
-    readText: jest.fn(() => {
+    readText: vi.fn(() => {
       return clipboardData;
     }),
   };
@@ -25,13 +25,15 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.resetAllMocks();
-  global.navigator?.clipboard = originalClipboard;
+  vi.resetAllMocks();
+  if (global.navigator) {
+    global.navigator.clipboard = originalClipboard;
+  }
 });
 
 describe("CopyIcon component test", () => {
   it("should copy code to clipboard when icon is clicked", async () => {
-    const stringValue = "Very important REST API Client code 🧐";
+    const stringValue = "Very important Pulse API Client code 🧐";
 
     const { getByRole } = render(
       <CopyIcon handleClick={handleCopyIconClick} value={stringValue} />,

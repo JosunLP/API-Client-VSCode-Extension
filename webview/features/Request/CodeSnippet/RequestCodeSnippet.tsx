@@ -1,10 +1,10 @@
-// @ts-ignore
+// @ts-expect-error: postman-code-generators lacks types
 import codegen from "postman-code-generators";
 import { Request } from "postman-collection";
-import React, { useEffect, useMemo, ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import CopyIcon from "../../../components/CopyIcon";
 import SelectWrapper from "../../../components/SelectWrapper";
@@ -29,7 +29,7 @@ const RequestCodeSnippet = () => {
     handleCodeSnippetOptionChange,
     handleCodeSnippetVariantChange,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       authData: state.authData,
       requestUrl: state.requestUrl,
       authOption: state.authOption,
@@ -43,8 +43,7 @@ const RequestCodeSnippet = () => {
       setCodeSnippetValue: state.setCodeSnippetValue,
       handleCodeSnippetOptionChange: state.handleCodeSnippetOptionChange,
       handleCodeSnippetVariantChange: state.handleCodeSnippetVariantChange,
-    }),
-    shallow,
+    })),
   );
   const DEBOUNCE_TIME_VALUE = 800;
   const [debouncedUrlValue] = useDebounce(requestUrl, DEBOUNCE_TIME_VALUE);
@@ -104,6 +103,7 @@ const RequestCodeSnippet = () => {
       {},
       (error: string, snippet: string) => {
         if (error) {
+          console.error(error);
         } else {
           setCodeSnippetValue(snippet);
         }
@@ -124,12 +124,8 @@ const RequestCodeSnippet = () => {
           onChange={handleCodeSnippetOption}
           value={codeSnippetOption.language}
         >
-          {OPTION.CODE_SNIPPET_OPTIONS.map(({ label, variants }, index) => (
-            <option
-              key={"Code Snippet" + index}
-              value={label}
-              variant-type={variants[0]}
-            >
+          {OPTION.CODE_SNIPPET_OPTIONS.map(({ label }, index) => (
+            <option key={"Code Snippet" + index} value={label}>
               {label === "csharp" ? "C#" : label}
             </option>
           ))}

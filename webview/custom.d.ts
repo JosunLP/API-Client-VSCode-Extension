@@ -10,4 +10,16 @@ declare module "*.png" {
   export default content;
 }
 
-declare var vscode: any; //vscode object decalred in script tag
+interface VsCodeApi {
+  postMessage(message: any): void;
+  getState(): any;
+  setState(state: any): void;
+}
+
+declare global {
+  interface Window {
+    vscode: VsCodeApi;
+  }
+}
+
+declare const vscode: VsCodeApi;

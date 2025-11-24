@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+
 import { COMMON, REQUEST } from "../../constants";
 import { IKeyValueTableDataSlice, KeyValueTableDaum } from "./type";
 
@@ -80,7 +81,7 @@ const keyValueTableDataSlice: StateCreator<
   handleFileUpload: (data, optionsType = COMMON.HEADERS, replaceValues) => {
     const rows: KeyValueTableDaum[] = [];
 
-    for (let key in data) {
+    for (const key in data) {
       rows.push({
         optionType: optionsType,
         isChecked: true,

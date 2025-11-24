@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import { SIDEBAR } from "../../../constants";
 
 const SidebarGuideMenu = () => {
+  useEffect(() => {
+    console.log("SidebarGuideMenu mounted");
+  }, []);
+
   const handleButtonClick = () => {
+    console.log("Open Menu button clicked");
     vscode.postMessage({ command: SIDEBAR.START_APP });
   };
 

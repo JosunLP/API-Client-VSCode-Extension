@@ -1,9 +1,24 @@
 import { render } from "@testing-library/react";
 import React from "react";
+import { vi } from "vitest";
 
 import SidebarMenu from "../features/Sidebar/Menu/SidebarMenu";
+import useStore from "../store/useStore";
+
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("SidebarGuideMenu component test", () => {
+  beforeEach(() => {
+    useStore.mockImplementation((selector) =>
+      selector({
+        sidebarOption: "History",
+        handleSidebarOption: vi.fn(),
+      }),
+    );
+  });
+
   it("should display correct default sidebar message", () => {
     const { getAllByText } = render(<SidebarMenu />);
 

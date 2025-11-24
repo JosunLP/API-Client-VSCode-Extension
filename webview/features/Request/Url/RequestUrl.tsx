@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { REQUEST } from "../../../constants";
 import useStore from "../../../store/useStore";
@@ -12,14 +12,15 @@ const RequestUrl = () => {
     requestOption,
     keyValueTableData,
     handleRequestUrlChange,
+    socketConnected,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestUrl: state.requestUrl,
       requestOption: state.requestOption,
       keyValueTableData: state.keyValueTableData,
       handleRequestUrlChange: state.handleRequestUrlChange,
-    }),
-    shallow,
+      socketConnected: state.socketConnected,
+    })),
   );
 
   useEffect(() => {
@@ -43,7 +44,9 @@ const RequestUrl = () => {
     const parameterRemovedUrl = removeUrlParameter(requestUrl);
     const newUrlWithParams = parameterRemovedUrl + parameterString;
 
-    handleRequestUrlChange(newUrlWithParams);
+    if (newUrlWithParams !== requestUrl) {
+      handleRequestUrlChange(newUrlWithParams);
+    }
   }, [keyValueTableData]);
 
   return (
@@ -51,6 +54,11 @@ const RequestUrl = () => {
       placeholder="Enter Request URL"
       value={requestUrl}
       onChange={(event) => handleRequestUrlChange(event.target.value)}
+      readOnly={socketConnected}
+      style={{
+        opacity: socketConnected ? 0.6 : 1,
+        cursor: socketConnected ? "not-allowed" : "text",
+      }}
     />
   );
 };

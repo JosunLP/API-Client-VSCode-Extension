@@ -1,5 +1,5 @@
 import React, { Fragment, MouseEvent } from "react";
-import shallow from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import DetailOption from "../../../components/DetailOption";
 import MenuOption from "../../../components/MenuOption";
@@ -8,13 +8,18 @@ import useStore from "../../../store/useStore";
 import RequestMenuOption from "./RequestMenuOption";
 
 const RequestMenu = () => {
-  const { requestOption, keyValueTableData, changeRequestOption } = useStore(
-    (state) => ({
+  const {
+    requestOption,
+    requestMethod,
+    keyValueTableData,
+    changeRequestOption,
+  } = useStore(
+    useShallow((state) => ({
       requestOption: state.requestOption,
+      requestMethod: state.requestMethod,
       keyValueTableData: state.keyValueTableData,
       changeRequestOption: state.handleRequestOptionChange,
-    }),
-    shallow,
+    })),
   );
 
   const headersCount = keyValueTableData.filter(
@@ -23,8 +28,20 @@ const RequestMenu = () => {
 
   const handleOptionChange = (event: MouseEvent<HTMLHeadElement>) => {
     const clickedTarget = event.target as HTMLHeadElement;
+    const optionText = clickedTarget.innerText;
 
-    changeRequestOption(clickedTarget.innerText);
+    if (optionText === "Message") {
+      changeRequestOption(COMMON.BODY);
+    } else {
+      changeRequestOption(optionText);
+    }
+  };
+
+  const getMenuOptionLabel = (option: string) => {
+    if (requestMethod === "WEBSOCKET" && option === COMMON.BODY) {
+      return "Message";
+    }
+    return option;
   };
 
   return (
@@ -33,10 +50,16 @@ const RequestMenu = () => {
         {OPTION.REQUEST_MENU_OPTIONS.map((requestMenuOption, index) => (
           <Fragment key={REQUEST.REQUEST + index}>
             <MenuOption
-              currentOption={requestOption}
-              menuOption={requestMenuOption}
+              currentOption={
+                requestOption === COMMON.BODY && requestMethod === "WEBSOCKET"
+                  ? "Message"
+                  : requestOption
+              }
+              menuOption={getMenuOptionLabel(requestMenuOption)}
             >
-              <h3 onClick={handleOptionChange}>{requestMenuOption}</h3>
+              <h3 onClick={handleOptionChange}>
+                {getMenuOptionLabel(requestMenuOption)}
+              </h3>
             </MenuOption>
             {requestMenuOption === COMMON.HEADERS && <p>({headersCount})</p>}
           </Fragment>

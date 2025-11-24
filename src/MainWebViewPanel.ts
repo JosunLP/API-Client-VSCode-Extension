@@ -1,34 +1,34 @@
 import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 
+import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
-import {
-  generateResponseObject,
-  getBody,
-  getHeaders,
-  getNonce,
-  getUrl,
-} from "./utils";
-import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
-import SidebarWebViewPanel from "./SidebarWebViewPanel";
 import ExtentionStateManager from "./ExtensionStateManger";
+import SidebarWebViewPanel from "./SidebarWebViewPanel";
+import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
+import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
+import { WebSocketManager } from "./WebSocketManager";
 
-class MainWebViewPanel {
+/**
+ * Manages the main webview panel for the API Client.
+ */
+class MainWebViewPanel extends BaseWebView {
   private url: string = "";
   private body: string | FormData | URLSearchParams = "";
   private method: string = "";
   private headers: IRequestHeaderInformation = { key: "" };
   public mainPanel: vscode.WebviewPanel | null = null;
-  private extensionUri;
+  // private extensionUri; // Handled by BaseWebView
   public stateManager;
   public sidebarWebViewPanel;
+  private webSocketManager: WebSocketManager | null = null;
 
   constructor(
     extensionUri: vscode.Uri,
     stateManager: ExtentionStateManager,
     sidebarWebViewPanel: SidebarWebViewPanel,
   ) {
-    this.extensionUri = extensionUri;
+    super(extensionUri);
     this.stateManager = stateManager;
     this.sidebarWebViewPanel = sidebarWebViewPanel;
   }
@@ -48,8 +48,11 @@ class MainWebViewPanel {
       },
     );
 
-    this.mainPanel.webview.html = this.getHtmlForWebView(
+    this.webSocketManager = new WebSocketManager(this.mainPanel);
+
+    this.mainPanel.webview.html = this.getHtmlForWebview(
       this.mainPanel.webview,
+      "bundle.js",
     );
 
     this.mainPanel.iconPath = vscode.Uri.joinPath(
@@ -65,8 +68,8 @@ class MainWebViewPanel {
   private receiveWebviewMessage() {
     if (!this.mainPanel) return;
 
-    this.mainPanel.webview.onDidReceiveMessage(
-      ({
+    this.mainPanel.webview.onDidReceiveMessage(async (message) => {
+      const {
         requestMethod,
         requestUrl,
         authOption,
@@ -76,44 +79,72 @@ class MainWebViewPanel {
         bodyRawData,
         keyValueTableData,
         command,
-      }) => {
-        if (command === COMMAND.ALERT_COPY) {
+        socketData,
+      } = message;
+
+      switch (command) {
+        case COMMAND.ALERT_COPY:
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
-
           return;
-        }
 
-        if (requestUrl.length === 0) {
-          vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
-
+        case COMMAND.SOCKET_CONNECT:
+          if (requestUrl) {
+            if (requestMethod === "WEBSOCKET") {
+              const headers = getHeaders(
+                keyValueTableData,
+                authOption,
+                authData,
+              );
+              this.webSocketManager?.connect(requestUrl, headers);
+            }
+          } else {
+            vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
+          }
           return;
-        }
-        const requestObject = {
-          requestMethod,
-          requestUrl,
-          authOption,
-          authData,
-          bodyOption,
-          bodyRawOption,
-          bodyRawData,
-          keyValueTableData,
-          command,
-        };
-        this.url = getUrl(requestUrl);
-        this.method = requestMethod;
-        this.headers = getHeaders(keyValueTableData, authOption, authData);
 
-        // @ts-expect-error
-        this.body = getBody(
-          keyValueTableData,
-          bodyOption,
-          bodyRawOption,
-          bodyRawData,
-        );
+        case COMMAND.SOCKET_DISCONNECT:
+          if (requestMethod === "WEBSOCKET") {
+            this.webSocketManager?.disconnect();
+          }
+          return;
 
-        this.postWebviewMessage(requestObject);
-      },
-    );
+        case COMMAND.SOCKET_EMIT:
+          if (requestMethod === "WEBSOCKET") {
+            this.webSocketManager?.send(socketData);
+          }
+          return;
+      }
+
+      if (requestUrl.length === 0) {
+        vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
+
+        return;
+      }
+      const requestObject = {
+        requestMethod,
+        requestUrl,
+        authOption,
+        authData,
+        bodyOption,
+        bodyRawOption,
+        bodyRawData,
+        keyValueTableData,
+        command,
+      };
+      this.url = getUrl(requestUrl);
+      this.method = requestMethod;
+      this.headers = getHeaders(keyValueTableData, authOption, authData);
+
+      // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
+      this.body = getBody(
+        keyValueTableData,
+        bodyOption,
+        bodyRawOption,
+        bodyRawData,
+      );
+
+      await this.postWebviewMessage(requestObject);
+    });
   }
 
   private async postWebviewMessage(requestObject: IRequestObjectType) {
@@ -182,52 +213,6 @@ class MainWebViewPanel {
         this.stateManager.getExtensionContext(COLLECTION.FAVORITES_COLLECTION),
       );
     }
-  }
-
-  private getHtmlForWebView(panel: vscode.Webview) {
-    const scriptPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "dist",
-      "bundle.js",
-    );
-    const resetCssPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "media",
-      "reset.css",
-    );
-    const vscodeStylesCssPath = vscode.Uri.joinPath(
-      this.extensionUri,
-      "media",
-      "vscode.css",
-    );
-
-    const resetCssSrc = panel.asWebviewUri(resetCssPath);
-    const mainStylesCssSrc = panel.asWebviewUri(vscodeStylesCssPath);
-    const scriptSrc = panel.asWebviewUri(scriptPath);
-    const nonce = getNonce();
-
-    return `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>REST API Tester</title>
-          <link href="${resetCssSrc}" rel="stylesheet">
-          <link href="${mainStylesCssSrc}" rel="stylesheet">
-        </head>
-        <body>
-          <div id="root"></div>
-          <script nonce="${nonce}">
-          let vscode;
-
-          if (typeof acquireVsCodeApi !== "undefined") {
-            vscode = acquireVsCodeApi();
-          }
-          </script>
-          <script src="${scriptSrc}" nonce="${nonce}"></script>
-        </body>
-      </html>`;
   }
 }
 

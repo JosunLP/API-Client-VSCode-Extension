@@ -1,10 +1,12 @@
 import { render } from "@testing-library/react";
-import React from "react";
+import { vi } from "vitest";
 
 import RequestAuthBearerToken from "../features/Request/Authorization/RequestAuthBearerToken";
 import useStore from "../store/useStore";
 
-jest.mock("../store/useStore", () => jest.fn());
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("RequestAuthBearerToken component test", () => {
   it("should display the correct input placeholder text", () => {
