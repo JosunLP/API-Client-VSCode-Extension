@@ -28,7 +28,7 @@ const SelectWrapperContainer = styled.div<ISelectWrapperStyledProps>`
   margin-left: ${(props) => props.$primary && "auto"};
   padding-bottom: ${(props) => (props.$border ? "0.8rem" : "")};
   border-bottom: ${(props) =>
-    props.border ? "0.08rem solid rgba(255, 255, 255, 0.3)" : ""};
+    props.$border ? "0.08rem solid rgba(255, 255, 255, 0.3)" : ""};
 
   h3 {
     opacity: 0.93;
