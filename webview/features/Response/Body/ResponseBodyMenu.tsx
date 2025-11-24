@@ -1,6 +1,6 @@
 import React, { MouseEvent } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import CopyIcon from "../../../components/CopyIcon";
 import SelectWrapper from "../../../components/SelectWrapper";
@@ -11,12 +11,11 @@ import ResponseBodyViewOption from "./ResponseBodyMenuOption";
 const RequestBodyMenu = () => {
   const { responseData, responseBodyOption, handleResponseBodyOptionChange } =
     useStore(
-      (state) => ({
+      useShallow((state) => ({
         responseData: state.responseData,
         responseBodyOption: state.responseBodyOption,
         handleResponseBodyOptionChange: state.handleResponseBodyOptionChange,
-      }),
-      shallow,
+      })),
     );
 
   const handleOptionChange = (event: MouseEvent) => {

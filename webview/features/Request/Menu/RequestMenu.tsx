@@ -1,5 +1,5 @@
 import React, { Fragment, MouseEvent } from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import DetailOption from "../../../components/DetailOption";
 import MenuOption from "../../../components/MenuOption";
@@ -9,12 +9,11 @@ import RequestMenuOption from "./RequestMenuOption";
 
 const RequestMenu = () => {
   const { requestOption, keyValueTableData, changeRequestOption } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestOption: state.requestOption,
       keyValueTableData: state.keyValueTableData,
       changeRequestOption: state.handleRequestOptionChange,
-    }),
-    shallow,
+    })),
   );
 
   const headersCount = keyValueTableData.filter(

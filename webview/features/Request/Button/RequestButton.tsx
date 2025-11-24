@@ -1,17 +1,16 @@
 import React from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import Button from "../../../components/Button";
 import useStore from "../../../store/useStore";
 
 const RequestButton = () => {
   const { requestInProcess, requestMethod, socketConnected } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestInProcess: state.requestInProcess,
       requestMethod: state.requestMethod,
       socketConnected: state.socketConnected,
-    }),
-    shallow,
+    })),
   );
 
   const getButtonText = () => {

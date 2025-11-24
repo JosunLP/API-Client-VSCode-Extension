@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
 import { OPTION, REQUEST } from "../../../constants";
@@ -13,13 +13,12 @@ const RequestBodyRawOptions = () => {
     addRequestBodyHeaders,
     removeRequestBodyHeaders,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       bodyRawOption: state.bodyRawOption,
       handleBodyRawOption: state.handleBodyRawOption,
       addRequestBodyHeaders: state.addRequestBodyHeaders,
       removeRequestBodyHeaders: state.removeRequestBodyHeaders,
-    }),
-    shallow,
+    })),
   );
 
   const handleBodyRawSelectOption = (event: ChangeEvent<HTMLSelectElement>) => {

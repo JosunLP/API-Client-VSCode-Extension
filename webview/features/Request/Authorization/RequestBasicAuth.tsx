@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import InputWrapper from "../../../components/InputWrapper";
 import Wrapper from "../../../components/Wrapper";
@@ -13,13 +13,12 @@ const RequestBasicAuth = () => {
     handleRequestAuthData,
     handleShouldShowPassword,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       authData: state.authData,
       shouldShowPassword: state.shouldShowPassword,
       handleRequestAuthData: state.handleRequestAuthData,
       handleShouldShowPassword: state.handleShouldShowPassword,
-    }),
-    shallow,
+    })),
   );
 
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { COMMON, HEIGHT, OPTION, REQUEST } from "../../../constants";
 import CodeEditor from "../../../shared/CodeEditor";
@@ -16,14 +16,13 @@ const ResponseMenuOption = () => {
     responseBodyOption,
     responseBodyViewFormat,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       responseData: state.responseData?.data,
       responseOption: state.responseOption,
       responseHeaders: state.responseData?.headers,
       responseBodyOption: state.responseBodyOption,
       responseBodyViewFormat: state.responseBodyViewFormat,
-    }),
-    shallow,
+    })),
   );
 
   switch (responseOption) {

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
 import { OPTION, REQUEST } from "../../../constants";
@@ -9,11 +9,10 @@ import RequestAuthMenuOption from "./RequestAuthSelectMenuOption";
 
 const RequestAuthSelectMenu = () => {
   const { authOption, handleRequestAuthType } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       authOption: state.authOption,
       handleRequestAuthType: state.handleRequestAuthType,
-    }),
-    shallow,
+    })),
   );
 
   return (

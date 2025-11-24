@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
 import { OPTION, RESPONSE } from "../../../constants";
@@ -12,13 +12,12 @@ const ResponseBodyViewOption = () => {
     responseBodyViewFormat,
     handleResponseBodyViewFormatChange,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       responseBodyOption: state.responseBodyOption,
       responseBodyViewFormat: state.responseBodyViewFormat,
       handleResponseBodyViewFormatChange:
         state.handleResponseBodyViewFormatChange,
-    }),
-    shallow,
+    })),
   );
 
   return (

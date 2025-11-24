@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import LoadButtonsBlock from "../../../components/LoadButtonsBlock";
 import { HEIGHT, OPTION, REQUEST } from "../../../constants";
@@ -17,7 +17,7 @@ const RequestBodySelectMenuOption = () => {
     codeEditorProps,
     handleBodyRawOptionData,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       bodyOption: state.bodyOption,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption.toLowerCase(),
@@ -37,8 +37,7 @@ const RequestBodySelectMenuOption = () => {
         handleBeautifyButton: state.handleBeautifyButton,
       },
       handleBodyRawOptionData: state.handleBodyRawOptionData,
-    }),
-    shallow,
+    })),
   );
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {

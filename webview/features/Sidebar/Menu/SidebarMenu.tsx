@@ -1,6 +1,6 @@
-import React, { MouseEvent, useLayoutEffect } from "react";
+import React, { MouseEvent, useEffect } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import MenuOption from "../../../components/MenuOption";
 import SelectWrapper from "../../../components/SelectWrapper";
@@ -19,15 +19,14 @@ const SidebarMenu = () => {
     handleUserHistoryCollection,
     handleUserFavoritesCollection,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       sidebarOption: state.sidebarOption,
       deleteCollection: state.deleteCollection,
       handleSidebarOption: state.handleSidebarOption,
       resetFavoriteIconState: state.resetFavoriteIconState,
       handleUserHistoryCollection: state.handleUserHistoryCollection,
       handleUserFavoritesCollection: state.handleUserFavoritesCollection,
-    }),
-    shallow,
+    })),
   );
 
   const handleHeadingTextClick: OnClickCallback = (
@@ -38,18 +37,34 @@ const SidebarMenu = () => {
     handleSidebarOption(clickedHeading.innerText);
   };
 
-  useLayoutEffect(() => {
-    window.addEventListener("message", (message) => {
+  useEffect(() => {
+    console.log("SidebarMenu mounted and setting up message listener");
+    const handleMessage = (message: MessageEvent) => {
       const { messageCategory, history, favorites, target } = message.data;
 
       if (messageCategory === SIDEBAR.COLLECTION_DATA) {
-        handleUserHistoryCollection(history?.userRequestHistory);
-        handleUserFavoritesCollection(favorites?.userRequestHistory);
+        console.log("SidebarMenu received collection data", {
+          history,
+          favorites,
+        });
+        if (history?.userRequestHistory) {
+          handleUserHistoryCollection(history.userRequestHistory);
+        }
+        if (favorites?.userRequestHistory) {
+          handleUserFavoritesCollection(favorites.userRequestHistory);
+        }
       } else if (messageCategory === SIDEBAR.DELETE_COMPLETE) {
         deleteCollection(target);
         resetFavoriteIconState();
       }
-    });
+    };
+
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

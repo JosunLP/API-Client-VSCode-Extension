@@ -3,8 +3,16 @@ import ReactDOM from "react-dom/client";
 
 import SidebarPage from "./pages/SidebarPage";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLDivElement,
-);
+console.log("Sidebar script loaded");
+console.log("Root element:", document.getElementById("root"));
 
-root.render(<SidebarPage />);
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  console.error("Root element not found!");
+} else {
+  console.log("Creating React root...");
+  const root = ReactDOM.createRoot(rootElement as HTMLDivElement);
+  console.log("Rendering SidebarPage...");
+  root.render(<SidebarPage />);
+  console.log("SidebarPage rendered");
+}

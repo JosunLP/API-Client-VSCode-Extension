@@ -59,4 +59,6 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     }),
   );
+
+  console.log("Pulse API Client: Extension activated successfully!");
 }

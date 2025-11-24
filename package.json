@@ -36,14 +36,14 @@
     "api-client"
   ],
   "activationEvents": [
-    "onCommand:rest-api-client.newRequest",
-    "onView:rest-api-client.collectionMenu"
+    "onCommand:pulse-api-client.newRequest",
+    "onView:pulse-api-client.collectionMenu"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "rest-api-client.newRequest",
+        "command": "pulse-api-client.newRequest",
         "category": "Start",
         "title": "New Request"
       }

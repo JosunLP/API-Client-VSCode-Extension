@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { COMMON } from "../../../constants";
 import useStore from "../../../store/useStore";
@@ -17,7 +17,7 @@ const RequestPanel = () => {
     handleRequestProcessStatus,
     socketConnected,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestData: {
         authData: state.authData,
         requestUrl: state.requestUrl,
@@ -31,8 +31,7 @@ const RequestPanel = () => {
       requestMenuHeight: state.requestMenuHeight,
       handleRequestProcessStatus: state.handleRequestProcessStatus,
       socketConnected: state.socketConnected,
-    }),
-    shallow,
+    })),
   );
 
   const handleFormSubmit = (event: FormEvent) => {

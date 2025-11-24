@@ -24,6 +24,7 @@ class SidebarWebViewPanel
   }
 
   resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
+    console.log("Pulse API Client: Resolving sidebar webview...");
     this.sidebarWebview = webviewView;
 
     this.sidebarWebview.webview.options = {
@@ -34,22 +35,36 @@ class SidebarWebViewPanel
       ],
     };
 
-    this.sidebarWebview.webview.html = this.getHtmlForWebview(
-      webviewView.webview,
-      "sidebar.js",
+    const html = this.getHtmlForWebview(webviewView.webview, "sidebar.js");
+    console.log("Pulse API Client: Generated HTML length:", html.length);
+    this.sidebarWebview.webview.html = html;
+
+    const historyData = this.stateManager.getExtensionContext(
+      COLLECTION.HISTORY_COLLECTION,
+    );
+    const favoritesData = this.stateManager.getExtensionContext(
+      COLLECTION.FAVORITES_COLLECTION,
     );
 
-    this.sidebarWebview.webview.postMessage({
-      messageCategory: CATEGORY.COLLECTION_DATA,
-      history: this.stateManager.getExtensionContext(
-        COLLECTION.HISTORY_COLLECTION,
-      ),
-      favorites: this.stateManager.getExtensionContext(
-        COLLECTION.FAVORITES_COLLECTION,
-      ),
-    });
-
     this.receiveSidebarWebViewMessage();
+
+    // Send initial data after a short delay to ensure React has mounted
+    setTimeout(() => {
+      if (this.sidebarWebview) {
+        console.log("Pulse API Client: Sending initial data to sidebar...", {
+          history: historyData,
+          favorites: favoritesData,
+        });
+
+        this.sidebarWebview.webview.postMessage({
+          messageCategory: CATEGORY.COLLECTION_DATA,
+          history: historyData,
+          favorites: favoritesData,
+        });
+      }
+    }, 100);
+
+    console.log("Pulse API Client: Sidebar webview resolved successfully!");
   }
 
   postMainWebViewPanelMessage(

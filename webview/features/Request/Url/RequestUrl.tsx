@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { REQUEST } from "../../../constants";
 import useStore from "../../../store/useStore";
@@ -13,13 +13,12 @@ const RequestUrl = () => {
     keyValueTableData,
     handleRequestUrlChange,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       requestUrl: state.requestUrl,
       requestOption: state.requestOption,
       keyValueTableData: state.keyValueTableData,
       handleRequestUrlChange: state.handleRequestUrlChange,
-    }),
-    shallow,
+    })),
   );
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import { REQUEST, SIDEBAR } from "../../../constants";
 import { ISidebarSliceList } from "../../../store/slices/type";
@@ -16,7 +16,7 @@ const SidebarMenuOption = () => {
     addCollectionToFavorites,
     removeFromFavoriteCollection,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       sidebarOption: state.sidebarOption,
       userFavorites: state.userFavorites,
       userRequestHistory: state.userRequestHistory,
@@ -24,9 +24,14 @@ const SidebarMenuOption = () => {
       handleUserFavoriteIcon: state.handleUserFavoriteIcon,
       addCollectionToFavorites: state.addCollectionToFavorites,
       removeFromFavoriteCollection: state.removeFromFavoriteCollection,
-    }),
-    shallow,
+    })),
   );
+
+  console.log("SidebarMenuOption render", {
+    sidebarOption,
+    historyCount: userRequestHistory?.length,
+    favoritesCount: userFavorites?.length,
+  });
 
   const sidebarCollectionProps = {
     sidebarOption,

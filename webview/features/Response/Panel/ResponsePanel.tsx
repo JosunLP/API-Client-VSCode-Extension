@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { shallow } from "zustand/shallow";
+import { useShallow } from "zustand/react/shallow";
 
 import Loader from "../../../components/Loader";
 import { COMMON, RESPONSE } from "../../../constants";
@@ -19,7 +19,7 @@ const ResponsePanel = () => {
     handleSidebarCollectionClick,
     handleSocketConnection,
   } = useStore(
-    (state) => ({
+    useShallow((state) => ({
       responseData: state.responseData,
       requestInProcess: state.requestInProcess,
       handleResponseData: state.handleResponseData,
@@ -27,8 +27,7 @@ const ResponsePanel = () => {
       handleSidebarCollectionClick: state.handleSidebarCollectionClick,
       handleSidebarCollectionHeaders: state.handleSidebarCollectionHeaders,
       handleSocketConnection: state.handleSocketConnection,
-    }),
-    shallow,
+    })),
   );
 
   const handleExtensionMessage = (event: MessageEvent) => {
@@ -124,6 +123,11 @@ const ResponsePanel = () => {
 
   useEffect(() => {
     window.addEventListener("message", handleExtensionMessage);
+
+    return () => {
+      window.removeEventListener("message", handleExtensionMessage);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   switch (requestInProcess) {
