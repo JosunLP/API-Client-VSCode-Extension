@@ -1,4 +1,4 @@
-import React, { MouseEvent,useLayoutEffect } from "react";
+import React, { MouseEvent, useLayoutEffect } from "react";
 import styled from "styled-components";
 import { shallow } from "zustand/shallow";
 

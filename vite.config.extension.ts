@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
-    target: "node16",
+    target: "node20",
     lib: {
       entry: path.resolve(__dirname, "src/extension.ts"),
       fileName: () => "extension.js",
