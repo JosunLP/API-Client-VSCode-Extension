@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+
 import { REQUEST } from "../../constants";
 import { IRequestDataSlice, ISidebarResponse } from "./type";
 

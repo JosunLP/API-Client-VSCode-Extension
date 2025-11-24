@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+
 import { IMessageProps, IMessageStyledProps } from "./type";
 
 const Message = ({ children, primary }: IMessageProps) => {
-  return <MessageWrapper primary={primary}>{children}</MessageWrapper>;
+  return <MessageWrapper $primary={primary}>{children}</MessageWrapper>;
 };
 
 const MessageWrapper = styled.div<IMessageStyledProps>`
@@ -11,7 +12,7 @@ const MessageWrapper = styled.div<IMessageStyledProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: ${(props) => (props.primary ? "1rem" : " 3.8rem")};
+  margin-top: ${(props) => (props.$primary ? "1rem" : " 3.8rem")};
   overflow-x: hidden;
 
   h2 {

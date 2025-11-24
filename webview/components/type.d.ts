@@ -6,7 +6,7 @@ export interface IButtonProps {
   handleButtonClick?: () => void;
 }
 export interface IButtonStyledProps {
-  primary: boolean;
+  $primary: boolean;
   type?: string;
 }
 
@@ -26,7 +26,7 @@ export interface IInformationProps {
 }
 
 export interface IInformationStyledProps {
-  textColor: string;
+  $textColor: string;
 }
 
 export interface ICommonChildProps {
@@ -63,7 +63,7 @@ export interface IMessageProps {
 }
 
 export interface IMessageStyledProps {
-  primary?: boolean;
+  $primary?: boolean;
 }
 
 export interface ISelectWrapperProps {
@@ -73,7 +73,7 @@ export interface ISelectWrapperProps {
   secondary?: boolean;
 }
 export interface ISelectWrapperStyledProps {
-  primary?: boolean;
-  secondary?: boolean;
-  border?: boolean;
+  $primary?: boolean;
+  $secondary?: boolean;
+  $border?: boolean;
 }

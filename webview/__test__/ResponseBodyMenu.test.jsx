@@ -1,9 +1,25 @@
 import { render } from "@testing-library/react";
-import React from "react";
+import { vi } from "vitest";
 
 import ResponseBodyMenu from "../features/Response/Body/ResponseBodyMenu";
+import useStore from "../store/useStore";
+
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("ResponseBodyMenu component test", () => {
+  beforeEach(() => {
+    useStore.mockImplementation((selector) =>
+      selector({
+        responseBodyOption: "Pretty",
+        responseBodyContent: "JSON",
+        handleResponseBodyOption: vi.fn(),
+        handleResponseBodyContent: vi.fn(),
+      }),
+    );
+  });
+
   it("should render correct default response body option", () => {
     const { getByText } = render(<ResponseBodyMenu />);
 

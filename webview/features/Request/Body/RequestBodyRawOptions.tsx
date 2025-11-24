@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import styled from "styled-components";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 
 import SelectWrapper from "../../../components/SelectWrapper";
 import { OPTION, REQUEST } from "../../../constants";
@@ -35,7 +35,7 @@ const RequestBodyRawOptions = () => {
     } else {
       removeRequestBodyHeaders();
       addRequestBodyHeaders(
-        selectedOptionElement.getAttribute("header-type") || "",
+        selectedOptionElement.getAttribute("data-header-type") || "",
       );
     }
   };
@@ -50,7 +50,7 @@ const RequestBodyRawOptions = () => {
           ({ option, headerField }, index) => (
             <option
               key={REQUEST.RAW + index}
-              header-type={headerField}
+              data-header-type={headerField}
               value={option}
             >
               {option}

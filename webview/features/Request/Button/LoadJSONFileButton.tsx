@@ -1,5 +1,5 @@
-import React from "react";
-import shallow from "zustand/shallow";
+import React, { ChangeEvent } from "react";
+import { shallow } from "zustand/shallow";
 
 import Button from "../../../components/Button";
 import useStore from "../../../store/useStore";
@@ -18,7 +18,9 @@ const LoadJSONFileButton = ({
     shallow,
   );
 
-  async function loadSettingsFromJSONFile(event: any) {
+  async function loadSettingsFromJSONFile(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
     const selectedFiles = event.target.files;
 
     if (!selectedFiles) return;
@@ -40,7 +42,7 @@ const LoadJSONFileButton = ({
     accept: ".json",
   };
 
-  for (let attr in inputAttrs) {
+  for (const attr in inputAttrs) {
     fileInput.setAttribute(
       attr,
       inputAttrs[attr as keyof { type: string; accept: string }],

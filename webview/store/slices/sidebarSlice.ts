@@ -1,9 +1,10 @@
 import { StateCreator } from "zustand";
+
 import { SIDEBAR } from "../../constants";
 import {
   ISidebarSlice,
-  IUserRequestSidebarState,
   ISidebarSliceList,
+  IUserRequestSidebarState,
 } from "./type";
 
 const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (

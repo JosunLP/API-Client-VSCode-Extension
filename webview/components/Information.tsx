@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+
 import { IInformationProps, IInformationStyledProps } from "./type";
 
 const Information = ({ children, textColor }: IInformationProps) => {
   return (
-    <InformationWrapper textColor={textColor}>{children}</InformationWrapper>
+    <InformationWrapper $textColor={textColor}>{children}</InformationWrapper>
   );
 };
 
@@ -15,7 +16,7 @@ const InformationWrapper = styled.div<IInformationStyledProps>`
 
   h4 {
     font-weight: 500;
-    color: ${(props) => props.textColor};
+    color: ${(props) => props.$textColor};
   }
 
   p {

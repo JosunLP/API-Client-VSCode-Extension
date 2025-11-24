@@ -1,39 +1,54 @@
-import { render, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { vi } from "vitest";
 
 import RequestMethod from "../features/Request/Method/RequestMethod";
+import useStore from "../store/useStore";
+
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("RequestMethod component test", () => {
+  beforeEach(() => {
+    useStore.mockImplementation((selector) =>
+      selector({
+        requestMethod: "GET",
+        handleRequestMethodChange: vi.fn(),
+      }),
+    );
+  });
+
   it("should display correct default select option", () => {
     const { getByRole } = render(<RequestMethod />);
-    const selectElement = getByRole("option", {
+    const optionElement = getByRole("option", {
       name: "GET",
-    }) as HTMLSelectElement;
-    expect(selectElement.options).toBe(true);
+    }) as HTMLOptionElement;
+    expect(optionElement.selected).toBe(true);
   });
 
   it("should display the correct number of options", () => {
     const { getAllByRole } = render(<RequestMethod />);
 
-    expect(getAllByRole("option").length).toBe(5);
+    expect(getAllByRole("option").length).toBe(7);
   });
 
-  it("should allow user to select request method", async () => {
+  it("should call handler when user selects request method", async () => {
+    const handleRequestMethodChange = vi.fn();
+    useStore.mockImplementation((selector) =>
+      selector({
+        requestMethod: "GET",
+        handleRequestMethodChange,
+      }),
+    );
     const { getByRole } = render(<RequestMethod />);
-    await waitFor(() =>
-      userEvent.selectOptions(
-        getByRole("combobox"),
 
-        getByRole("option", { name: "POST" }),
-      ),
+    await userEvent.selectOptions(
+      getByRole("combobox"),
+      getByRole("option", { name: "POST" }),
     );
 
-    const selectElement = getByRole("option", {
-      name: "POST",
-    }) as HTMLSelectElement;
-
-    expect(selectElement.options).toBe(true);
-    expect(selectElement.options).toBe(false);
+    expect(handleRequestMethodChange).toHaveBeenCalledWith("POST");
   });
 });

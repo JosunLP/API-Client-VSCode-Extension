@@ -1,6 +1,17 @@
+import { vi } from "vitest";
+
 import calculateCollectionTime from "../utils/calculateCollectionTime";
 
 describe("calculateCollectionTime utility function tests", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1658154982525);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should return correct time when milliseconds is passed to a function", () => {
     const firstMockTime = calculateCollectionTime(1654698982525);
     const secondMockTime = calculateCollectionTime(1675694952821);

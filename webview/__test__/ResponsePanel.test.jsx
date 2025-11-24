@@ -1,10 +1,12 @@
 import { render } from "@testing-library/react";
-import React from "react";
+import { vi } from "vitest";
 
 import ResponsePanel from "../features/Response/Panel/ResponsePanel";
 import useStore from "../store/useStore";
 
-jest.mock("../store/useStore", () => jest.fn());
+vi.mock("../store/useStore", () => ({
+  default: vi.fn(),
+}));
 
 describe("ResponsePanel component test", () => {
   it("should display default message when response panel menu is shown", () => {

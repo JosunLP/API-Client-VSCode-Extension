@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
-import { HEIGHT } from "../../constants";
 
+import { HEIGHT } from "../../constants";
 import { IResizseBarSlice } from "./type";
 
 const resizebarSlice: StateCreator<

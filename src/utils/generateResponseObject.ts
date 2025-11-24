@@ -12,7 +12,7 @@ async function generateResponseObject(
   const sentTime = new Date().getTime();
 
   try {
-    // @ts-expect-error
+    // @ts-expect-error: axios configuration type mismatch
     const response = await axios(configuration);
 
     const receivedTime = new Date().getTime();
@@ -40,6 +40,7 @@ async function generateResponseObject(
     ).length;
 
     return responseDataObject;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.response) {
       const receivedTime = new Date().getTime();

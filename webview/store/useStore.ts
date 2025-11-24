@@ -1,17 +1,16 @@
-import create from "zustand";
+import { create } from "zustand";
 
 import keyValueTableDataSlice from "./slices/keyValueTableDataSlice";
 import requestDataSlice from "./slices/requestDataSlice";
 import resizeBarSlice from "./slices/resizeBarSlice";
 import responseDataSlice from "./slices/responseDataSlice";
 import sidebarSlice from "./slices/sidebarSlice";
-
 import {
-  ISidebarSlice,
+  IKeyValueTableDataSlice,
+  IRequestDataSlice,
   IResizseBarSlice,
   IResponseDataSlice,
-  IRequestDataSlice,
-  IKeyValueTableDataSlice,
+  ISidebarSlice,
 } from "./slices/type";
 
 const useStore = create<
