@@ -10,6 +10,7 @@ import { calculateCollectionTime, generateMethodColor } from "../../../utils";
 import SidebarDeleteAllButton from "../Button/SidebarDeleteAllButton";
 import SibebarEmptyCollectionMenu from "../Menu/SidebarEmptyCollectionMenu";
 import EmptySearchResultMessage from "../Message/EmptySearchResultMessage";
+import ProjectAssignMenu from "./ProjectAssignMenu";
 import ProjectGroup from "./ProjectGroup";
 
 interface IFavoriteItem {
@@ -56,6 +57,7 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
   const [searchInputValue, setSearchInputValue] = useState("");
   const [renamingProjectId, setRenamingProjectId] = useState<string | null>(null);
   const [newProjectName, setNewProjectName] = useState("");
+  const [assigningFavoriteId, setAssigningFavoriteId] = useState<string | null>(null);
 
   // Group favorites by project
   const groupedFavorites: Record<string, IFavoriteItem[]> = {};
@@ -121,10 +123,7 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
           <div role="iconWrapper">
             <FaFolder
               className="sidebarIcon"
-              onClick={() => {
-                const projectId = prompt("Enter project ID (leave empty to unassign):");
-                onAssignToProject(favorite.id, projectId || null);
-              }}
+              onClick={() => setAssigningFavoriteId(favorite.id)}
               title="Assign to project"
             />
             <FaTrashAlt
@@ -140,6 +139,19 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
 
   return (
     <>
+      {assigningFavoriteId && (
+        <ProjectAssignMenu
+          projects={projects}
+          currentProjectId={
+            userFavorites.find((f) => f.id === assigningFavoriteId)?.projectId
+          }
+          onAssign={(projectId) => {
+            onAssignToProject(assigningFavoriteId, projectId);
+            setAssigningFavoriteId(null);
+          }}
+          onClose={() => setAssigningFavoriteId(null)}
+        />
+      )}
       {userFavorites?.length ? (
         <UtilitySectionWrapper>
           <input

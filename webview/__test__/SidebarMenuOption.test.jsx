@@ -11,8 +11,19 @@ vi.mock("../store/useStore", () => ({
 describe("SidebarMenuOption component test", () => {
   it("should render empty history collection message", () => {
     useStore.mockImplementationOnce(() => ({
+      projects: [],
       sidebarOption: "History",
       userRequestHistory: [],
+      userFavorites: [],
+      handleUserDeleteIcon: vi.fn(),
+      handleUserFavoriteIcon: vi.fn(),
+      addCollectionToFavorites: vi.fn(),
+      removeFromFavoriteCollection: vi.fn(),
+      addProject: vi.fn(),
+      updateProject: vi.fn(),
+      deleteProject: vi.fn(),
+      toggleProjectCollapse: vi.fn(),
+      assignToProject: vi.fn(),
     }));
 
     const { getByText } = render(<SidebarMenuOption />);
@@ -27,8 +38,19 @@ describe("SidebarMenuOption component test", () => {
 
   it("should render empty favorites collection message", () => {
     useStore.mockImplementationOnce(() => ({
+      projects: [],
       sidebarOption: "Favorites",
       userRequestHistory: [],
+      userFavorites: [],
+      handleUserDeleteIcon: vi.fn(),
+      handleUserFavoriteIcon: vi.fn(),
+      addCollectionToFavorites: vi.fn(),
+      removeFromFavoriteCollection: vi.fn(),
+      addProject: vi.fn(),
+      updateProject: vi.fn(),
+      deleteProject: vi.fn(),
+      toggleProjectCollapse: vi.fn(),
+      assignToProject: vi.fn(),
     }));
 
     const { getByText } = render(<SidebarMenuOption />);
