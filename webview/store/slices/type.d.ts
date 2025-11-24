@@ -1,5 +1,6 @@
 export interface ISidebarSlice extends ISidebarSliceList {
   sidebarOption: string | null;
+  projects: IProject[];
   handleSidebarOption: (option: string) => void;
   handleUserHistoryCollection: (
     historyData: IUserRequestSidebarState[],
@@ -16,6 +17,13 @@ export interface ISidebarSlice extends ISidebarSliceList {
   removeFromFavoriteCollection: (id: string) => void;
   resetFavoriteIconState: () => void;
   deleteCollection: (targetState: string) => void;
+  // Project management
+  handleProjects: (projects: IProject[]) => void;
+  addProject: (name: string) => void;
+  updateProject: (id: string, name: string) => void;
+  deleteProject: (id: string) => void;
+  toggleProjectCollapse: (id: string) => void;
+  assignToProject: (favoriteId: string, projectId: string | null) => void;
 }
 
 export interface ISidebarSliceList {
@@ -33,6 +41,14 @@ export interface IUserRequestSidebarState {
   isUserFavorite: boolean;
   id: string;
   requestObject: RequestObject;
+  projectId?: string; // Optional project grouping
+}
+
+export interface IProject {
+  id: string;
+  name: string;
+  createdTime: number;
+  collapsed?: boolean;
 }
 
 export interface Headers {

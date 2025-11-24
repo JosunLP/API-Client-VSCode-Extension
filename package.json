@@ -37,8 +37,7 @@
     "api-client"
   ],
   "activationEvents": [
-    "onCommand:pulse-api-client.newRequest",
-    "onView:pulse-api-client.collectionMenu"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {

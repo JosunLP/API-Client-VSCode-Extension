@@ -5,9 +5,11 @@ import { REQUEST, SIDEBAR } from "../../../constants";
 import { ISidebarSliceList } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import SidebarCollection from "../Collection/SidebarCollection";
+import SidebarFavoritesCollection from "../Collection/SidebarFavoritesCollection";
 
 const SidebarMenuOption = () => {
   const {
+    projects,
     userFavorites,
     sidebarOption,
     userRequestHistory,
@@ -15,8 +17,14 @@ const SidebarMenuOption = () => {
     handleUserFavoriteIcon,
     addCollectionToFavorites,
     removeFromFavoriteCollection,
+    addProject,
+    updateProject,
+    deleteProject,
+    toggleProjectCollapse,
+    assignToProject,
   } = useStore(
     useShallow((state) => ({
+      projects: state.projects,
       sidebarOption: state.sidebarOption,
       userFavorites: state.userFavorites,
       userRequestHistory: state.userRequestHistory,
@@ -24,6 +32,11 @@ const SidebarMenuOption = () => {
       handleUserFavoriteIcon: state.handleUserFavoriteIcon,
       addCollectionToFavorites: state.addCollectionToFavorites,
       removeFromFavoriteCollection: state.removeFromFavoriteCollection,
+      addProject: state.addProject,
+      updateProject: state.updateProject,
+      deleteProject: state.deleteProject,
+      toggleProjectCollapse: state.toggleProjectCollapse,
+      assignToProject: state.assignToProject,
     })),
   );
 
@@ -114,11 +127,67 @@ const SidebarMenuOption = () => {
     },
   };
 
+  const handleAddProject = () => {
+    const projectName = prompt("Enter project name:");
+    if (projectName && projectName.trim()) {
+      addProject(projectName.trim());
+      // Persist to backend
+      vscode.postMessage({
+        command: "ADD_PROJECT",
+        name: projectName.trim(),
+      });
+    }
+  };
+
+  const handleRenameProject = (id: string, newName: string) => {
+    updateProject(id, newName);
+    // Persist to backend
+    vscode.postMessage({
+      command: "UPDATE_PROJECT",
+      id,
+      name: newName,
+    });
+  };
+
+  const handleDeleteProject = (id: string) => {
+    deleteProject(id);
+    // Persist to backend
+    vscode.postMessage({
+      command: "DELETE_PROJECT",
+      id,
+    });
+  };
+
+  const handleToggleProjectCollapse = (id: string) => {
+    toggleProjectCollapse(id);
+    // Persist to backend
+    vscode.postMessage({
+      command: "TOGGLE_PROJECT_COLLAPSE",
+      id,
+    });
+  };
+
+  const handleAssignToProject = (favoriteId: string, projectId: string | null) => {
+    assignToProject(favoriteId, projectId);
+    // Persist to backend
+    vscode.postMessage({
+      command: "ASSIGN_TO_PROJECT",
+      favoriteId,
+      projectId,
+    });
+  };
+
   switch (sidebarOption) {
     case SIDEBAR.FAVORITES:
       return (
-        <SidebarCollection
-          userCollection={userFavorites}
+        <SidebarFavoritesCollection
+          userFavorites={userFavorites}
+          projects={projects}
+          onAddProject={handleAddProject}
+          onRenameProject={handleRenameProject}
+          onDeleteProject={handleDeleteProject}
+          onToggleProjectCollapse={handleToggleProjectCollapse}
+          onAssignToProject={handleAssignToProject}
           {...sidebarCollectionProps}
         />
       );

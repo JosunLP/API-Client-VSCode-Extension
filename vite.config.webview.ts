@@ -23,6 +23,20 @@ export default defineConfig({
         chunkFileNames: "chunks/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash].[ext]",
         format: "es",
+        manualChunks: (id) => {
+          // Separate postman-code-generators into its own chunk for lazy loading
+          if (id.includes("postman-code-generators")) {
+            return "code-generators";
+          }
+          // Separate Monaco editor into its own chunk
+          if (id.includes("@monaco-editor")) {
+            return "monaco-editor";
+          }
+          // Keep other large node_modules in a vendor chunk
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
       },
     },
     outDir: "dist",

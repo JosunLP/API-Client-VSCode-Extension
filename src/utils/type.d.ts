@@ -8,6 +8,14 @@ export interface IUserRequestSidebarState {
   isUserFavorite: boolean;
   id: string;
   requestObject: RequestObject;
+  projectId?: string; // Optional project grouping
+}
+
+export interface IProject {
+  id: string;
+  name: string;
+  createdTime: number;
+  collapsed?: boolean;
 }
 
 export interface Headers {

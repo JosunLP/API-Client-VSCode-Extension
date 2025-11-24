@@ -4,7 +4,7 @@ import { BaseWebView } from "./BaseWebView";
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
 import ExtentionStateManager from "./ExtensionStateManger";
 import { filterObjectKey, generateResponseObject } from "./utils";
-import { IUserRequestSidebarState } from "./utils/type";
+import { IProject, IUserRequestSidebarState } from "./utils/type";
 
 /**
  * Manages the sidebar webview panel.
@@ -45,6 +45,9 @@ class SidebarWebViewPanel
     const favoritesData = this.stateManager.getExtensionContext(
       COLLECTION.FAVORITES_COLLECTION,
     );
+    const projectsData = this.stateManager.getExtensionContext(
+      COLLECTION.PROJECTS_COLLECTION,
+    );
 
     this.receiveSidebarWebViewMessage();
 
@@ -54,12 +57,14 @@ class SidebarWebViewPanel
         console.log("Pulse API Client: Sending initial data to sidebar...", {
           history: historyData,
           favorites: favoritesData,
+          projects: projectsData,
         });
 
         this.sidebarWebview.webview.postMessage({
           messageCategory: CATEGORY.COLLECTION_DATA,
           history: historyData,
           favorites: favoritesData,
+          projects: projectsData,
         });
       }
     }, 100);
@@ -77,10 +82,15 @@ class SidebarWebViewPanel
   ) {
     if (!this.sidebarWebview) return;
 
+    const projectsData = this.stateManager.getExtensionContext(
+      COLLECTION.PROJECTS_COLLECTION,
+    );
+
     this.sidebarWebview.webview.postMessage({
       messageCategory: CATEGORY.COLLECTION_DATA,
       history: userHistoryData,
       favorites: userFavoritesData,
+      projects: projectsData,
     });
   }
 
@@ -92,13 +102,92 @@ class SidebarWebViewPanel
         command,
         id,
         target,
+        name,
+        favoriteId,
+        projectId,
       }: {
         command: string;
-        id: string;
-        target: string;
+        id?: string;
+        target?: string;
+        name?: string;
+        favoriteId?: string;
+        projectId?: string | null;
       }) => {
         if (command === COMMAND.START_APP) {
           vscode.commands.executeCommand(COMMAND.MAIN_WEB_VIEW_PANEL);
+        } else if (command === "ADD_PROJECT") {
+          // Add new project
+          const projects = (this.stateManager.getExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+          ).userRequestHistory as IProject[] | undefined) || [];
+          const newProject: IProject = {
+            id: `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: name || "New Project",
+            createdTime: Date.now(),
+            collapsed: false,
+          };
+          await this.stateManager.addExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+            { history: [...projects, newProject] },
+          );
+        } else if (command === "UPDATE_PROJECT") {
+          // Update project name
+          const projects = (this.stateManager.getExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+          ).userRequestHistory as IProject[] | undefined) || [];
+          const updatedProjects = projects.map((p) =>
+            p.id === id ? { ...p, name: name || p.name } : p,
+          );
+          await this.stateManager.addExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+            { history: updatedProjects },
+          );
+        } else if (command === "DELETE_PROJECT") {
+          // Delete project and unassign favorites
+          const projects = (this.stateManager.getExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+          ).userRequestHistory as IProject[] | undefined) || [];
+          const updatedProjects = projects.filter((p) => p.id !== id);
+          await this.stateManager.addExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+            { history: updatedProjects },
+          );
+          
+          // Unassign favorites from deleted project
+          const favorites = (this.stateManager.getExtensionContext(
+            COLLECTION.FAVORITES_COLLECTION,
+          ).userRequestHistory as IUserRequestSidebarState[] | undefined) || [];
+          const updatedFavorites = favorites.map((f) =>
+            f.projectId === id ? { ...f, projectId: undefined } : f,
+          );
+          await this.stateManager.addExtensionContext(
+            COLLECTION.FAVORITES_COLLECTION,
+            { history: updatedFavorites },
+          );
+        } else if (command === "TOGGLE_PROJECT_COLLAPSE") {
+          // Toggle project collapse state
+          const projects = (this.stateManager.getExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+          ).userRequestHistory as IProject[] | undefined) || [];
+          const updatedProjects = projects.map((p) =>
+            p.id === id ? { ...p, collapsed: !p.collapsed } : p,
+          );
+          await this.stateManager.addExtensionContext(
+            COLLECTION.PROJECTS_COLLECTION,
+            { history: updatedProjects },
+          );
+        } else if (command === "ASSIGN_TO_PROJECT") {
+          // Assign favorite to project
+          const favorites = (this.stateManager.getExtensionContext(
+            COLLECTION.FAVORITES_COLLECTION,
+          ).userRequestHistory as IUserRequestSidebarState[] | undefined) || [];
+          const updatedFavorites = favorites.map((f) =>
+            f.id === favoriteId ? { ...f, projectId: projectId || undefined } : f,
+          );
+          await this.stateManager.addExtensionContext(
+            COLLECTION.FAVORITES_COLLECTION,
+            { history: updatedFavorites },
+          );
         } else if (command === COMMAND.ADD_TO_FAVORITES) {
           await this.stateManager.updateExtensionContext(
             COLLECTION.HISTORY_COLLECTION,

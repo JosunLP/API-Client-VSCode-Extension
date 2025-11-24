@@ -18,6 +18,7 @@ const SidebarMenu = () => {
     resetFavoriteIconState,
     handleUserHistoryCollection,
     handleUserFavoritesCollection,
+    handleProjects,
   } = useStore(
     useShallow((state) => ({
       sidebarOption: state.sidebarOption,
@@ -26,6 +27,7 @@ const SidebarMenu = () => {
       resetFavoriteIconState: state.resetFavoriteIconState,
       handleUserHistoryCollection: state.handleUserHistoryCollection,
       handleUserFavoritesCollection: state.handleUserFavoritesCollection,
+      handleProjects: state.handleProjects,
     })),
   );
 
@@ -40,18 +42,22 @@ const SidebarMenu = () => {
   useEffect(() => {
     console.log("SidebarMenu mounted and setting up message listener");
     const handleMessage = (message: MessageEvent) => {
-      const { messageCategory, history, favorites, target } = message.data;
+      const { messageCategory, history, favorites, projects, target } = message.data;
 
       if (messageCategory === SIDEBAR.COLLECTION_DATA) {
         console.log("SidebarMenu received collection data", {
           history,
           favorites,
+          projects,
         });
         if (history?.userRequestHistory) {
           handleUserHistoryCollection(history.userRequestHistory);
         }
         if (favorites?.userRequestHistory) {
           handleUserFavoritesCollection(favorites.userRequestHistory);
+        }
+        if (projects?.userRequestHistory) {
+          handleProjects(projects.userRequestHistory);
         }
       } else if (messageCategory === SIDEBAR.DELETE_COMPLETE) {
         deleteCollection(target);

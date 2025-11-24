@@ -1,24 +1,17 @@
 import * as vscode from "vscode";
 
-import { COLLECTION, COMMAND, MESSAGE } from "./constants";
+import { COLLECTION, COMMAND } from "./constants";
 import ExtentionStateManager from "./ExtensionStateManger";
 import MainWebViewPanel from "./MainWebViewPanel";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
 
 export async function activate(context: vscode.ExtensionContext) {
   console.log("Pulse API Client: Activating extension...");
+  
+  // Initialize state manager immediately for data integrity
   const StateManager = new ExtentionStateManager(context);
-  const SidebarWebViewProvider = new SidebarWebViewPanel(
-    context.extensionUri,
-    StateManager,
-  );
-  const MainWebViewProvider = new MainWebViewPanel(
-    context.extensionUri,
-    StateManager,
-    SidebarWebViewProvider,
-  );
-  let currentPanel: vscode.WebviewPanel | null = null;
-
+  
+  // Ensure collections exist but don't initialize heavy providers yet
   if (!StateManager.getExtensionContext(COLLECTION.HISTORY_COLLECTION)) {
     await StateManager.addExtensionContext(COLLECTION.HISTORY_COLLECTION, {
       history: [],
@@ -31,28 +24,67 @@ export async function activate(context: vscode.ExtensionContext) {
     });
   }
 
-  vscode.window.showInformationMessage(MESSAGE.WELCOME_MESSAGE);
+  if (!StateManager.getExtensionContext(COLLECTION.PROJECTS_COLLECTION)) {
+    await StateManager.addExtensionContext(COLLECTION.PROJECTS_COLLECTION, {
+      history: [],
+    });
+  }
 
+  // Lazy initialization of providers - only create when needed
+  let SidebarWebViewProvider: SidebarWebViewPanel | null = null;
+  let MainWebViewProvider: MainWebViewPanel | null = null;
+  let currentPanel: vscode.WebviewPanel | null = null;
+
+  const getSidebarProvider = () => {
+    if (!SidebarWebViewProvider) {
+      SidebarWebViewProvider = new SidebarWebViewPanel(
+        context.extensionUri,
+        StateManager,
+      );
+    }
+    return SidebarWebViewProvider;
+  };
+
+  const getMainProvider = () => {
+    if (!MainWebViewProvider) {
+      const sidebar = getSidebarProvider();
+      MainWebViewProvider = new MainWebViewPanel(
+        context.extensionUri,
+        StateManager,
+        sidebar,
+      );
+    }
+    return MainWebViewProvider;
+  };
+
+  // Register sidebar provider lazily
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       COMMAND.SIDEBAR_WEB_VIEW_PANEL,
-      SidebarWebViewProvider,
+      {
+        resolveWebviewView: (webviewView) => {
+          return getSidebarProvider().resolveWebviewView(webviewView);
+        },
+      },
       { webviewOptions: { retainContextWhenHidden: true } },
     ),
   );
 
+  // Register main command
   context.subscriptions.push(
     vscode.commands.registerCommand(COMMAND.MAIN_WEB_VIEW_PANEL, () => {
       if (currentPanel) {
         currentPanel.reveal(vscode.ViewColumn.One);
       } else {
-        currentPanel = MainWebViewProvider.initializeWebView();
+        const mainProvider = getMainProvider();
+        currentPanel = mainProvider.initializeWebView();
 
-        SidebarWebViewProvider.mainWebViewPanel = MainWebViewProvider.mainPanel;
+        const sidebar = getSidebarProvider();
+        sidebar.mainWebViewPanel = mainProvider.mainPanel;
 
-        if (MainWebViewProvider.mainPanel) {
-          MainWebViewProvider.mainPanel.onDidDispose(() => {
-            SidebarWebViewProvider.mainWebViewPanel = null;
+        if (mainProvider.mainPanel) {
+          mainProvider.mainPanel.onDidDispose(() => {
+            sidebar.mainWebViewPanel = null;
             currentPanel = null;
           }, null);
         }

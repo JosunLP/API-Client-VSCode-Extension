@@ -1,7 +1,5 @@
-// @ts-expect-error: postman-code-generators lacks types
-import codegen from "postman-code-generators";
 import { Request } from "postman-collection";
-import React, { ChangeEvent, useEffect, useMemo } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce";
 import { useShallow } from "zustand/react/shallow";
@@ -13,7 +11,19 @@ import CodeEditor from "../../../shared/CodeEditor";
 import useStore from "../../../store/useStore";
 import { generateSdkRequestObject } from "../../../utils";
 
+// Lazy load the heavy postman-code-generators module
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let codegenModule: any = null;
+const loadCodegen = async () => {
+  if (!codegenModule) {
+    // @ts-expect-error: postman-code-generators lacks types
+    codegenModule = await import("postman-code-generators");
+  }
+  return codegenModule;
+};
+
 const RequestCodeSnippet = () => {
+  const [isCodegenLoaded, setIsCodegenLoaded] = useState(false);
   const {
     authData,
     requestUrl,
@@ -95,8 +105,23 @@ const RequestCodeSnippet = () => {
     );
   };
 
+  // Load codegen module on first render
   useEffect(() => {
-    codegen.convert(
+    let mounted = true;
+    loadCodegen().then(() => {
+      if (mounted) {
+        setIsCodegenLoaded(true);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isCodegenLoaded || !codegenModule) return;
+
+    codegenModule.default.convert(
       codeSnippetOption.language.toLowerCase(),
       codeSnippetOption.variant,
       memoizedSdkRequestObject,
@@ -110,6 +135,7 @@ const RequestCodeSnippet = () => {
       },
     );
   }, [
+    isCodegenLoaded,
     debouncedUrlValue,
     requestMethod,
     codeSnippetOption.language,
@@ -123,6 +149,7 @@ const RequestCodeSnippet = () => {
         <SelectOptionWrapper
           onChange={handleCodeSnippetOption}
           value={codeSnippetOption.language}
+          disabled={!isCodegenLoaded}
         >
           {OPTION.CODE_SNIPPET_OPTIONS.map(({ label }, index) => (
             <option key={"Code Snippet" + index} value={label}>
@@ -136,6 +163,7 @@ const RequestCodeSnippet = () => {
             handleCodeSnippetVariantChange(event.target.value)
           }
           value={codeSnippetOption.variant}
+          disabled={!isCodegenLoaded}
         >
           {OPTION.CODE_SNIPPET_OPTIONS.map(
             ({ label, variants }, index) =>
@@ -149,6 +177,9 @@ const RequestCodeSnippet = () => {
         </SelectOptionWrapper>
         <CopyIcon handleClick={handleCopyIconClick} value={codeSnippetValue} />
       </SelectWrapper>
+      {!isCodegenLoaded && (
+        <LoadingMessage>Loading code generator...</LoadingMessage>
+      )}
       <CodeEditor
         codeEditorValue={codeSnippetValue}
         editorHeight={HEIGHT.REQUEST_EDITOR_HEIGHT}
@@ -172,6 +203,18 @@ const SelectOptionWrapper = styled.select`
   font-weight: 500;
   background-color: var(--vscode-editor-background);
   color: rgba(255, 255, 255, 0.78);
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const LoadingMessage = styled.div`
+  padding: 1rem;
+  text-align: center;
+  color: var(--vscode-descriptionForeground);
+  font-style: italic;
 `;
 
 export default RequestCodeSnippet;

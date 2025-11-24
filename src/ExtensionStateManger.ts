@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { COLLECTION } from "./constants";
 import { filterDuplicatesFromObject } from "./utils";
-import { IUserRequestSidebarState } from "./utils/type";
+import { IProject, IUserRequestSidebarState } from "./utils/type";
 
 class ExtentionStateManager {
   private context: vscode.ExtensionContext;
@@ -22,7 +22,7 @@ class ExtentionStateManager {
 
   async addExtensionContext(
     state: string,
-    { history }: { history: IUserRequestSidebarState[] },
+    { history }: { history: IUserRequestSidebarState[] | IProject[] },
   ) {
     await this.context.globalState.update(state, history);
   }
