@@ -2,11 +2,10 @@ import React, { useMemo, useState } from "react";
 import { FaFolder, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 
-import { Headers, RequestObject } from "../../../../src/utils/type";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 import Information from "../../../components/Information";
 import MoreInformation from "../../../components/MoreInformation";
-import { IProject } from "../../../store/slices/type";
+import { IProject, IUserRequestSidebarState } from "../../../store/slices/type";
 import { calculateCollectionTime, generateMethodColor } from "../../../utils";
 import SidebarDeleteAllButton from "../Button/SidebarDeleteAllButton";
 import SibebarEmptyCollectionMenu from "../Menu/SidebarEmptyCollectionMenu";
@@ -14,22 +13,9 @@ import EmptySearchResultMessage from "../Message/EmptySearchResultMessage";
 import ProjectAssignMenu from "./ProjectAssignMenu";
 import ProjectGroup from "./ProjectGroup";
 
-interface IFavoriteItem {
-  url: string;
-  method: string;
-  headers: Headers;
-  responseType: string;
-  requestedTime: number;
-  favoritedTime: number | null;
-  isUserFavorite: boolean;
-  id: string;
-  requestObject: RequestObject;
-  projectId?: string;
-}
-
 interface ISidebarFavoritesCollectionProps {
   sidebarOption: string | null;
-  userFavorites: IFavoriteItem[];
+  userFavorites: IUserRequestSidebarState[];
   projects: IProject[];
   handleUrlClick: (id: string) => void;
   handleDeleteButton: (id: string) => void;
@@ -63,8 +49,8 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
 
   // Group favorites by project - memoized for performance
   const { groupedFavorites, ungroupedFavorites, filteredFavoritesCount } = useMemo(() => {
-    const grouped: Record<string, IFavoriteItem[]> = {};
-    const ungrouped: IFavoriteItem[] = [];
+    const grouped: Record<string, IUserRequestSidebarState[]> = {};
+    const ungrouped: IUserRequestSidebarState[] = [];
 
     userFavorites
       .filter((favorite) =>
@@ -111,7 +97,7 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
     setNewProjectName("");
   };
 
-  const renderFavoriteItem = (favorite: IFavoriteItem) => {
+  const renderFavoriteItem = (favorite: IUserRequestSidebarState) => {
     const methodColor = generateMethodColor(favorite.method.toLowerCase());
     const favoriteListedTime = calculateCollectionTime(favorite.favoritedTime || 0);
 

@@ -16,36 +16,81 @@ const ProjectAssignMenu: React.FC<IProjectAssignMenuProps> = ({
   onAssign,
   onClose,
 }) => {
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(
+    currentProjectId ? projects.findIndex(p => p.id === currentProjectId) + 1 : 0
+  );
+
+  const allOptions = [{ id: null, name: "No Project" }, ...projects];
+
   const handleAssign = (projectId: string | null) => {
     onAssign(projectId);
     onClose();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      onClose();
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % allOptions.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev - 1 + allOptions.length) % allOptions.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const option = allOptions[selectedIndex];
+      handleAssign(option.id);
+    } else if (e.key === "Tab") {
+      // Focus trap
+      e.preventDefault();
+      const focusableElements = e.currentTarget.querySelectorAll(
+        'button, [role="menuitem"]'
+      );
+      const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as Element);
+      const nextIndex = e.shiftKey 
+        ? (currentIndex - 1 + focusableElements.length) % focusableElements.length
+        : (currentIndex + 1) % focusableElements.length;
+      (focusableElements[nextIndex] as HTMLElement)?.focus();
+    }
+  };
+
+  React.useEffect(() => {
+    // Focus the selected item when menu opens
+    const selectedElement = document.querySelector('[data-selected="true"]') as HTMLElement;
+    selectedElement?.focus();
+  }, []);
+
   return (
     <MenuOverlay onClick={onClose}>
-      <MenuContent onClick={(e) => e.stopPropagation()}>
+      <MenuContent onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
         <MenuHeader>
-          <h4>Assign to Project</h4>
-          <CloseButton onClick={onClose}>✕</CloseButton>
+          <h4 id="menu-label">Assign to Project</h4>
+          <CloseButton onClick={onClose} aria-label="Close menu">✕</CloseButton>
         </MenuHeader>
-        <MenuBody>
-          <MenuItem
-            onClick={() => handleAssign(null)}
-            $isSelected={!currentProjectId}
-          >
-            <span>No Project</span>
-            {!currentProjectId && <CheckMark>✓</CheckMark>}
-          </MenuItem>
-          {projects.map((project) => (
-            <MenuItem
-              key={project.id}
-              onClick={() => handleAssign(project.id)}
-              $isSelected={currentProjectId === project.id}
-            >
-              <span>{project.name}</span>
-              {currentProjectId === project.id && <CheckMark>✓</CheckMark>}
-            </MenuItem>
-          ))}
+        <MenuBody role="menu" aria-labelledby="menu-label">
+          {allOptions.map((option, index) => {
+            const isSelected = option.id === currentProjectId;
+            const isFocused = index === selectedIndex;
+            return (
+              <MenuItem
+                key={option.id || "none"}
+                onClick={() => handleAssign(option.id)}
+                onMouseEnter={() => setSelectedIndex(index)}
+                $isSelected={isSelected}
+                $isFocused={isFocused}
+                role="menuitem"
+                tabIndex={isFocused ? 0 : -1}
+                aria-selected={isSelected}
+                data-selected={isFocused}
+              >
+                <span>{option.name}</span>
+                {isSelected && <CheckMark>✓</CheckMark>}
+              </MenuItem>
+            );
+          })}
         </MenuBody>
       </MenuContent>
     </MenuOverlay>
@@ -117,27 +162,28 @@ const MenuBody = styled.div`
   padding: 0.5rem 0;
 `;
 
-const MenuItem = styled.div<{ $isSelected: boolean }>`
+const MenuItem = styled.div<{ $isSelected: boolean; $isFocused: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.6rem 1rem;
   cursor: pointer;
-  background-color: ${(props) =>
-    props.$isSelected
-      ? "var(--vscode-list-activeSelectionBackground)"
-      : "transparent"};
+  background-color: ${(props) => {
+    if (props.$isFocused) return "var(--vscode-list-hoverBackground)";
+    if (props.$isSelected) return "var(--vscode-list-activeSelectionBackground)";
+    return "transparent";
+  }};
   color: ${(props) =>
     props.$isSelected
       ? "var(--vscode-list-activeSelectionForeground)"
       : "var(--vscode-foreground)"};
   transition: background-color 0.2s;
+  outline: ${(props) =>
+    props.$isFocused ? "1px solid var(--vscode-focusBorder)" : "none"};
+  outline-offset: -1px;
 
   &:hover {
-    background-color: ${(props) =>
-      props.$isSelected
-        ? "var(--vscode-list-activeSelectionBackground)"
-        : "var(--vscode-list-hoverBackground)"};
+    background-color: var(--vscode-list-hoverBackground);
   }
 
   span {
