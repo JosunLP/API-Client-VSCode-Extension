@@ -4,7 +4,7 @@ import { COLLECTION } from "./constants";
 import { filterDuplicatesFromObject } from "./utils";
 import { IUserRequestSidebarState } from "./utils/type";
 
-class ExtentionStateManager {
+class ExtensionStateManager {
   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
@@ -57,6 +57,25 @@ class ExtentionStateManager {
         ...duplicateFilteredUserFavoriteCollection,
       ]);
     }
+  }
+
+  async updateFavoriteFolder(id: string, folder: string) {
+    const globalFavoritesState: IUserRequestSidebarState[] | undefined =
+      this.context.globalState.get(COLLECTION.FAVORITES_COLLECTION);
+
+    if (!globalFavoritesState) return;
+
+    const updatedFavorites = globalFavoritesState.map((item) => {
+      if (item.id === id) {
+        return { ...item, folder: folder };
+      }
+      return item;
+    });
+
+    await this.context.globalState.update(
+      COLLECTION.FAVORITES_COLLECTION,
+      updatedFavorites,
+    );
   }
 
   async deleteExtensionContext(targetExtensionContext: string, id?: string) {

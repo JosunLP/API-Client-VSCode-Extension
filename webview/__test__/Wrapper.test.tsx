@@ -8,7 +8,7 @@ describe("Wrapper component test", () => {
     const { getByText } = render(
       <Wrapper>
         <div>
-          <h1>Welcome to REST API Tester</h1>
+          <h1>Welcome to Pulse API Tester</h1>
         </div>
       </Wrapper>,
     );

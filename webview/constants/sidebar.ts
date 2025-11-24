@@ -10,6 +10,7 @@ const SIDEBAR = {
   DELETE_ALL_COLLECTION: "Delete all collection",
   REMOVE_FROM_FAVORITES: "Remove from favorites",
   USER_REQUEST_HISTORY_COLLECTION: "userRequestHistory",
+  UPDATE_FAVORITE_FOLDER: "Update favorite folder",
 };
 
 export default SIDEBAR;

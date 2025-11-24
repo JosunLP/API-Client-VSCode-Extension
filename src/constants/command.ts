@@ -11,6 +11,7 @@ const COMMAND = {
   SOCKET_CONNECT: "Socket Connect",
   SOCKET_DISCONNECT: "Socket Disconnect",
   SOCKET_EMIT: "Socket Emit",
+  UPDATE_FAVORITE_FOLDER: "Update favorite folder",
 };
 
 export default COMMAND;

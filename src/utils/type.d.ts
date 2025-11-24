@@ -2,12 +2,14 @@ export interface IUserRequestSidebarState {
   url: string;
   method: string;
   headers: Headers;
+  data?: string | FormData | URLSearchParams;
   responseType: string;
   requestedTime: number;
   favoritedTime: number | null;
   isUserFavorite: boolean;
   id: string;
   requestObject: RequestObject;
+  folder?: string;
 }
 
 export interface Headers {

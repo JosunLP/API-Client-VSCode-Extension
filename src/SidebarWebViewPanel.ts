@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { BaseWebView } from "./BaseWebView";
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
-import ExtentionStateManager from "./ExtensionStateManger";
+import ExtensionStateManager from "./ExtensionStateManager";
 import { filterObjectKey, generateResponseObject } from "./utils";
 import { IUserRequestSidebarState } from "./utils/type";
 
@@ -18,7 +18,7 @@ class SidebarWebViewPanel
   public mainWebViewPanel: vscode.WebviewPanel | null = null;
   public stateManager;
 
-  constructor(extensionUri: vscode.Uri, stateManager: ExtentionStateManager) {
+  constructor(extensionUri: vscode.Uri, stateManager: ExtensionStateManager) {
     super(extensionUri);
     this.stateManager = stateManager;
   }
@@ -92,10 +92,12 @@ class SidebarWebViewPanel
         command,
         id,
         target,
+        folder,
       }: {
         command: string;
         id: string;
         target: string;
+        folder?: string;
       }) => {
         if (command === COMMAND.START_APP) {
           vscode.commands.executeCommand(COMMAND.MAIN_WEB_VIEW_PANEL);
@@ -141,6 +143,10 @@ class SidebarWebViewPanel
               target,
             });
           }
+        } else if (command === COMMAND.UPDATE_FAVORITE_FOLDER) {
+          if (folder) {
+            await this.stateManager.updateFavoriteFolder(id, folder);
+          }
         } else {
           if (!this.mainWebViewPanel) {
             vscode.commands.executeCommand(COMMAND.MAIN_WEB_VIEW_PANEL);
@@ -160,6 +166,13 @@ class SidebarWebViewPanel
               id,
               COLLECTION.FILTERABLE_OBJECT_KEY,
             );
+
+            if (
+              selectedCollection &&
+              ["GET", "HEAD"].includes(selectedCollection.method.toUpperCase())
+            ) {
+              selectedCollection.data = undefined;
+            }
 
             const responseObject = await generateResponseObject(
               selectedCollection,

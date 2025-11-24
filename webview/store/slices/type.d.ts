@@ -16,6 +16,7 @@ export interface ISidebarSlice extends ISidebarSliceList {
   removeFromFavoriteCollection: (id: string) => void;
   resetFavoriteIconState: () => void;
   deleteCollection: (targetState: string) => void;
+  updateFavoriteFolder: (id: string, folder: string) => void;
 }
 
 export interface ISidebarSliceList {
@@ -27,12 +28,14 @@ export interface IUserRequestSidebarState {
   url: string;
   method: string;
   headers: Headers;
+  data?: string | FormData | URLSearchParams;
   responseType: string;
   requestedTime: number;
   favoritedTime: number | null;
   isUserFavorite: boolean;
   id: string;
   requestObject: RequestObject;
+  folder?: string;
 }
 
 export interface Headers {

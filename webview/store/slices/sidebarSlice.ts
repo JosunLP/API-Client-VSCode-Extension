@@ -69,6 +69,13 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
   deleteCollection: (targetState: string) => {
     set(() => ({ [targetState]: [] }));
   },
+
+  updateFavoriteFolder: (id: string, folder: string) =>
+    set((state) => ({
+      userFavorites: state.userFavorites.map((favorite) =>
+        favorite.id === id ? { ...favorite, folder } : favorite,
+      ),
+    })),
 });
 
 export default sidebarSlice;

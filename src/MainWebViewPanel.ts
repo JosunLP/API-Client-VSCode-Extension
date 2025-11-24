@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 
 import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
-import ExtentionStateManager from "./ExtensionStateManger";
+import ExtensionStateManager from "./ExtensionStateManager";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
 import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
@@ -25,7 +25,7 @@ class MainWebViewPanel extends BaseWebView {
 
   constructor(
     extensionUri: vscode.Uri,
-    stateManager: ExtentionStateManager,
+    stateManager: ExtensionStateManager,
     sidebarWebViewPanel: SidebarWebViewPanel,
   ) {
     super(extensionUri);
@@ -156,7 +156,9 @@ class MainWebViewPanel extends BaseWebView {
       url: this.url,
       method: this.method,
       headers: this.headers,
-      data: this.body,
+      data: ["GET", "HEAD"].includes(this.method.toUpperCase())
+        ? undefined
+        : this.body,
       responseType: TYPE.TEXT,
     };
 

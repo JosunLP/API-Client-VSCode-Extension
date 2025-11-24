@@ -15,6 +15,7 @@ const SidebarMenuOption = () => {
     handleUserFavoriteIcon,
     addCollectionToFavorites,
     removeFromFavoriteCollection,
+    updateFavoriteFolder,
   } = useStore(
     useShallow((state) => ({
       sidebarOption: state.sidebarOption,
@@ -24,6 +25,7 @@ const SidebarMenuOption = () => {
       handleUserFavoriteIcon: state.handleUserFavoriteIcon,
       addCollectionToFavorites: state.addCollectionToFavorites,
       removeFromFavoriteCollection: state.removeFromFavoriteCollection,
+      updateFavoriteFolder: state.updateFavoriteFolder,
     })),
   );
 
@@ -95,6 +97,14 @@ const SidebarMenuOption = () => {
             target: SIDEBAR.USER_REQUEST_HISTORY_COLLECTION,
           });
       }
+    },
+    handleUpdateFavoriteFolder(id: string, folder: string) {
+      vscode.postMessage({
+        command: SIDEBAR.UPDATE_FAVORITE_FOLDER,
+        id,
+        folder,
+      });
+      updateFavoriteFolder(id, folder);
     },
     handleUrlClick(id: string) {
       switch (sidebarOption) {

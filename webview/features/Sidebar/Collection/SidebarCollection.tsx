@@ -29,6 +29,7 @@ interface ISidebarCollectionProps {
   handleDeleteButton: (id: string) => void;
   handleDeleteAllButton: () => void;
   handleSidebarFavoriteIcon: (stringValue: string, id: string) => void;
+  handleUpdateFavoriteFolder?: (id: string, folder: string) => void;
 }
 const SidebarCollection = ({
   sidebarOption,
@@ -37,6 +38,7 @@ const SidebarCollection = ({
   handleDeleteButton,
   handleDeleteAllButton,
   handleSidebarFavoriteIcon,
+  handleUpdateFavoriteFolder,
 }: ISidebarCollectionProps) => {
   const [searchInputValue, setSearchInputValue] = useState("");
 
@@ -60,81 +62,172 @@ const SidebarCollection = ({
             <>
               <SidebarDeleteAllButton clickHandler={handleDeleteAllButton} />
               <CollectionDetailWrapper>
-                {userCollection
-                  .filter((collection) =>
-                    collection.url.toLowerCase().includes(searchInputValue),
-                  )
-                  .map(
-                    ({
-                      url,
-                      method,
-                      isUserFavorite,
-                      id,
-                      requestedTime,
-                      favoritedTime,
-                    }) => {
-                      const methodColor = generateMethodColor(
-                        method.toLowerCase(),
-                      );
-                      const collectionCreatedTime =
-                        calculateCollectionTime(requestedTime);
-                      const favoriteListedTime = calculateCollectionTime(
-                        favoritedTime || 0,
-                      );
+                {sidebarOption === SIDEBAR.FAVORITES
+                  ? Object.entries(
+                      userCollection
+                        .filter((collection) =>
+                          collection.url
+                            .toLowerCase()
+                            .includes(searchInputValue),
+                        )
+                        .reduce((groups, item) => {
+                          const folder = item.folder || "Unassigned";
+                          if (!groups[folder]) groups[folder] = [];
+                          groups[folder].push(item);
+                          return groups;
+                        }, {} as Record<string, typeof userCollection>),
+                    ).map(([folder, items]) => (
+                      <div key={folder}>
+                        <FolderHeader>{folder}</FolderHeader>
+                        {items.map((collection) => {
+                          const {
+                            url,
+                            method,
+                            id,
+                            requestedTime,
+                            favoritedTime,
+                            folder,
+                          } = collection;
+                          const methodColor = generateMethodColor(
+                            method.toLowerCase(),
+                          );
+                          const favoriteListedTime = calculateCollectionTime(
+                            favoritedTime || 0,
+                          );
 
-                      return (
-                        <HistoryListWrapper key={sidebarOption + id}>
-                          <Information textColor={methodColor}>
-                            <div className="methodContainer">
-                              <h4>{method}</h4>
-                            </div>
-                            <div>
-                              <p onClick={() => handleUrlClick(id)}>{url}</p>
-                            </div>
-                          </Information>
-                          <MoreInformation>
-                            <div>
-                              {sidebarOption === SIDEBAR.HISTORY ? (
-                                <p>{collectionCreatedTime}</p>
-                              ) : (
-                                <p>Added {favoriteListedTime}</p>
-                              )}
-                            </div>
-                            <div role="iconWrapper">
-                              {sidebarOption === SIDEBAR.HISTORY ? (
-                                isUserFavorite ? (
-                                  <AiFillHeart
-                                    className="sidebarIcon favorite"
-                                    onClick={() =>
-                                      handleSidebarFavoriteIcon(
-                                        SIDEBAR.REMOVE_FROM_FAVORITES,
-                                        id,
-                                      )
-                                    }
-                                  />
-                                ) : (
-                                  <AiOutlineHeart
+                          return (
+                            <HistoryListWrapper key={sidebarOption + id}>
+                              <Information textColor={methodColor}>
+                                <div className="methodContainer">
+                                  <h4>{method}</h4>
+                                </div>
+                                <div>
+                                  <p onClick={() => handleUrlClick(id)}>
+                                    {url}
+                                  </p>
+                                </div>
+                              </Information>
+                              <MoreInformation>
+                                <div>
+                                  <p>Added {favoriteListedTime}</p>
+                                </div>
+                                {handleUpdateFavoriteFolder && (
+                                  <div
+                                    style={{
+                                      marginTop: "0.5rem",
+                                      marginBottom: "0.5rem",
+                                    }}
+                                  >
+                                    <input
+                                      type="text"
+                                      placeholder="Folder"
+                                      defaultValue={folder || ""}
+                                      onBlur={(e) =>
+                                        handleUpdateFavoriteFolder(
+                                          id,
+                                          e.target.value,
+                                        )
+                                      }
+                                      style={{
+                                        background: "transparent",
+                                        border: "1px solid #404040",
+                                        color: "inherit",
+                                        padding: "0.2rem",
+                                        width: "95%",
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                <div role="iconWrapper">
+                                  <FaTrashAlt
                                     className="sidebarIcon"
-                                    onClick={() =>
-                                      handleSidebarFavoriteIcon(
-                                        SIDEBAR.ADD_TO_FAVORITES,
-                                        id,
-                                      )
-                                    }
+                                    onClick={() => handleDeleteButton(id)}
+                                    data-testid="delete-button"
                                   />
-                                )
-                              ) : null}
-                              <FaTrashAlt
-                                className="sidebarIcon"
-                                onClick={() => handleDeleteButton(id)}
-                                data-testid="delete-button"
-                              />
-                            </div>
-                          </MoreInformation>
-                        </HistoryListWrapper>
-                      );
-                    },
-                  )}
+                                </div>
+                              </MoreInformation>
+                            </HistoryListWrapper>
+                          );
+                        })}
+                      </div>
+                    ))
+                  : userCollection
+                      .filter((collection) =>
+                        collection.url.toLowerCase().includes(searchInputValue),
+                      )
+                      .map(
+                        ({
+                          url,
+                          method,
+                          isUserFavorite,
+                          id,
+                          requestedTime,
+                          favoritedTime,
+                        }) => {
+                          const methodColor = generateMethodColor(
+                            method.toLowerCase(),
+                          );
+                          const collectionCreatedTime =
+                            calculateCollectionTime(requestedTime);
+                          const favoriteListedTime = calculateCollectionTime(
+                            favoritedTime || 0,
+                          );
+
+                          return (
+                            <HistoryListWrapper key={sidebarOption + id}>
+                              <Information textColor={methodColor}>
+                                <div className="methodContainer">
+                                  <h4>{method}</h4>
+                                </div>
+                                <div>
+                                  <p onClick={() => handleUrlClick(id)}>
+                                    {url}
+                                  </p>
+                                </div>
+                              </Information>
+                              <MoreInformation>
+                                <div>
+                                  {sidebarOption === SIDEBAR.HISTORY ? (
+                                    <p>{collectionCreatedTime}</p>
+                                  ) : (
+                                    <p>Added {favoriteListedTime}</p>
+                                  )}
+                                </div>
+                                <div role="iconWrapper">
+                                  {sidebarOption === SIDEBAR.HISTORY ? (
+                                    isUserFavorite ? (
+                                      <AiFillHeart
+                                        className="sidebarIcon favorite"
+                                        onClick={() =>
+                                          handleSidebarFavoriteIcon(
+                                            SIDEBAR.REMOVE_FROM_FAVORITES,
+                                            id,
+                                          )
+                                        }
+                                      />
+                                    ) : (
+                                      <AiOutlineHeart
+                                        className="sidebarIcon"
+                                        onClick={() =>
+                                          handleSidebarFavoriteIcon(
+                                            SIDEBAR.ADD_TO_FAVORITES,
+                                            id,
+                                          )
+                                        }
+                                      />
+                                    )
+                                  ) : null}
+                                  <FaTrashAlt
+                                    className="sidebarIcon"
+                                    onClick={() => handleDeleteButton(id)}
+                                    data-testid="delete-button"
+                                  />
+                                </div>
+                              </MoreInformation>
+                            </HistoryListWrapper>
+                          );
+                        },
+                      )}
               </CollectionDetailWrapper>
             </>
           ) : (
@@ -178,6 +271,15 @@ const HistoryListWrapper = styled.div`
   p {
     font-size: 0.92rem;
   }
+`;
+
+const FolderHeader = styled.h3`
+  padding: 0.5rem 1rem;
+  background-color: #252526;
+  color: #cccccc;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 `;
 
 export default SidebarCollection;
