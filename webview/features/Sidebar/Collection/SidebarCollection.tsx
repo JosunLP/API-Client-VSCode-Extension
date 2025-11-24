@@ -80,8 +80,13 @@ const SidebarCollection = ({
                       <div key={folder}>
                         <FolderHeader>{folder}</FolderHeader>
                         {items.map((collection) => {
-                          const { url, method, id, favoritedTime, folder } =
-                            collection;
+                          const {
+                            url,
+                            method,
+                            id,
+                            favoritedTime,
+                            folder: itemFolder,
+                          } = collection;
                           const methodColor = generateMethodColor(
                             method.toLowerCase(),
                           );
@@ -110,7 +115,7 @@ const SidebarCollection = ({
                                     <FolderInput
                                       type="text"
                                       placeholder="Folder"
-                                      defaultValue={folder || ""}
+                                      defaultValue={itemFolder || ""}
                                       onBlur={(e) =>
                                         handleUpdateFavoriteFolder(
                                           id,

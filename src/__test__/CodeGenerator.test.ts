@@ -80,8 +80,9 @@ describe("CodeGenerator", () => {
       expect(csharpCode).toContain(
         `request.Headers.TryAddWithoutValidation("Authorization", "Bearer token123")`,
       );
+      // C# uses verbatim string literals with doubled quotes
       expect(csharpCode).toContain(
-        `new StringContent("{\\"name\\":\\"John Doe\\",\\"age\\":30}")`,
+        `new StringContent(@"{""name"":""John Doe"",""age"":30}")`,
       );
       expect(csharpCode).toContain(
         `MediaTypeHeaderValue.Parse("application/json")`,

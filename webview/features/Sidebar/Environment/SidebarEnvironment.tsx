@@ -9,12 +9,14 @@ interface ISidebarEnvironmentProps {
   environments: IEnvironment[];
   handleSaveEnvironment: (env: IEnvironment) => void;
   handleDeleteEnvironment: (id: string) => void;
+  handleToggleEnvironmentActive?: (id: string) => void;
 }
 
 const SidebarEnvironment = ({
   environments,
   handleSaveEnvironment,
   handleDeleteEnvironment,
+  handleToggleEnvironmentActive,
 }: ISidebarEnvironmentProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
@@ -67,8 +69,11 @@ const SidebarEnvironment = ({
     value: string | boolean,
   ) => {
     const newVars = [...editVariables];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (newVars[index] as any)[field] = value;
+    if (field === "key" || field === "value") {
+      newVars[index][field] = value as string;
+    } else if (field === "enabled") {
+      newVars[index][field] = value as boolean;
+    }
     setEditVariables(newVars);
   };
 
@@ -78,13 +83,18 @@ const SidebarEnvironment = ({
   };
 
   const toggleActive = (env: IEnvironment) => {
-    // Deactivate all others
-    environments.forEach((e) => {
-      if (e.id !== env.id && e.isActive) {
-        handleSaveEnvironment({ ...e, isActive: false });
-      }
-    });
-    handleSaveEnvironment({ ...env, isActive: !env.isActive });
+    // If a dedicated toggle handler is provided, use it for a single state update
+    if (handleToggleEnvironmentActive) {
+      handleToggleEnvironmentActive(env.id);
+    } else {
+      // Fallback: deactivate all others and toggle the target
+      environments.forEach((e) => {
+        if (e.id !== env.id && e.isActive) {
+          handleSaveEnvironment({ ...e, isActive: false });
+        }
+      });
+      handleSaveEnvironment({ ...env, isActive: !env.isActive });
+    }
   };
 
   return (
