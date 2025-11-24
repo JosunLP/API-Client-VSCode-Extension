@@ -1,4 +1,4 @@
-import { io, Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
 import * as vscode from "vscode";
 
 /**
@@ -6,7 +6,7 @@ import * as vscode from "vscode";
  * Follows OOP principles to encapsulate socket logic.
  */
 export class SocketIOManager {
-  private socket: Socket | null = null;
+  private socket: any | null = null;
   private panel: vscode.WebviewPanel;
 
   constructor(panel: vscode.WebviewPanel) {
@@ -18,12 +18,13 @@ export class SocketIOManager {
    * @param url The URL to connect to.
    * @param options Optional connection options.
    */
-  public connect(url: string, options?: object) {
+  public async connect(url: string, options?: object) {
     if (this.socket) {
       this.disconnect();
     }
 
     try {
+      const { io } = await import("socket.io-client");
       this.socket = io(url, options);
 
       this.socket.on("connect", () => {

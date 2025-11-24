@@ -1,20 +1,21 @@
 import * as vscode from "vscode";
-import WebSocket from "ws";
+// import WebSocket from "ws";
 
 export class WebSocketManager {
-  private ws: WebSocket | null = null;
+  private ws: any | null = null;
   private panel: vscode.WebviewPanel;
 
   constructor(panel: vscode.WebviewPanel) {
     this.panel = panel;
   }
 
-  public connect(url: string) {
+  public async connect(url: string) {
     if (this.ws) {
       this.disconnect();
     }
 
     try {
+      const { default: WebSocket } = await import("ws");
       this.ws = new WebSocket(url);
 
       this.ws.on("open", () => {

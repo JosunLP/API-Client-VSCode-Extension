@@ -6,6 +6,7 @@ import MainWebViewPanel from "./MainWebViewPanel";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
 
 export async function activate(context: vscode.ExtensionContext) {
+  console.log("Pulse API Client: Activating extension...");
   const StateManager = new ExtentionStateManager(context);
   const SidebarWebViewProvider = new SidebarWebViewPanel(
     context.extensionUri,
