@@ -51,7 +51,7 @@ export abstract class BaseWebView {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="${csp}">
-          <title>REST API Client</title>
+          <title>Pulse API Client</title>
           <link href="${resetCssSrc}" rel="stylesheet">
           <link href="${mainStylesCssSrc}" rel="stylesheet">
         </head>

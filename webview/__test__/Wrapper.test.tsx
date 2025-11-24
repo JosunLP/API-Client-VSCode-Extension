@@ -13,6 +13,6 @@ describe("Wrapper component test", () => {
       </Wrapper>,
     );
 
-    expect(getByText(/Welcome to REST API Tester/i)).toBeInTheDocument();
+    expect(getByText(/Welcome to Pulse API Tester/i)).toBeInTheDocument();
   });
 });

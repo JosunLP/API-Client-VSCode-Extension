@@ -1,24 +1,24 @@
 {
-  "name": "rest-api-client",
-  "publisher": "unjinjang",
-  "displayName": "REST API Client",
+  "name": "pulse-api-client",
+  "publisher": "JosunLP",
+  "displayName": "Pulse API Client",
   "icon": "icons/images/icon.png",
-  "description": "Simple and intuitive API Client made into a VSCode extension.",
-  "version": "1.1.5",
+  "description": "Simple and intuitive API Client made into a VSCode extension.  A fork from REST API Client extension.",
+  "version": "2.0.0",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/REST-API-Client/API-Client-VSCode-Extension/issues"
+    "url": "https://github.com/JosunLP/API-Client-VSCode-Extension/issues"
   },
   "author": {
-    "name": "Unjin Jang",
-    "email": "unwls0@gmail.com"
+    "name": "Jonas Pfalzgraf",
+    "email": "support@josunlp.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/REST-API-Client"
+    "url": "https://github.com/JosunLP/API-Client-VSCode-Extension"
   },
   "engines": {
-    "vscode": "^1.68.0"
+    "vscode": "^1.106.0"
   },
   "categories": [
     "Programming Languages",
@@ -51,19 +51,20 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "RESTAPIClient",
-          "title": "REST API Client",
+          "id": "pulse-api-client",
+          "title": "Pulse API Client",
           "icon": "icons/svg/httpIcon.svg"
         }
       ]
     },
     "views": {
-      "RESTAPIClient": [
+      "pulse-api-client": [
         {
           "type": "webview",
-          "id": "rest-api-client.collectionMenu",
-          "name": "REST API Client",
-          "contextualTitle": "REST API Client"
+          "id": "pulse-api-client.collectionMenu",
+          "name": "Pulse API Client",
+          "contextualTitle": "Pulse API Client",
+          "icon": ""
         }
       ]
     }
@@ -71,6 +72,7 @@
   "scripts": {
     "vscode:prepublish": "npm run package",
     "dev": "npm run build:extension -- --watch & npm run build:webview -- --watch",
+    "build": "npm run build:extension && npm run build:webview",
     "build:extension": "vite build --config vite.config.extension.ts",
     "build:webview": "vite build --config vite.config.webview.ts",
     "package": "npm run build:extension && npm run build:webview",
