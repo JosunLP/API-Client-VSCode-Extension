@@ -162,6 +162,9 @@ const ResponsePanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0.1rem 4.5rem 1.5rem 4.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 `;
 
 export default ResponsePanel;

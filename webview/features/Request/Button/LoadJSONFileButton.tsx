@@ -35,28 +35,41 @@ const LoadJSONFileButton = ({
     return JSON.parse(await file.text());
   }
 
-  const fileInput = document.createElement("input");
-  const inputAttrs = {
-    type: "file",
-    accept: ".json",
-  };
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  for (const attr in inputAttrs) {
-    fileInput.setAttribute(
-      attr,
-      inputAttrs[attr as keyof { type: string; accept: string }],
-    );
-  }
+  React.useEffect(() => {
+    const fileInput = document.createElement("input");
+    const inputAttrs = {
+      type: "file",
+      accept: ".json",
+    };
 
-  fileInput.addEventListener("change", (event) =>
-    loadSettingsFromJSONFile(event),
-  );
+    for (const attr in inputAttrs) {
+      fileInput.setAttribute(
+        attr,
+        inputAttrs[attr as keyof { type: string; accept: string }],
+      );
+    }
+
+    const handleChange = (event: Event) => {
+      loadSettingsFromJSONFile(
+        event as unknown as ChangeEvent<HTMLInputElement>,
+      );
+    };
+
+    fileInput.addEventListener("change", handleChange);
+    fileInputRef.current = fileInput;
+
+    return () => {
+      fileInput.removeEventListener("change", handleChange);
+    };
+  }, []);
 
   return (
     <Button
       buttonType="submit"
       primary={false}
-      handleButtonClick={() => fileInput.click()}
+      handleButtonClick={() => fileInputRef.current?.click()}
     >
       {replaceValues ? "Set data from file" : "Add data from file"}
     </Button>

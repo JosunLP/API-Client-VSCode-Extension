@@ -26,6 +26,7 @@ const RequestButton = ({ onDisconnect }: RequestButtonProps) => {
           buttonType="button"
           buttonStatus={requestInProcess}
           handleButtonClick={onDisconnect}
+          style={{ backgroundColor: "#a10000", color: "white", border: "none" }}
         >
           Disconnect
         </Button>

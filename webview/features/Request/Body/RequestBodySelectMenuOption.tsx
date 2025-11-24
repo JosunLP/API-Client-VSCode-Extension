@@ -13,32 +13,54 @@ const RequestBodySelectMenuOption = () => {
     bodyOption,
     bodyRawData,
     bodyRawOption,
-    keyValueProps,
-    codeEditorProps,
+    addNewTableRow,
+    deleteTableRow,
+    handleRequestKey,
+    keyValueTableData,
+    handleRequestValue,
+    addRequestBodyHeaders,
+    handleRequestCheckbox,
+    handleRequestDescription,
+    removeRequestBodyHeaders,
+    shouldBeautifyEditor,
+    handleBeautifyButton,
     handleBodyRawOptionData,
   } = useStore(
     useShallow((state) => ({
       bodyOption: state.bodyOption,
       bodyRawData: state.bodyRawData,
       bodyRawOption: state.bodyRawOption.toLowerCase(),
-      keyValueProps: {
-        addNewTableRow: state.addNewTableRow,
-        deleteTableRow: state.deleteTableRow,
-        handleRequestKey: state.handleRequestKey,
-        keyValueTableData: state.keyValueTableData,
-        handleRequestValue: state.handleRequestValue,
-        addRequestBodyHeaders: state.addRequestBodyHeaders,
-        handleRequestCheckbox: state.handleRequestCheckbox,
-        handleRequestDescription: state.handleRequestDescription,
-        removeRequestBodyHeaders: state.removeRequestBodyHeaders,
-      },
-      codeEditorProps: {
-        shouldBeautifyEditor: state.shouldBeautifyEditor,
-        handleBeautifyButton: state.handleBeautifyButton,
-      },
+      addNewTableRow: state.addNewTableRow,
+      deleteTableRow: state.deleteTableRow,
+      handleRequestKey: state.handleRequestKey,
+      keyValueTableData: state.keyValueTableData,
+      handleRequestValue: state.handleRequestValue,
+      addRequestBodyHeaders: state.addRequestBodyHeaders,
+      handleRequestCheckbox: state.handleRequestCheckbox,
+      handleRequestDescription: state.handleRequestDescription,
+      removeRequestBodyHeaders: state.removeRequestBodyHeaders,
+      shouldBeautifyEditor: state.shouldBeautifyEditor,
+      handleBeautifyButton: state.handleBeautifyButton,
       handleBodyRawOptionData: state.handleBodyRawOptionData,
     })),
   );
+
+  const keyValueProps = {
+    addNewTableRow,
+    deleteTableRow,
+    handleRequestKey,
+    keyValueTableData,
+    handleRequestValue,
+    addRequestBodyHeaders,
+    handleRequestCheckbox,
+    handleRequestDescription,
+    removeRequestBodyHeaders,
+  };
+
+  const codeEditorProps = {
+    shouldBeautifyEditor,
+    handleBeautifyButton,
+  };
 
   function handleRequestBodyEditorChange(bodyValue: string | undefined) {
     if (bodyValue) {

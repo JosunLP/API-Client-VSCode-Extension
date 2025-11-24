@@ -91,6 +91,7 @@ const CodeEditor = ({
 
 const EditorWrapper = styled.div`
   margin-top: 2rem;
+  height: calc(100% - 3rem);
 `;
 
 export default CodeEditor;

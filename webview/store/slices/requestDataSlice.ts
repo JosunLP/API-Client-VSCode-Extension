@@ -31,7 +31,16 @@ const requestDataSlice: StateCreator<
   handleRequestUrlChange: (url: string) => set(() => ({ requestUrl: url })),
 
   handleRequestMethodChange: (method: string) =>
-    set(() => ({ requestMethod: method })),
+    set(() => {
+      if (method === "WEBSOCKET") {
+        return {
+          requestMethod: method,
+          bodyOption: REQUEST.RAW,
+          bodyRawOption: "Text",
+        };
+      }
+      return { requestMethod: method };
+    }),
 
   handleRequestParamsChange: (params: string) =>
     set(() => ({ requestUrlParams: params })),
