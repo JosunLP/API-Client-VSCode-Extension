@@ -122,43 +122,7 @@ class MainWebViewPanel extends BaseWebView {
           return;
 
         case COMMAND.GENERATE_CODE: {
-          this.prepareRequestData(message);
-          const languages = ["cURL", "JavaScript (Fetch)", "Python (Requests)"];
-          const selected = await vscode.window.showQuickPick(languages, {
-            placeHolder: "Select language to generate code",
-          });
-          if (selected) {
-            let code = "";
-            const bodyStr =
-              typeof this.body === "string" ? this.body : undefined;
-            if (selected === "cURL") {
-              code = CodeGenerator.generateCurl(
-                this.url,
-                this.method,
-                this.headers,
-                bodyStr,
-              );
-            } else if (selected === "JavaScript (Fetch)") {
-              code = CodeGenerator.generateFetch(
-                this.url,
-                this.method,
-                this.headers,
-                bodyStr,
-              );
-            } else if (selected === "Python (Requests)") {
-              code = CodeGenerator.generatePythonRequests(
-                this.url,
-                this.method,
-                this.headers,
-                bodyStr,
-              );
-            }
-
-            await vscode.env.clipboard.writeText(code);
-            vscode.window.showInformationMessage(
-              `Code for ${selected} copied to clipboard!`,
-            );
-          }
+          await this.handleGenerateCode(message);
           return;
         }
       }
@@ -183,6 +147,83 @@ class MainWebViewPanel extends BaseWebView {
 
       await this.postWebviewMessage(requestObject);
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async handleGenerateCode(message: any) {
+    this.prepareRequestData(message);
+    const languages = [
+      "cURL",
+      "JavaScript (Fetch)",
+      "JavaScript (Axios)",
+      "Go",
+      "C# (HttpClient)",
+      "Python (Requests)",
+    ];
+    const selected = await vscode.window.showQuickPick(languages, {
+      placeHolder: "Select language to generate code",
+    });
+
+    if (selected) {
+      let code = "";
+      const bodyStr = typeof this.body === "string" ? this.body : undefined;
+
+      switch (selected) {
+        case "cURL":
+          code = CodeGenerator.generateCurl(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "JavaScript (Fetch)":
+          code = CodeGenerator.generateFetch(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "JavaScript (Axios)":
+          code = CodeGenerator.generateAxios(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "Go":
+          code = CodeGenerator.generateGo(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "C# (HttpClient)":
+          code = CodeGenerator.generateCSharp(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "Python (Requests)":
+          code = CodeGenerator.generatePythonRequests(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+      }
+
+      await vscode.env.clipboard.writeText(code);
+      vscode.window.showInformationMessage(
+        `Code for ${selected} copied to clipboard!`,
+      );
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

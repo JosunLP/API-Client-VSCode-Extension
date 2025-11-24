@@ -37,6 +37,58 @@ describe("CodeGenerator", () => {
     });
   });
 
+  describe("generateAxios", () => {
+    it("should generate correct axios snippet", () => {
+      const axiosCode = CodeGenerator.generateAxios(url, method, headers, body);
+      expect(axiosCode).toContain(`const axios = require('axios');`);
+      expect(axiosCode).toContain(`"url": "${url}"`);
+      expect(axiosCode).toContain(`"method": "POST"`);
+      expect(axiosCode).toContain(`"Content-Type": "application/json"`);
+      // Axios data can be object or string, here we expect object since body is JSON
+      expect(axiosCode).toContain(`"data": {`);
+      expect(axiosCode).toContain(`"name": "John Doe"`);
+    });
+  });
+
+  describe("generateGo", () => {
+    it("should generate correct go snippet", () => {
+      const goCode = CodeGenerator.generateGo(url, method, headers, body);
+      expect(goCode).toContain(`package main`);
+      expect(goCode).toContain(`"net/http"`);
+      expect(goCode).toContain(`url := "${url}"`);
+      expect(goCode).toContain(`method := "POST"`);
+      expect(goCode).toContain(
+        `payload := strings.NewReader("{\\"name\\":\\"John Doe\\",\\"age\\":30}")`,
+      );
+      expect(goCode).toContain(
+        `req.Header.Add("Content-Type", "application/json")`,
+      );
+    });
+  });
+
+  describe("generateCSharp", () => {
+    it("should generate correct c# snippet", () => {
+      const csharpCode = CodeGenerator.generateCSharp(
+        url,
+        method,
+        headers,
+        body,
+      );
+      expect(csharpCode).toContain(`using System.Net.Http;`);
+      expect(csharpCode).toContain(`new HttpMethod("POST")`);
+      expect(csharpCode).toContain(`"${url}"`);
+      expect(csharpCode).toContain(
+        `request.Headers.TryAddWithoutValidation("Authorization", "Bearer token123")`,
+      );
+      expect(csharpCode).toContain(
+        `new StringContent("{\\"name\\":\\"John Doe\\",\\"age\\":30}")`,
+      );
+      expect(csharpCode).toContain(
+        `MediaTypeHeaderValue.Parse("application/json")`,
+      );
+    });
+  });
+
   describe("generatePythonRequests", () => {
     it("should generate correct python requests snippet", () => {
       const pythonCode = CodeGenerator.generatePythonRequests(
