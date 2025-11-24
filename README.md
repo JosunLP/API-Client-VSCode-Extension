@@ -10,7 +10,7 @@
   <h3>Pulse API Client</h3>
   <h5>Simple and intuitive API Client made into a VSCode extension.</h5>
 
-<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client">Visual Studio Marketplace</a>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.pulse-api-client">Visual Studio Marketplace</a>
 •
 <a href="https://github.com/JosunLP/API-Client-VSCode-Extension">Repository</a>
 •
@@ -18,11 +18,11 @@
 
 <br>
 
-<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client&ssr=false#review-details">
-    <img src="https://img.shields.io/visual-studio-marketplace/stars/JosunLP.rest-api-client?color=informational&style=for-the-badge"/>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.pulse-api-client&ssr=false#review-details">
+    <img src="https://img.shields.io/visual-studio-marketplace/stars/JosunLP.pulse-api-client?color=informational&style=for-the-badge"/>
 </a>
-<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client&ssr=false#overview">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/JosunLP.rest-api-client?color=blue&style=for-the-badge"/>
+<a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.pulse-api-client&ssr=false#overview">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/JosunLP.pulse-api-client?color=blue&style=for-the-badge"/>
 </a>
 
 </div>
@@ -48,11 +48,11 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-    - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
+  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [👨🏻‍💻 Contributing](#-contributing)
-    - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
-    - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
-    - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
+  - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
+  - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
+  - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
 - [🫧 Contributors](#-contributors)
 - [📋 License](#-license)
 
