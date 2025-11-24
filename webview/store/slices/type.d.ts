@@ -113,6 +113,7 @@ export interface IRequestDataSlice extends ISidebarResponse {
   shouldShowPassword: boolean;
   shouldBeautifyEditor: boolean;
   requestOption: string;
+  socketConnected: boolean;
   codeSnippetOption: {
     language: string;
     variant: string;
@@ -131,6 +132,7 @@ export interface IRequestDataSlice extends ISidebarResponse {
   handleBodyRawOption: (type: string) => void;
   handleBodyRawOptionData: (rawOption: string, data: string) => void;
   handleBeautifyButton: () => void;
+  handleSocketConnection: (status: boolean) => void;
   handleCodeSnippetOptionChange: (
     languageOption: string,
     variantOption: string,

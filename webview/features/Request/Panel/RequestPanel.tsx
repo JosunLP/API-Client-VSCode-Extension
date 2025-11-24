@@ -11,27 +11,48 @@ import RequestUrl from "../Url/RequestUrl";
 
 const RequestPanel = () => {
   const requestMenuRef = useRef<HTMLDivElement | null>(null);
-  const { requestData, requestMenuHeight, handleRequestProcessStatus } =
-    useStore(
-      (state) => ({
-        requestData: {
-          authData: state.authData,
-          requestUrl: state.requestUrl,
-          authOption: state.authOption,
-          bodyOption: state.bodyOption,
-          bodyRawData: state.bodyRawData,
-          bodyRawOption: state.bodyRawOption,
-          requestMethod: state.requestMethod,
-          keyValueTableData: state.keyValueTableData,
-        },
-        requestMenuHeight: state.requestMenuHeight,
-        handleRequestProcessStatus: state.handleRequestProcessStatus,
-      }),
-      shallow,
-    );
+  const {
+    requestData,
+    requestMenuHeight,
+    handleRequestProcessStatus,
+    socketConnected,
+  } = useStore(
+    (state) => ({
+      requestData: {
+        authData: state.authData,
+        requestUrl: state.requestUrl,
+        authOption: state.authOption,
+        bodyOption: state.bodyOption,
+        bodyRawData: state.bodyRawData,
+        bodyRawOption: state.bodyRawOption,
+        requestMethod: state.requestMethod,
+        keyValueTableData: state.keyValueTableData,
+      },
+      requestMenuHeight: state.requestMenuHeight,
+      handleRequestProcessStatus: state.handleRequestProcessStatus,
+      socketConnected: state.socketConnected,
+    }),
+    shallow,
+  );
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
+
+    if (requestData.requestMethod === "SOCKET") {
+      if (socketConnected) {
+        vscode.postMessage({
+          command: COMMON.SOCKET_DISCONNECT,
+        });
+      } else {
+        if (requestData.requestUrl.length !== 0) {
+          vscode.postMessage({
+            command: COMMON.SOCKET_CONNECT,
+            ...requestData,
+          });
+        }
+      }
+      return;
+    }
 
     if (requestData.requestUrl.length !== 0) {
       handleRequestProcessStatus(COMMON.LOADING);

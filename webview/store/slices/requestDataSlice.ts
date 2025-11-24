@@ -26,6 +26,7 @@ const requestDataSlice: StateCreator<
   },
   authData: { username: "", password: "", token: "" },
   bodyRawData: { text: "", javascript: "", json: "", html: "" },
+  socketConnected: false,
 
   handleRequestUrlChange: (url: string) => set(() => ({ requestUrl: url })),
 
@@ -39,6 +40,9 @@ const requestDataSlice: StateCreator<
     set(() => ({ requestOption: option })),
 
   handleRequestAuthType: (type: string) => set(() => ({ authOption: type })),
+
+  handleSocketConnection: (status: boolean) =>
+    set(() => ({ socketConnected: status })),
 
   handleRequestAuthData: (authType: string, data: string) =>
     set((state) => ({

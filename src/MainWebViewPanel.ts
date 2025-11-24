@@ -5,6 +5,7 @@ import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
 import ExtentionStateManager from "./ExtensionStateManger";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
+import { SocketManager } from "./SocketManager";
 import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
 
@@ -20,6 +21,7 @@ class MainWebViewPanel extends BaseWebView {
   // private extensionUri; // Handled by BaseWebView
   public stateManager;
   public sidebarWebViewPanel;
+  private socketManager: SocketManager | null = null;
 
   constructor(
     extensionUri: vscode.Uri,
@@ -46,6 +48,8 @@ class MainWebViewPanel extends BaseWebView {
       },
     );
 
+    this.socketManager = new SocketManager(this.mainPanel);
+
     this.mainPanel.webview.html = this.getHtmlForWebview(
       this.mainPanel.webview,
       "bundle.js",
@@ -64,8 +68,8 @@ class MainWebViewPanel extends BaseWebView {
   private receiveWebviewMessage() {
     if (!this.mainPanel) return;
 
-    this.mainPanel.webview.onDidReceiveMessage(
-      ({
+    this.mainPanel.webview.onDidReceiveMessage(async (message) => {
+      const {
         requestMethod,
         requestUrl,
         authOption,
@@ -75,44 +79,69 @@ class MainWebViewPanel extends BaseWebView {
         bodyRawData,
         keyValueTableData,
         command,
-      }) => {
-        if (command === COMMAND.ALERT_COPY) {
+        socketEvent,
+        socketData,
+      } = message;
+
+      switch (command) {
+        case COMMAND.ALERT_COPY:
           vscode.window.showInformationMessage(MESSAGE.COPY_SUCCESFUL_MESSAGE);
-
           return;
-        }
 
-        if (requestUrl.length === 0) {
-          vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
-
+        case COMMAND.SOCKET_CONNECT:
+          if (requestUrl) {
+            const headers = getHeaders(keyValueTableData, authOption, authData);
+            const options = {
+              extraHeaders: headers,
+              auth: authData,
+            };
+            this.socketManager?.connect(requestUrl, options);
+          } else {
+            vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
+          }
           return;
-        }
-        const requestObject = {
-          requestMethod,
-          requestUrl,
-          authOption,
-          authData,
-          bodyOption,
-          bodyRawOption,
-          bodyRawData,
-          keyValueTableData,
-          command,
-        };
-        this.url = getUrl(requestUrl);
-        this.method = requestMethod;
-        this.headers = getHeaders(keyValueTableData, authOption, authData);
 
-        // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
-        this.body = getBody(
-          keyValueTableData,
-          bodyOption,
-          bodyRawOption,
-          bodyRawData,
-        );
+        case COMMAND.SOCKET_DISCONNECT:
+          this.socketManager?.disconnect();
+          return;
 
-        this.postWebviewMessage(requestObject);
-      },
-    );
+        case COMMAND.SOCKET_EMIT:
+          if (socketEvent) {
+            this.socketManager?.emit(socketEvent, socketData);
+          }
+          return;
+      }
+
+      if (requestUrl.length === 0) {
+        vscode.window.showWarningMessage(MESSAGE.WARNING_MESSAGE);
+
+        return;
+      }
+      const requestObject = {
+        requestMethod,
+        requestUrl,
+        authOption,
+        authData,
+        bodyOption,
+        bodyRawOption,
+        bodyRawData,
+        keyValueTableData,
+        command,
+      };
+      this.url = getUrl(requestUrl);
+      this.method = requestMethod;
+      this.headers = getHeaders(keyValueTableData, authOption, authData);
+
+      // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
+      this.body = getBody(
+        keyValueTableData,
+        bodyOption,
+        bodyRawOption,
+        bodyRawData,
+      );
+
+      await this.postWebviewMessage(requestObject);
+    });
   }
 
   private async postWebviewMessage(requestObject: IRequestObjectType) {

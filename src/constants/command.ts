@@ -8,6 +8,9 @@ const COMMAND = {
   SIDEBAR_WEB_VIEW_PANEL: "rest-api-client.collectionMenu",
   REMOVE_FROM_FAVORITES: "Remove from favorites",
   DELETE_ALL_COLLECTION: "Delete all collection",
+  SOCKET_CONNECT: "Socket Connect",
+  SOCKET_DISCONNECT: "Socket Disconnect",
+  SOCKET_EMIT: "Socket Emit",
 };
 
 export default COMMAND;

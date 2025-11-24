@@ -17,6 +17,7 @@ const ResponsePanel = () => {
     handleRequestProcessStatus,
     handleSidebarCollectionHeaders,
     handleSidebarCollectionClick,
+    handleSocketConnection,
   } = useStore(
     (state) => ({
       responseData: state.responseData,
@@ -25,12 +26,71 @@ const ResponsePanel = () => {
       handleRequestProcessStatus: state.handleRequestProcessStatus,
       handleSidebarCollectionClick: state.handleSidebarCollectionClick,
       handleSidebarCollectionHeaders: state.handleSidebarCollectionHeaders,
+      handleSocketConnection: state.handleSocketConnection,
     }),
     shallow,
   );
 
   const handleExtensionMessage = (event: MessageEvent) => {
-    if (event.data.type === RESPONSE.RESPONSE) {
+    const { type, payload } = event.data;
+
+    if (type === "socket-connected") {
+      handleSocketConnection(true);
+      handleResponseData({
+        type: RESPONSE.RESPONSE,
+        data: JSON.stringify(
+          { message: "Connected to socket", id: payload?.id },
+          null,
+          2,
+        ),
+        headers: [],
+        headersLength: 0,
+        statusCode: 101,
+        statusText: "Switching Protocols",
+        requestTime: 0,
+        responseSize: 0,
+      });
+      handleRequestProcessStatus(COMMON.FINISHED);
+    } else if (type === "socket-disconnected") {
+      handleSocketConnection(false);
+      handleResponseData({
+        type: RESPONSE.RESPONSE,
+        data: JSON.stringify({ message: "Disconnected from socket" }, null, 2),
+        headers: [],
+        headersLength: 0,
+        statusCode: 200,
+        statusText: "OK",
+        requestTime: 0,
+        responseSize: 0,
+      });
+    } else if (type === "socket-event") {
+      // Append or show event data
+      // For now, just replace response data to show the latest event
+      handleResponseData({
+        type: RESPONSE.RESPONSE,
+        data: JSON.stringify(payload, null, 2),
+        headers: [],
+        headersLength: 0,
+        statusCode: 200,
+        statusText: "Event Received",
+        requestTime: 0,
+        responseSize: 0,
+      });
+    } else if (type === "socket-error") {
+      handleSocketConnection(false);
+      handleResponseData({
+        type: RESPONSE.ERROR,
+        message: payload?.message || "Socket Error",
+        data: "",
+        headers: [],
+        headersLength: 0,
+        statusCode: 500,
+        statusText: "Error",
+        requestTime: 0,
+        responseSize: 0,
+      });
+      handleRequestProcessStatus(RESPONSE.ERROR);
+    } else if (event.data.type === RESPONSE.RESPONSE) {
       handleResponseData(event.data);
       handleRequestProcessStatus(COMMON.FINISHED);
     } else if (event.data.type === RESPONSE.ERROR) {

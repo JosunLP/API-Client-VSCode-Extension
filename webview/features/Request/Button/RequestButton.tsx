@@ -1,14 +1,29 @@
 import React from "react";
+import { shallow } from "zustand/shallow";
 
 import Button from "../../../components/Button";
 import useStore from "../../../store/useStore";
 
 const RequestButton = () => {
-  const requestInProcess = useStore((state) => state.requestInProcess);
+  const { requestInProcess, requestMethod, socketConnected } = useStore(
+    (state) => ({
+      requestInProcess: state.requestInProcess,
+      requestMethod: state.requestMethod,
+      socketConnected: state.socketConnected,
+    }),
+    shallow,
+  );
+
+  const getButtonText = () => {
+    if (requestMethod === "SOCKET") {
+      return socketConnected ? "Disconnect" : "Connect";
+    }
+    return "Send";
+  };
 
   return (
     <Button primary buttonType="submit" buttonStatus={requestInProcess}>
-      Send
+      {getButtonText()}
     </Button>
   );
 };
