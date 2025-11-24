@@ -13,11 +13,6 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "vscode",
-        "ws",
-        "socket.io-client",
-        "axios",
-        "form-data",
-        "uuid",
         ...builtinModules,
         ...builtinModules.map((m) => `node:${m}`),
       ],
