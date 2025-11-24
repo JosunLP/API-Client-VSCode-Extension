@@ -38,7 +38,7 @@ const RequestPanel = () => {
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    if (requestData.requestMethod === "SOCKET") {
+    if (["SOCKET", "WEBSOCKET", "SERIAL"].includes(requestData.requestMethod)) {
       if (socketConnected) {
         vscode.postMessage({
           command: COMMON.SOCKET_DISCONNECT,

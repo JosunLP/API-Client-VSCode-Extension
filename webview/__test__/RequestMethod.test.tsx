@@ -31,7 +31,7 @@ describe("RequestMethod component test", () => {
   it("should display the correct number of options", () => {
     const { getAllByRole } = render(<RequestMethod />);
 
-    expect(getAllByRole("option").length).toBe(7);
+    expect(getAllByRole("option").length).toBe(10);
   });
 
   it("should call handler when user selects request method", async () => {

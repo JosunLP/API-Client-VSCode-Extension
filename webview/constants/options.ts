@@ -9,6 +9,8 @@ const OPTION = {
     "HEAD",
     "OPTIONS",
     "SOCKET",
+    "WEBSOCKET",
+    "SERIAL",
   ],
   REQUEST_MENU_OPTIONS: [
     "Params",

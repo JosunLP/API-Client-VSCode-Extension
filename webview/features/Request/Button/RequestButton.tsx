@@ -15,7 +15,7 @@ const RequestButton = () => {
   );
 
   const getButtonText = () => {
-    if (requestMethod === "SOCKET") {
+    if (["SOCKET", "WEBSOCKET", "SERIAL"].includes(requestMethod)) {
       return socketConnected ? "Disconnect" : "Connect";
     }
     return "Send";

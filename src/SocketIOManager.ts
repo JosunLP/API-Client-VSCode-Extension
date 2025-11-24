@@ -5,7 +5,7 @@ import * as vscode from "vscode";
  * Manages WebSocket connections.
  * Follows OOP principles to encapsulate socket logic.
  */
-export class SocketManager {
+export class SocketIOManager {
   private socket: Socket | null = null;
   private panel: vscode.WebviewPanel;
 
@@ -18,7 +18,7 @@ export class SocketManager {
    * @param url The URL to connect to.
    * @param options Optional connection options.
    */
-  public connect(url: string, options?: any) {
+  public connect(url: string, options?: object) {
     if (this.socket) {
       this.disconnect();
     }
@@ -47,8 +47,12 @@ export class SocketManager {
       this.socket.onAny((event, ...args) => {
         this.postMessage("socket-event", { event, args });
       });
-    } catch (error: any) {
-      this.postMessage("socket-error", { message: error.message });
+    } catch (error) {
+      if (error instanceof Error) {
+        this.postMessage("socket-error", { message: error.message });
+      } else {
+        this.postMessage("socket-error", { message: String(error) });
+      }
     }
   }
 
@@ -67,7 +71,7 @@ export class SocketManager {
    * @param event The event name.
    * @param data The data to send.
    */
-  public emit(event: string, data: any) {
+  public emit(event: string, data: unknown) {
     if (this.socket && this.socket.connected) {
       this.socket.emit(event, data);
     } else {
@@ -75,7 +79,7 @@ export class SocketManager {
     }
   }
 
-  private postMessage(type: string, payload?: any) {
+  private postMessage(type: string, payload?: unknown) {
     this.panel.webview.postMessage({
       type: type,
       payload: payload,
