@@ -5,7 +5,14 @@ import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
 import ExtensionStateManager from "./ExtensionStateManager";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
-import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
+import {
+  CodeGenerator,
+  generateResponseObject,
+  getBody,
+  getHeaders,
+  getUrl,
+  resolveVariables,
+} from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
 import { WebSocketManager } from "./WebSocketManager";
 
@@ -113,6 +120,47 @@ class MainWebViewPanel extends BaseWebView {
             this.webSocketManager?.send(socketData);
           }
           return;
+
+        case COMMAND.GENERATE_CODE: {
+          this.prepareRequestData(message);
+          const languages = ["cURL", "JavaScript (Fetch)", "Python (Requests)"];
+          const selected = await vscode.window.showQuickPick(languages, {
+            placeHolder: "Select language to generate code",
+          });
+          if (selected) {
+            let code = "";
+            const bodyStr =
+              typeof this.body === "string" ? this.body : undefined;
+            if (selected === "cURL") {
+              code = CodeGenerator.generateCurl(
+                this.url,
+                this.method,
+                this.headers,
+                bodyStr,
+              );
+            } else if (selected === "JavaScript (Fetch)") {
+              code = CodeGenerator.generateFetch(
+                this.url,
+                this.method,
+                this.headers,
+                bodyStr,
+              );
+            } else if (selected === "Python (Requests)") {
+              code = CodeGenerator.generatePythonRequests(
+                this.url,
+                this.method,
+                this.headers,
+                bodyStr,
+              );
+            }
+
+            await vscode.env.clipboard.writeText(code);
+            vscode.window.showInformationMessage(
+              `Code for ${selected} copied to clipboard!`,
+            );
+          }
+          return;
+        }
       }
 
       if (requestUrl.length === 0) {
@@ -131,20 +179,55 @@ class MainWebViewPanel extends BaseWebView {
         keyValueTableData,
         command,
       };
-      this.url = getUrl(requestUrl);
-      this.method = requestMethod;
-      this.headers = getHeaders(keyValueTableData, authOption, authData);
-
-      // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
-      this.body = getBody(
-        keyValueTableData,
-        bodyOption,
-        bodyRawOption,
-        bodyRawData,
-      );
+      this.prepareRequestData(message);
 
       await this.postWebviewMessage(requestObject);
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private prepareRequestData(message: any) {
+    const {
+      requestMethod,
+      requestUrl,
+      authOption,
+      authData,
+      bodyOption,
+      bodyRawOption,
+      bodyRawData,
+      keyValueTableData,
+    } = message;
+
+    this.url = getUrl(requestUrl);
+    this.method = requestMethod;
+    this.headers = getHeaders(keyValueTableData, authOption, authData);
+
+    // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
+    this.body = getBody(
+      keyValueTableData,
+      bodyOption,
+      bodyRawOption,
+      bodyRawData,
+    );
+
+    const environments = this.stateManager.getEnvironments();
+    const activeEnv = environments.find((e) => e.isActive);
+
+    if (activeEnv) {
+      this.url = resolveVariables(this.url, activeEnv.variables);
+
+      const newHeaders: IRequestHeaderInformation = {};
+      for (const [key, value] of Object.entries(this.headers)) {
+        const newKey = resolveVariables(key, activeEnv.variables);
+        const newValue = resolveVariables(value, activeEnv.variables);
+        newHeaders[newKey] = newValue;
+      }
+      this.headers = newHeaders;
+
+      if (typeof this.body === "string") {
+        this.body = resolveVariables(this.body, activeEnv.variables);
+      }
+    }
   }
 
   private async postWebviewMessage(requestObject: IRequestObjectType) {

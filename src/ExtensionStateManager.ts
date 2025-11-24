@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 import { COLLECTION } from "./constants";
-import { IUserRequestSidebarState } from "./utils/type";
+import { IEnvironment, IUserRequestSidebarState } from "./utils/type";
 
 class ExtensionStateManager {
   private context: vscode.ExtensionContext;
@@ -145,6 +145,41 @@ class ExtensionStateManager {
         ...filteredExtenionContext,
       ]);
     }
+  }
+
+  getEnvironments() {
+    return (
+      this.context.globalState.get<IEnvironment[]>(
+        COLLECTION.ENVIRONMENTS_COLLECTION,
+      ) || []
+    );
+  }
+
+  async saveEnvironment(environment: IEnvironment) {
+    const environments = this.getEnvironments();
+    const index = environments.findIndex((e) => e.id === environment.id);
+
+    let newEnvironments;
+    if (index !== -1) {
+      newEnvironments = [...environments];
+      newEnvironments[index] = environment;
+    } else {
+      newEnvironments = [...environments, environment];
+    }
+
+    await this.context.globalState.update(
+      COLLECTION.ENVIRONMENTS_COLLECTION,
+      newEnvironments,
+    );
+  }
+
+  async deleteEnvironment(id: string) {
+    const environments = this.getEnvironments();
+    const newEnvironments = environments.filter((e) => e.id !== id);
+    await this.context.globalState.update(
+      COLLECTION.ENVIRONMENTS_COLLECTION,
+      newEnvironments,
+    );
   }
 }
 

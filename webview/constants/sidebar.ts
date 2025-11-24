@@ -11,6 +11,9 @@ const SIDEBAR = {
   REMOVE_FROM_FAVORITES: "Remove from favorites",
   USER_REQUEST_HISTORY_COLLECTION: "userRequestHistory",
   UPDATE_FAVORITE_FOLDER: "Update favorite folder",
+  ENVIRONMENTS: "Environments",
+  SAVE_ENVIRONMENT: "Save Environment",
+  DELETE_ENVIRONMENT: "Delete Environment",
 };
 
 export default SIDEBAR;

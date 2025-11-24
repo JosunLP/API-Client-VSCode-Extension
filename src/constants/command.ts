@@ -12,6 +12,9 @@ const COMMAND = {
   SOCKET_DISCONNECT: "Socket Disconnect",
   SOCKET_EMIT: "Socket Emit",
   UPDATE_FAVORITE_FOLDER: "Update favorite folder",
+  SAVE_ENVIRONMENT: "Save Environment",
+  DELETE_ENVIRONMENT: "Delete Environment",
+  GENERATE_CODE: "Generate Code",
 };
 
 export default COMMAND;

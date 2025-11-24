@@ -88,6 +88,19 @@ export interface IRequestData {
   url: string;
   method: string;
   headers: IRequestHeaderInformation;
-  data: string | FormData | URLSearchParams;
+  data?: string | FormData | URLSearchParams;
   responseType: string;
+}
+
+export interface IEnvironment {
+  id: string;
+  name: string;
+  variables: IEnvironmentVariable[];
+  isActive: boolean;
+}
+
+export interface IEnvironmentVariable {
+  key: string;
+  value: string;
+  enabled: boolean;
 }

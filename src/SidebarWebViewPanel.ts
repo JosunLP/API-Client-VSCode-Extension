@@ -4,7 +4,7 @@ import { BaseWebView } from "./BaseWebView";
 import { CATEGORY, COLLECTION, COMMAND, MESSAGE, TYPE } from "./constants";
 import ExtensionStateManager from "./ExtensionStateManager";
 import { filterObjectKey, generateResponseObject } from "./utils";
-import { IUserRequestSidebarState } from "./utils/type";
+import { IEnvironment, IUserRequestSidebarState } from "./utils/type";
 
 /**
  * Manages the sidebar webview panel.
@@ -45,6 +45,7 @@ class SidebarWebViewPanel
     const favoritesData = this.stateManager.getExtensionContext(
       COLLECTION.FAVORITES_COLLECTION,
     );
+    const environmentsData = this.stateManager.getEnvironments();
 
     this.receiveSidebarWebViewMessage();
 
@@ -54,12 +55,14 @@ class SidebarWebViewPanel
         console.log("Pulse API Client: Sending initial data to sidebar...", {
           history: historyData,
           favorites: favoritesData,
+          environments: environmentsData,
         });
 
         this.sidebarWebview.webview.postMessage({
           messageCategory: CATEGORY.COLLECTION_DATA,
           history: historyData,
           favorites: favoritesData,
+          environments: environmentsData,
         });
       }
     }, 100);
@@ -77,10 +80,13 @@ class SidebarWebViewPanel
   ) {
     if (!this.sidebarWebview) return;
 
+    const environmentsData = this.stateManager.getEnvironments();
+
     this.sidebarWebview.webview.postMessage({
       messageCategory: CATEGORY.COLLECTION_DATA,
       history: userHistoryData,
       favorites: userFavoritesData,
+      environments: environmentsData,
     });
   }
 
@@ -93,11 +99,13 @@ class SidebarWebViewPanel
         id,
         target,
         folder,
+        environment,
       }: {
         command: string;
         id: string;
         target: string;
         folder?: string;
+        environment?: IEnvironment;
       }) => {
         if (command === COMMAND.START_APP) {
           vscode.commands.executeCommand(COMMAND.MAIN_WEB_VIEW_PANEL);
@@ -105,6 +113,28 @@ class SidebarWebViewPanel
           await this.stateManager.addToFavorites(id);
         } else if (command === COMMAND.REMOVE_FROM_FAVORITES) {
           await this.stateManager.removeFromFavorites(id);
+        } else if (command === COMMAND.SAVE_ENVIRONMENT) {
+          if (environment) {
+            await this.stateManager.saveEnvironment(environment);
+            this.postMainWebViewPanelMessage(
+              this.stateManager.getExtensionContext(
+                COLLECTION.HISTORY_COLLECTION,
+              ),
+              this.stateManager.getExtensionContext(
+                COLLECTION.FAVORITES_COLLECTION,
+              ),
+            );
+          }
+        } else if (command === COMMAND.DELETE_ENVIRONMENT) {
+          await this.stateManager.deleteEnvironment(id);
+          this.postMainWebViewPanelMessage(
+            this.stateManager.getExtensionContext(
+              COLLECTION.HISTORY_COLLECTION,
+            ),
+            this.stateManager.getExtensionContext(
+              COLLECTION.FAVORITES_COLLECTION,
+            ),
+          );
         } else if (command === COMMAND.DELETE) {
           if (target === COLLECTION.FAVORITES_COLLECTION) {
             await this.stateManager.unfavoriteInHistory(id);

@@ -7,6 +7,7 @@ export interface ISidebarSlice extends ISidebarSliceList {
   handleUserFavoritesCollection: (
     favoritesData: IUserRequestSidebarState[],
   ) => void;
+  handleUserEnvironmentsCollection: (environments: IEnvironment[]) => void;
   handleUserFavoriteIcon: (id: string, time: number | null) => void;
   handleUserDeleteIcon: (
     targetState: keyof ISidebarSliceList,
@@ -22,6 +23,7 @@ export interface ISidebarSlice extends ISidebarSliceList {
 export interface ISidebarSliceList {
   userFavorites: IUserRequestSidebarState[];
   userRequestHistory: IUserRequestSidebarState[];
+  userEnvironments: IEnvironment[];
 }
 
 export interface IUserRequestSidebarState {
@@ -171,4 +173,17 @@ export interface IKeyValueTableDataSlice {
     optionsType: string,
     replaceValues: boolean,
   ) => void;
+}
+
+export interface IEnvironment {
+  id: string;
+  name: string;
+  variables: IEnvironmentVariable[];
+  isActive: boolean;
+}
+
+export interface IEnvironmentVariable {
+  key: string;
+  value: string;
+  enabled: boolean;
 }
