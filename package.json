@@ -18,7 +18,8 @@
     "url": "https://github.com/JosunLP/API-Client-VSCode-Extension"
   },
   "engines": {
-    "vscode": "^1.106.0"
+    "vscode": "^1.106.0",
+    "node": ">=25"
   },
   "categories": [
     "Programming Languages",
