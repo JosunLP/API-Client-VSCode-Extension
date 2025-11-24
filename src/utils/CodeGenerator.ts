@@ -204,9 +204,11 @@ export class CodeGenerator {
 
   /**
    * Escapes a string for use in C# verbatim string literals (@"...").
+   * In verbatim strings, backslashes are treated literally (no escaping needed),
+   * newlines and other control characters are preserved as-is.
+   * Only double quotes need to be doubled ("" instead of \").
    */
   private static escapeCSharpVerbatimString(str: string): string {
-    // In verbatim strings, only double quotes need to be doubled
     return str.replace(/"/g, '""');
   }
 
