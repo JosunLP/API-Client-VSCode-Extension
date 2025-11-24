@@ -7,7 +7,7 @@ describe("CodeGenerator", () => {
   const method = "POST";
   const headers = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer token123"
+    Authorization: "Bearer token123",
   };
   const body = JSON.stringify({ name: "John Doe", age: 30 });
 
@@ -39,7 +39,12 @@ describe("CodeGenerator", () => {
 
   describe("generatePythonRequests", () => {
     it("should generate correct python requests snippet", () => {
-      const pythonCode = CodeGenerator.generatePythonRequests(url, method, headers, body);
+      const pythonCode = CodeGenerator.generatePythonRequests(
+        url,
+        method,
+        headers,
+        body,
+      );
       expect(pythonCode).toContain(`import requests`);
       expect(pythonCode).toContain(`url = "${url}"`);
       expect(pythonCode).toContain(`"Content-Type": "application/json"`);
