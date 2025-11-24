@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FaFolder, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 
 import { Headers, RequestObject } from "../../../../src/utils/type";
+import ConfirmDialog from "../../../components/ConfirmDialog";
 import Information from "../../../components/Information";
 import MoreInformation from "../../../components/MoreInformation";
 import { IProject } from "../../../store/slices/type";
@@ -58,28 +59,36 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
   const [renamingProjectId, setRenamingProjectId] = useState<string | null>(null);
   const [newProjectName, setNewProjectName] = useState("");
   const [assigningFavoriteId, setAssigningFavoriteId] = useState<string | null>(null);
+  const [deletingProjectId, setDeletingProjectId] = useState<string | null>(null);
 
-  // Group favorites by project
-  const groupedFavorites: Record<string, IFavoriteItem[]> = {};
-  const ungroupedFavorites: IFavoriteItem[] = [];
+  // Group favorites by project - memoized for performance
+  const { groupedFavorites, ungroupedFavorites, filteredFavoritesCount } = useMemo(() => {
+    const grouped: Record<string, IFavoriteItem[]> = {};
+    const ungrouped: IFavoriteItem[] = [];
 
-  userFavorites
-    .filter((favorite) =>
-      favorite.url.toLowerCase().includes(searchInputValue.toLowerCase())
-    )
-    .forEach((favorite) => {
-      if (favorite.projectId) {
-        if (!groupedFavorites[favorite.projectId]) {
-          groupedFavorites[favorite.projectId] = [];
+    userFavorites
+      .filter((favorite) =>
+        favorite.url.toLowerCase().includes(searchInputValue.toLowerCase())
+      )
+      .forEach((favorite) => {
+        if (favorite.projectId) {
+          if (!grouped[favorite.projectId]) {
+            grouped[favorite.projectId] = [];
+          }
+          grouped[favorite.projectId].push(favorite);
+        } else {
+          ungrouped.push(favorite);
         }
-        groupedFavorites[favorite.projectId].push(favorite);
-      } else {
-        ungroupedFavorites.push(favorite);
-      }
-    });
+      });
 
-  const filteredFavoritesCount =
-    Object.values(groupedFavorites).flat().length + ungroupedFavorites.length;
+    const count = Object.values(grouped).reduce((sum, items) => sum + items.length, 0) + ungrouped.length;
+
+    return {
+      groupedFavorites: grouped,
+      ungroupedFavorites: ungrouped,
+      filteredFavoritesCount: count,
+    };
+  }, [userFavorites, searchInputValue]);
 
   const handleRenameProject = (projectId: string) => {
     const project = projects.find((p) => p.id === projectId);
@@ -137,6 +146,8 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
     );
   };
 
+  const deletingProject = projects.find((p) => p.id === deletingProjectId);
+
   return (
     <>
       {assigningFavoriteId && (
@@ -150,6 +161,20 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
             setAssigningFavoriteId(null);
           }}
           onClose={() => setAssigningFavoriteId(null)}
+        />
+      )}
+      {deletingProjectId && deletingProject && (
+        <ConfirmDialog
+          title="Delete Project"
+          message={`Are you sure you want to delete the project "${deletingProject.name}"? Favorites in this project will be moved to ungrouped.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+          onConfirm={() => {
+            onDeleteProject(deletingProjectId);
+            setDeletingProjectId(null);
+          }}
+          onCancel={() => setDeletingProjectId(null)}
         />
       )}
       {userFavorites?.length ? (
@@ -199,11 +224,7 @@ const SidebarFavoritesCollection: React.FC<ISidebarFavoritesCollectionProps> = (
                           itemCount={projectFavorites.length}
                           onToggleCollapse={() => onToggleProjectCollapse(project.id)}
                           onRename={() => handleRenameProject(project.id)}
-                          onDelete={() => {
-                            if (confirm(`Delete project "${project.name}"?`)) {
-                              onDeleteProject(project.id);
-                            }
-                          }}
+                          onDelete={() => setDeletingProjectId(project.id)}
                         />
                       )}
                       {!project.collapsed && (

@@ -121,7 +121,7 @@ class SidebarWebViewPanel
             COLLECTION.PROJECTS_COLLECTION,
           ).userRequestHistory as IProject[] | undefined) || [];
           const newProject: IProject = {
-            id: `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `project-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
             name: name || "New Project",
             createdTime: Date.now(),
             collapsed: false,

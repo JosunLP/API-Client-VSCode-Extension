@@ -80,7 +80,7 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
       projects: [
         ...state.projects,
         {
-          id: `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `project-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
           name,
           createdTime: Date.now(),
           collapsed: false,

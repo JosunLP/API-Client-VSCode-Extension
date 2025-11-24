@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import InputDialog from "../../../components/InputDialog";
 import { REQUEST, SIDEBAR } from "../../../constants";
 import { ISidebarSliceList } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
@@ -127,16 +128,20 @@ const SidebarMenuOption = () => {
     },
   };
 
+  const [showAddProjectDialog, setShowAddProjectDialog] = useState(false);
+
   const handleAddProject = () => {
-    const projectName = prompt("Enter project name:");
-    if (projectName && projectName.trim()) {
-      addProject(projectName.trim());
-      // Persist to backend
-      vscode.postMessage({
-        command: "ADD_PROJECT",
-        name: projectName.trim(),
-      });
-    }
+    setShowAddProjectDialog(true);
+  };
+
+  const confirmAddProject = (projectName: string) => {
+    addProject(projectName);
+    // Persist to backend
+    vscode.postMessage({
+      command: "ADD_PROJECT",
+      name: projectName,
+    });
+    setShowAddProjectDialog(false);
   };
 
   const handleRenameProject = (id: string, newName: string) => {
@@ -180,16 +185,26 @@ const SidebarMenuOption = () => {
   switch (sidebarOption) {
     case SIDEBAR.FAVORITES:
       return (
-        <SidebarFavoritesCollection
-          userFavorites={userFavorites}
-          projects={projects}
-          onAddProject={handleAddProject}
-          onRenameProject={handleRenameProject}
-          onDeleteProject={handleDeleteProject}
-          onToggleProjectCollapse={handleToggleProjectCollapse}
-          onAssignToProject={handleAssignToProject}
-          {...sidebarCollectionProps}
-        />
+        <>
+          {showAddProjectDialog && (
+            <InputDialog
+              title="Add New Project"
+              placeholder="Enter project name"
+              onConfirm={confirmAddProject}
+              onCancel={() => setShowAddProjectDialog(false)}
+            />
+          )}
+          <SidebarFavoritesCollection
+            userFavorites={userFavorites}
+            projects={projects}
+            onAddProject={handleAddProject}
+            onRenameProject={handleRenameProject}
+            onDeleteProject={handleDeleteProject}
+            onToggleProjectCollapse={handleToggleProjectCollapse}
+            onAssignToProject={handleAssignToProject}
+            {...sidebarCollectionProps}
+          />
+        </>
       );
     default:
       return (
