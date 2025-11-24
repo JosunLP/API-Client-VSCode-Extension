@@ -94,6 +94,31 @@ class SidebarWebViewPanel
     });
   }
 
+  /**
+   * Sends the current state (history, favorites, projects) to the sidebar webview.
+   * This ensures the UI stays in sync with persisted data after backend operations.
+   */
+  private syncSidebarState() {
+    if (!this.sidebarWebview) return;
+
+    const historyData = this.stateManager.getExtensionContext(
+      COLLECTION.HISTORY_COLLECTION,
+    );
+    const favoritesData = this.stateManager.getExtensionContext(
+      COLLECTION.FAVORITES_COLLECTION,
+    );
+    const projectsData = this.stateManager.getExtensionContext(
+      COLLECTION.PROJECTS_COLLECTION,
+    );
+
+    this.sidebarWebview.webview.postMessage({
+      messageCategory: CATEGORY.COLLECTION_DATA,
+      history: historyData,
+      favorites: favoritesData,
+      projects: projectsData,
+    });
+  }
+
   private receiveSidebarWebViewMessage() {
     if (!this.sidebarWebview) return;
 
@@ -130,6 +155,8 @@ class SidebarWebViewPanel
             COLLECTION.PROJECTS_COLLECTION,
             { history: [...projects, newProject] },
           );
+          // Sync state back to frontend
+          this.syncSidebarState();
         } else if (command === "UPDATE_PROJECT") {
           // Update project name
           const projects = (this.stateManager.getExtensionContext(
@@ -142,6 +169,8 @@ class SidebarWebViewPanel
             COLLECTION.PROJECTS_COLLECTION,
             { history: updatedProjects },
           );
+          // Sync state back to frontend
+          this.syncSidebarState();
         } else if (command === "DELETE_PROJECT") {
           // Delete project and unassign favorites
           const projects = (this.stateManager.getExtensionContext(
@@ -164,6 +193,8 @@ class SidebarWebViewPanel
             COLLECTION.FAVORITES_COLLECTION,
             { history: updatedFavorites },
           );
+          // Sync state back to frontend
+          this.syncSidebarState();
         } else if (command === "TOGGLE_PROJECT_COLLAPSE") {
           // Toggle project collapse state
           const projects = (this.stateManager.getExtensionContext(
@@ -176,6 +207,8 @@ class SidebarWebViewPanel
             COLLECTION.PROJECTS_COLLECTION,
             { history: updatedProjects },
           );
+          // Sync state back to frontend
+          this.syncSidebarState();
         } else if (command === "ASSIGN_TO_PROJECT") {
           // Assign favorite to project
           const favorites = (this.stateManager.getExtensionContext(
@@ -188,6 +221,8 @@ class SidebarWebViewPanel
             COLLECTION.FAVORITES_COLLECTION,
             { history: updatedFavorites },
           );
+          // Sync state back to frontend
+          this.syncSidebarState();
         } else if (command === COMMAND.ADD_TO_FAVORITES) {
           await this.stateManager.updateExtensionContext(
             COLLECTION.HISTORY_COLLECTION,
