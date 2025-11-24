@@ -1,13 +1,13 @@
 <div align="center">
   <a href="https://github.com/JosunLP/API-Client-VSCode-Extension">
     <img
-      src="https://user-images.githubusercontent.com/83770081/179551561-e773aa66-db92-437a-be66-c7480f19d434.png"
+      src="https://github.com/JosunLP/API-Client-VSCode-Extension/blob/b5ab202cdb8c89786408a601f531327d28bd94ab/icons/images/icon.png"
       width="100"
       height="100"
     />
   </a>
 
-  <h3>REST API Client</h3>
+  <h3>Pulse API Client</h3>
   <h5>Simple and intuitive API Client made into a VSCode extension.</h5>
 
 <a href="https://marketplace.visualstudio.com/items?itemName=JosunLP.rest-api-client">Visual Studio Marketplace</a>
@@ -37,7 +37,7 @@
   </p>
   <img
     src="https://user-images.githubusercontent.com/83770081/179973792-c8db3488-3f90-4829-8eb4-f1f671d89577.gif"
-    alt="REST API Client preview"
+    alt="Pulse API Client preview"
   />
 </div>
 
@@ -48,13 +48,11 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
-- [🗒 Changelog](#-changelog)
-  - [Current version 1.1.4](#current-version-114)
+    - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [👨🏻‍💻 Contributing](#-contributing)
-  - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
-  - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
-  - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
+    - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
+    - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
+    - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
 - [🫧 Contributors](#-contributors)
 - [📋 License](#-license)
 
@@ -64,12 +62,12 @@
 
 > ❗️ This extension is best paired with a dark-colored Visual Studio Code theme.
 
-> ❗️ REST API Client cannot be installed or used when using a web version of Visual Studio Code
+> ❗️ Pulse API Client cannot be installed or used when using a web version of Visual Studio Code
 
 ## 🔐 Security and Privacy
 
-- REST API Client **does not** collect or store any of your personal information or request data
-- REST API Client uses VSCode global state API in order to store your request history and favorites collections locally.
+- Pulse API Client **does not** collect or store any of your personal information or request data
+- Pulse API Client uses VSCode global state API in order to store your request history and favorites collections locally.
 
 ## ✨ Features
 
@@ -159,12 +157,6 @@ Simply click Open Menu button or open the Command Palette and type the command b
 - **Bundler**: [Webpack](https://webpack.js.org/)
 - **Compiler**: [Babel](https://babeljs.io/)
 - **Test:** [Jest](https://jestjs.io/)**,** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-
-## 🗒 Changelog
-
-#### Current version 1.1.4
-
-Visit [here](https://github.com/JosunLP/API-Client-VSCode-Extension/blob/main/CHANGELOG.md) for a detailed release notes
 
 ## 👨🏻‍💻 Contributing
 
