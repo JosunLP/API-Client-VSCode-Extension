@@ -173,6 +173,21 @@ class ExtensionStateManager {
     );
   }
 
+  async setActiveEnvironment(id: string) {
+    const environments = this.getEnvironments();
+    const newEnvironments = environments.map((env) => {
+      if (env.id === id) {
+        return { ...env, isActive: !env.isActive };
+      }
+      return { ...env, isActive: false };
+    });
+
+    await this.context.globalState.update(
+      COLLECTION.ENVIRONMENTS_COLLECTION,
+      newEnvironments,
+    );
+  }
+
   async deleteEnvironment(id: string) {
     const environments = this.getEnvironments();
     const newEnvironments = environments.filter((e) => e.id !== id);

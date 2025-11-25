@@ -13,6 +13,7 @@ const COMMAND = {
   SOCKET_EMIT: "Socket Emit",
   UPDATE_FAVORITE_FOLDER: "Update favorite folder",
   SAVE_ENVIRONMENT: "Save Environment",
+  SET_ACTIVE_ENVIRONMENT: "Set Active Environment",
   DELETE_ENVIRONMENT: "Delete Environment",
   GENERATE_CODE: "Generate Code",
 };

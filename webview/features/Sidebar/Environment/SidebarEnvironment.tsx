@@ -9,14 +9,14 @@ interface ISidebarEnvironmentProps {
   environments: IEnvironment[];
   handleSaveEnvironment: (env: IEnvironment) => void;
   handleDeleteEnvironment: (id: string) => void;
-  handleToggleEnvironmentActive?: (id: string) => void;
+  handleSetActiveEnvironment: (id: string) => void;
 }
 
 const SidebarEnvironment = ({
   environments,
   handleSaveEnvironment,
   handleDeleteEnvironment,
-  handleToggleEnvironmentActive,
+  handleSetActiveEnvironment,
 }: ISidebarEnvironmentProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
@@ -83,18 +83,7 @@ const SidebarEnvironment = ({
   };
 
   const toggleActive = (env: IEnvironment) => {
-    // If a dedicated toggle handler is provided, use it for a single state update
-    if (handleToggleEnvironmentActive) {
-      handleToggleEnvironmentActive(env.id);
-    } else {
-      // Fallback: deactivate all others and toggle the target
-      environments.forEach((e) => {
-        if (e.id !== env.id && e.isActive) {
-          handleSaveEnvironment({ ...e, isActive: false });
-        }
-      });
-      handleSaveEnvironment({ ...env, isActive: !env.isActive });
-    }
+    handleSetActiveEnvironment(env.id);
   };
 
   return (
@@ -110,8 +99,9 @@ const SidebarEnvironment = ({
               <EditForm>
                 <input
                   value={editName}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onChange={(e: any) => setEditName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEditName(e.target.value)
+                  }
                   placeholder="Environment Name"
                 />
                 <VariablesList>
@@ -119,16 +109,14 @@ const SidebarEnvironment = ({
                     <VariableRow key={i}>
                       <input
                         value={v.key}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           updateVariable(i, "key", e.target.value)
                         }
                         placeholder="Key"
                       />
                       <input
                         value={v.value}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        onChange={(e: any) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           updateVariable(i, "value", e.target.value)
                         }
                         placeholder="Value"

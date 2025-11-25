@@ -53,6 +53,13 @@ const SidebarMenuOption = () => {
     });
   };
 
+  const handleSetActiveEnvironment = (id: string) => {
+    vscode.postMessage({
+      command: SIDEBAR.SET_ACTIVE_ENVIRONMENT,
+      id,
+    });
+  };
+
   const sidebarCollectionProps = {
     sidebarOption,
     handleSidebarFavoriteIcon(command: string, id: string) {
@@ -149,6 +156,7 @@ const SidebarMenuOption = () => {
           environments={userEnvironments || []}
           handleSaveEnvironment={handleSaveEnvironment}
           handleDeleteEnvironment={handleDeleteEnvironment}
+          handleSetActiveEnvironment={handleSetActiveEnvironment}
         />
       );
     case SIDEBAR.FAVORITES:

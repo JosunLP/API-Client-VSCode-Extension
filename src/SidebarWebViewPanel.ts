@@ -125,6 +125,16 @@ class SidebarWebViewPanel
               ),
             );
           }
+        } else if (command === COMMAND.SET_ACTIVE_ENVIRONMENT) {
+          await this.stateManager.setActiveEnvironment(id);
+          this.postMainWebViewPanelMessage(
+            this.stateManager.getExtensionContext(
+              COLLECTION.HISTORY_COLLECTION,
+            ),
+            this.stateManager.getExtensionContext(
+              COLLECTION.FAVORITES_COLLECTION,
+            ),
+          );
         } else if (command === COMMAND.DELETE_ENVIRONMENT) {
           await this.stateManager.deleteEnvironment(id);
           this.postMainWebViewPanelMessage(

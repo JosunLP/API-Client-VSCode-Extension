@@ -13,6 +13,7 @@ const SIDEBAR = {
   UPDATE_FAVORITE_FOLDER: "Update favorite folder",
   ENVIRONMENTS: "Environments",
   SAVE_ENVIRONMENT: "Save Environment",
+  SET_ACTIVE_ENVIRONMENT: "Set Active Environment",
   DELETE_ENVIRONMENT: "Delete Environment",
 };
 
