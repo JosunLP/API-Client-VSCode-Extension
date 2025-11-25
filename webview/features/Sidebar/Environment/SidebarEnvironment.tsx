@@ -38,7 +38,7 @@ const SidebarEnvironment = ({
   const startEditing = (env: IEnvironment) => {
     setEditingId(env.id);
     setEditName(env.name);
-    setEditVariables([...env.variables]);
+    setEditVariables(env.variables.map(v => v.id ? v : { ...v, id: uuidv4() }));
   };
 
   const cancelEditing = () => {

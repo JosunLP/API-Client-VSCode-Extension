@@ -64,11 +64,9 @@ export class ExtensionController {
 
     const environments = this.stateManager.getEnvironments();
     if (!environments || environments.length === 0) {
-      await this.stateManager.addExtensionContext(
+      await this.context.globalState.update(
         COLLECTION.ENVIRONMENTS_COLLECTION,
-        {
-          environments: [],
-        },
+        [],
       );
     }
   }
