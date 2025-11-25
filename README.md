@@ -31,7 +31,7 @@
 
 <div>
   <p>
-    Visual Studio Code extension to send HTTP/S requests and WebSocket connections with
+    Visual Studio Code extension to send HTTP/S requests and establish WebSocket connections with
     an intuitive UI within Visual Studio Code to enhance work productivity.
   </p>
   <img
@@ -47,11 +47,12 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-    - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
+  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [👨🏻‍💻 Contributing](#-contributing)
-    - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
-    - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
-    - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
+  - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
+  - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
+  - [📦 Available Scripts](#-available-scripts)
+  - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
 - [🫧 Contributors](#-contributors)
 - [📋 License](#-license)
 
@@ -187,14 +188,14 @@ I appreciate even the tiniest suggestion or contribution you make to this projec
 
 #### 📦 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development mode with hot reload |
-| `npm run package` | Build extension and webview for production |
-| `npm run compile` | Package extension as VSIX file |
-| `npm run lint` | Run ESLint with auto-fix |
-| `npm run test` | Run tests with Vitest |
-| `npm run coverage` | Run tests with coverage report |
+| Command            | Description                                |
+| ------------------ | ------------------------------------------ |
+| `npm run dev`      | Start development mode with hot reload     |
+| `npm run package`  | Build extension and webview for production |
+| `npm run compile`  | Package extension as VSIX file             |
+| `npm run lint`     | Run ESLint with auto-fix                   |
+| `npm run test`     | Run tests with Vitest                      |
+| `npm run coverage` | Run tests with coverage report             |
 
 #### ⚠️ Bugs or Suggestions
 
@@ -203,8 +204,6 @@ If you found any bugs while using this extension or you have a suggestion please
 ## 🫧 Contributors
 
 [![Contributors](https://contrib.rocks/image?repo=JosunLP/API-Client-VSCode-Extension)](https://github.com/JosunLP/API-Client-VSCode-Extension/graphs/contributors)
-
-<a href="https://github.com/features/copilot"><img src="https://avatars.githubusercontent.com/u/175728472?s=64&v=4" width="50" height="50" alt="GitHub Copilot" title="GitHub Copilot"/></a>
 
 ## 📋 License
 
