@@ -31,9 +31,8 @@
 
 <div>
   <p>
-    Visual Studio Code extension to send basic HTTP/S requests and receive a
-    response with an intuitive UI within Visual Studio code to enhance work
-    productivity.
+    Visual Studio Code extension to send HTTP/S requests and establish WebSocket connections with
+    an intuitive UI within Visual Studio Code to enhance work productivity.
   </p>
   <img
     src="https://user-images.githubusercontent.com/83770081/179973792-c8db3488-3f90-4829-8eb4-f1f671d89577.gif"
@@ -48,11 +47,12 @@
 - [✨ Features](#-features)
 - [💻 Commands](#-commands)
 - [📚 Tech Stacks](#-tech-stacks)
-    - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
+  - [This project was created using the following tech stacks](#this-project-was-created-using-the-following-tech-stacks)
 - [👨🏻‍💻 Contributing](#-contributing)
-    - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
-    - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
-    - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
+  - [🪜 Step-by-step guide on how to make a pull request](#-step-by-step-guide-on-how-to-make-a-pull-request)
+  - [🏗 Running the extension locally for development](#-running-the-extension-locally-for-development)
+  - [📦 Available Scripts](#-available-scripts)
+  - [⚠️ Bugs or Suggestions](#️-bugs-or-suggestions)
 - [🫧 Contributors](#-contributors)
 - [📋 License](#-license)
 
@@ -72,7 +72,7 @@
 ## ✨ Features
 
 - Send a request and receive a response from your desired API endpoint.
-- Seven request methods
+- Eight request methods
   - `GET`
   - `POST`
   - `PUT`
@@ -80,6 +80,7 @@
   - `DELETE`
   - `HEAD`
   - `OPTIONS`
+  - `WEBSOCKET` - Real-time WebSocket connections with custom headers support
 - Various request options
   - Add parameter to your API endpoint
   - Add authorization option
@@ -93,6 +94,10 @@
       - `JavaScript`
       - `JSON`
       - `HTML`
+- **Environment Management** - Create and manage multiple environments with variables
+  - Define environment variables (key-value pairs)
+  - Switch between environments easily
+  - Variables are automatically substituted in your requests
 - Code snippet of your current request, provided up to 18 different languages with their specific variants, to copy and paste to your codebase.
 
 ![Code Snippet preview](https://user-images.githubusercontent.com/83770081/179729908-e20f4b05-2007-4bec-8473-b4944e882f86.gif)
@@ -114,6 +119,7 @@
 - Response headers view mode
 - History collection sidebar
 - Favorites collection sidebar
+- **Favorites Folder Organization** - Organize your favorite requests into folders
 - Intuitive icon UI to favorite a request history or delete
 - Search bar to find your specific request history
 - Click and search from the sidebar collection
@@ -139,24 +145,23 @@ Simply click Open Menu button or open the Command Palette and type the command b
 #### This project was created using the following tech stacks
 
 <p>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/></a>&nbsp
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/></a>&nbsp
-  <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E"/></a>&nbsp
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/></a>&nbsp
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/></a>&nbsp
-  <img src="https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=Webpack&logoColor=white"/></a>&nbsp
-  <img src="https://img.shields.io/badge/Babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=white"/></a>&nbsp
+  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E"/></a>&nbsp
+  <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"/></a>&nbsp
 </p>
 
 - **Extension** : [VS Code Extension API](https://code.visualstudio.com/api)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **UI** : [React JS](https://reactjs.org/), [Styled Components](https://styled-components.com/)
 - **HTTP/s Request**: [Axios](https://axios-http.com/)
+- **WebSocket**: [ws](https://github.com/websockets/ws)
 - **State Management Library**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **Editor** : [Monaco Editor](https://www.npmjs.com/package/monaco-editor)
+- **Editor** : [Monaco Editor](https://www.npmjs.com/package/@monaco-editor/react)
 - **Local DB** : [VSCode extension global state API](https://code.visualstudio.com/api/extension-capabilities/common-capabilities#:~:text=globalState%20%3A%20A%20global%20storage%20where,using%20setKeysForSync%20method%20on%20globalState%20.)
 - **Code Snippet Generator** : [Postman-collection](https://www.npmjs.com/package/postman-collection), [Postman-Code-Generators](https://www.npmjs.com/package/postman-code-generators)
-- **Bundler**: [Webpack](https://webpack.js.org/)
-- **Compiler**: [Babel](https://babeljs.io/)
-- **Test:** [Jest](https://jestjs.io/)**,** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Bundler**: [Vite](https://vitejs.dev/)
+- **Test:** [Vitest](https://vitest.dev/), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 
 ## 👨🏻‍💻 Contributing
 
@@ -177,9 +182,20 @@ I appreciate even the tiniest suggestion or contribution you make to this projec
 
 1. Run `git clone` from this [repository](https://github.com/JosunLP/API-Client-VSCode-Extension)
 2. Run `npm install`
-3. Run `npm run dev`
+3. Run `npm run dev` (starts both extension and webview in watch mode)
 4. Press F5 to launch extension development mode
 5. `command + p` or `ctrl + p` and type `> Developer: Toggle Developer Tools` to open browser console for easy debugging
+
+#### 📦 Available Scripts
+
+| Command            | Description                                |
+| ------------------ | ------------------------------------------ |
+| `npm run dev`      | Start development mode with hot reload     |
+| `npm run package`  | Build extension and webview for production |
+| `npm run compile`  | Package extension as VSIX file             |
+| `npm run lint`     | Run ESLint with auto-fix                   |
+| `npm run test`     | Run tests with Vitest                      |
+| `npm run coverage` | Run tests with coverage report             |
 
 #### ⚠️ Bugs or Suggestions
 

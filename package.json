@@ -4,7 +4,7 @@
   "displayName": "Pulse API Client",
   "icon": "icons/images/icon.png",
   "description": "Simple and intuitive API Client made into a VSCode extension.  A fork from REST API Client extension.",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JosunLP/API-Client-VSCode-Extension/issues"
@@ -13,6 +13,12 @@
     "name": "Jonas Pfalzgraf",
     "email": "support@josunlp.de"
   },
+  "contributors": [
+    {
+      "name": "GitHub Copilot",
+      "url": "https://github.com/features/copilot"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/JosunLP/API-Client-VSCode-Extension"
