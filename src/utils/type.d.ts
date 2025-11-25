@@ -2,12 +2,14 @@ export interface IUserRequestSidebarState {
   url: string;
   method: string;
   headers: Headers;
+  data?: string | FormData | URLSearchParams;
   responseType: string;
   requestedTime: number;
   favoritedTime: number | null;
   isUserFavorite: boolean;
   id: string;
   requestObject: RequestObject;
+  folder?: string;
 }
 
 export interface Headers {
@@ -86,6 +88,20 @@ export interface IRequestData {
   url: string;
   method: string;
   headers: IRequestHeaderInformation;
-  data: string | FormData | URLSearchParams;
+  data?: string | FormData | URLSearchParams;
   responseType: string;
+}
+
+export interface IEnvironment {
+  id: string;
+  name: string;
+  variables: IEnvironmentVariable[];
+  isActive: boolean;
+}
+
+export interface IEnvironmentVariable {
+  id: string;
+  key: string;
+  value: string;
+  enabled: boolean;
 }

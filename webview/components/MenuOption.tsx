@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { TMenuOptionProps } from "./type";
+import { IMenuOptionStyledProps, TMenuOptionProps } from "./type";
 
 const MenuOption = ({
   children,
@@ -15,7 +15,7 @@ const MenuOption = ({
   );
 };
 
-const MenuOptionWrapper = styled.div<{ $primary: boolean }>`
+const MenuOptionWrapper = styled.div<IMenuOptionStyledProps>`
   display: flex;
   align-items: center;
   margin: 0 1rem;

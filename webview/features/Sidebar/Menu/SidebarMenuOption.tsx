@@ -2,28 +2,33 @@ import React from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { REQUEST, SIDEBAR } from "../../../constants";
-import { ISidebarSliceList } from "../../../store/slices/type";
+import { IEnvironment, ISidebarSliceList } from "../../../store/slices/type";
 import useStore from "../../../store/useStore";
 import SidebarCollection from "../Collection/SidebarCollection";
+import SidebarEnvironment from "../Environment/SidebarEnvironment";
 
 const SidebarMenuOption = () => {
   const {
     userFavorites,
     sidebarOption,
+    userEnvironments,
     userRequestHistory,
     handleUserDeleteIcon,
     handleUserFavoriteIcon,
     addCollectionToFavorites,
     removeFromFavoriteCollection,
+    updateFavoriteFolder,
   } = useStore(
     useShallow((state) => ({
       sidebarOption: state.sidebarOption,
       userFavorites: state.userFavorites,
+      userEnvironments: state.userEnvironments,
       userRequestHistory: state.userRequestHistory,
       handleUserDeleteIcon: state.handleUserDeleteIcon,
       handleUserFavoriteIcon: state.handleUserFavoriteIcon,
       addCollectionToFavorites: state.addCollectionToFavorites,
       removeFromFavoriteCollection: state.removeFromFavoriteCollection,
+      updateFavoriteFolder: state.updateFavoriteFolder,
     })),
   );
 
@@ -31,7 +36,29 @@ const SidebarMenuOption = () => {
     sidebarOption,
     historyCount: userRequestHistory?.length,
     favoritesCount: userFavorites?.length,
+    environmentsCount: userEnvironments?.length,
   });
+
+  const handleSaveEnvironment = (env: IEnvironment) => {
+    vscode.postMessage({
+      command: SIDEBAR.SAVE_ENVIRONMENT,
+      environment: env,
+    });
+  };
+
+  const handleDeleteEnvironment = (id: string) => {
+    vscode.postMessage({
+      command: SIDEBAR.DELETE_ENVIRONMENT,
+      id,
+    });
+  };
+
+  const handleSetActiveEnvironment = (id: string) => {
+    vscode.postMessage({
+      command: SIDEBAR.SET_ACTIVE_ENVIRONMENT,
+      id,
+    });
+  };
 
   const sidebarCollectionProps = {
     sidebarOption,
@@ -96,6 +123,14 @@ const SidebarMenuOption = () => {
           });
       }
     },
+    handleUpdateFavoriteFolder(id: string, folder: string) {
+      vscode.postMessage({
+        command: SIDEBAR.UPDATE_FAVORITE_FOLDER,
+        id,
+        folder,
+      });
+      updateFavoriteFolder(id, folder);
+    },
     handleUrlClick(id: string) {
       switch (sidebarOption) {
         case SIDEBAR.FAVORITES:
@@ -115,6 +150,15 @@ const SidebarMenuOption = () => {
   };
 
   switch (sidebarOption) {
+    case SIDEBAR.ENVIRONMENTS:
+      return (
+        <SidebarEnvironment
+          environments={userEnvironments || []}
+          handleSaveEnvironment={handleSaveEnvironment}
+          handleDeleteEnvironment={handleDeleteEnvironment}
+          handleSetActiveEnvironment={handleSetActiveEnvironment}
+        />
+      );
     case SIDEBAR.FAVORITES:
       return (
         <SidebarCollection

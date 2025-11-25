@@ -2,6 +2,7 @@ import { StateCreator } from "zustand";
 
 import { SIDEBAR } from "../../constants";
 import {
+  IEnvironment,
   ISidebarSlice,
   ISidebarSliceList,
   IUserRequestSidebarState,
@@ -12,6 +13,7 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
 ) => ({
   userFavorites: [],
   userRequestHistory: [],
+  userEnvironments: [],
   sidebarOption: SIDEBAR.HISTORY,
 
   handleSidebarOption: (option: string) =>
@@ -22,6 +24,9 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
 
   handleUserFavoritesCollection: (favoritesData: IUserRequestSidebarState[]) =>
     set(() => ({ userFavorites: favoritesData })),
+
+  handleUserEnvironmentsCollection: (environments: IEnvironment[]) =>
+    set(() => ({ userEnvironments: environments })),
 
   handleUserFavoriteIcon: (id: string, time: number | null) =>
     set((state) => ({
@@ -69,6 +74,13 @@ const sidebarSlice: StateCreator<ISidebarSlice, [], [], ISidebarSlice> = (
   deleteCollection: (targetState: string) => {
     set(() => ({ [targetState]: [] }));
   },
+
+  updateFavoriteFolder: (id: string, folder: string) =>
+    set((state) => ({
+      userFavorites: state.userFavorites.map((favorite) =>
+        favorite.id === id ? { ...favorite, folder } : favorite,
+      ),
+    })),
 });
 
 export default sidebarSlice;

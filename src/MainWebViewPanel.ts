@@ -3,9 +3,16 @@ import * as vscode from "vscode";
 
 import { BaseWebView } from "./BaseWebView";
 import { COLLECTION, COMMAND, MESSAGE, NAME, TYPE } from "./constants";
-import ExtentionStateManager from "./ExtensionStateManger";
+import ExtensionStateManager from "./ExtensionStateManager";
 import SidebarWebViewPanel from "./SidebarWebViewPanel";
-import { generateResponseObject, getBody, getHeaders, getUrl } from "./utils";
+import {
+  CodeGenerator,
+  generateResponseObject,
+  getBody,
+  getHeaders,
+  getUrl,
+  resolveVariables,
+} from "./utils";
 import { IRequestHeaderInformation, IRequestObjectType } from "./utils/type";
 import { WebSocketManager } from "./WebSocketManager";
 
@@ -25,7 +32,7 @@ class MainWebViewPanel extends BaseWebView {
 
   constructor(
     extensionUri: vscode.Uri,
-    stateManager: ExtentionStateManager,
+    stateManager: ExtensionStateManager,
     sidebarWebViewPanel: SidebarWebViewPanel,
   ) {
     super(extensionUri);
@@ -113,6 +120,11 @@ class MainWebViewPanel extends BaseWebView {
             this.webSocketManager?.send(socketData);
           }
           return;
+
+        case COMMAND.GENERATE_CODE: {
+          await this.handleGenerateCode(message);
+          return;
+        }
       }
 
       if (requestUrl.length === 0) {
@@ -131,20 +143,132 @@ class MainWebViewPanel extends BaseWebView {
         keyValueTableData,
         command,
       };
-      this.url = getUrl(requestUrl);
-      this.method = requestMethod;
-      this.headers = getHeaders(keyValueTableData, authOption, authData);
-
-      // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
-      this.body = getBody(
-        keyValueTableData,
-        bodyOption,
-        bodyRawOption,
-        bodyRawData,
-      );
+      this.prepareRequestData(message);
 
       await this.postWebviewMessage(requestObject);
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async handleGenerateCode(message: any) {
+    this.prepareRequestData(message);
+    const languages = [
+      "cURL",
+      "JavaScript (Fetch)",
+      "JavaScript (Axios)",
+      "Go",
+      "C# (HttpClient)",
+      "Python (Requests)",
+    ];
+    const selected = await vscode.window.showQuickPick(languages, {
+      placeHolder: "Select language to generate code",
+    });
+
+    if (selected) {
+      let code = "";
+      const bodyStr = typeof this.body === "string" ? this.body : undefined;
+
+      switch (selected) {
+        case "cURL":
+          code = CodeGenerator.generateCurl(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "JavaScript (Fetch)":
+          code = CodeGenerator.generateFetch(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "JavaScript (Axios)":
+          code = CodeGenerator.generateAxios(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "Go":
+          code = CodeGenerator.generateGo(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "C# (HttpClient)":
+          code = CodeGenerator.generateCSharp(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+        case "Python (Requests)":
+          code = CodeGenerator.generatePythonRequests(
+            this.url,
+            this.method,
+            this.headers,
+            bodyStr,
+          );
+          break;
+      }
+
+      await vscode.env.clipboard.writeText(code);
+      vscode.window.showInformationMessage(
+        `Code for ${selected} copied to clipboard!`,
+      );
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private prepareRequestData(message: any) {
+    const {
+      requestMethod,
+      requestUrl,
+      authOption,
+      authData,
+      bodyOption,
+      bodyRawOption,
+      bodyRawData,
+      keyValueTableData,
+    } = message;
+
+    this.url = getUrl(requestUrl);
+    this.method = requestMethod;
+    this.headers = getHeaders(keyValueTableData, authOption, authData);
+
+    // @ts-expect-error: getBody returns a type that might not match this.body exactly but is handled at runtime
+    this.body = getBody(
+      keyValueTableData,
+      bodyOption,
+      bodyRawOption,
+      bodyRawData,
+    );
+
+    const environments = this.stateManager.getEnvironments();
+    const activeEnv = environments.find((e) => e.isActive);
+
+    if (activeEnv) {
+      this.url = resolveVariables(this.url, activeEnv.variables);
+
+      const newHeaders: IRequestHeaderInformation = {};
+      for (const [key, value] of Object.entries(this.headers)) {
+        const newKey = resolveVariables(key, activeEnv.variables);
+        const newValue = resolveVariables(value, activeEnv.variables);
+        newHeaders[newKey] = newValue;
+      }
+      this.headers = newHeaders;
+
+      if (typeof this.body === "string") {
+        this.body = resolveVariables(this.body, activeEnv.variables);
+      }
+    }
   }
 
   private async postWebviewMessage(requestObject: IRequestObjectType) {
@@ -156,7 +280,9 @@ class MainWebViewPanel extends BaseWebView {
       url: this.url,
       method: this.method,
       headers: this.headers,
-      data: this.body,
+      data: ["GET", "HEAD"].includes(this.method.toUpperCase())
+        ? undefined
+        : this.body,
       responseType: TYPE.TEXT,
     };
 

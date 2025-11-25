@@ -44,17 +44,7 @@ export interface TMenuOptionProps {
 }
 
 export interface IMenuOptionStyledProps {
-  primary: boolean;
-}
-
-export interface IMenuOptionStyledProps {
-  primary?: boolean;
-}
-
-interface IMenuOptionProps {
-  children: ReactElement;
-  currentOption: string | null;
-  menuOption: string;
+  $primary: boolean;
 }
 
 export interface IMessageProps {
