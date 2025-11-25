@@ -137,12 +137,12 @@ class ExtensionStateManager {
     if (!id) {
       await this.context.globalState.update(targetExtensionContext, []);
     } else {
-      const filteredExtenionContext = targetGlobalState.filter(
+      const filteredExtensionContext = targetGlobalState.filter(
         (history) => history.id !== id,
       );
 
       await this.context.globalState.update(targetExtensionContext, [
-        ...filteredExtenionContext,
+        ...filteredExtensionContext,
       ]);
     }
   }
@@ -177,7 +177,7 @@ class ExtensionStateManager {
     const environments = this.getEnvironments();
     const newEnvironments = environments.map((env) => {
       if (env.id === id) {
-        return { ...env, isActive: !env.isActive };
+        return { ...env, isActive: true };
       }
       return { ...env, isActive: false };
     });

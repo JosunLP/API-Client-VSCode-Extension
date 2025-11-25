@@ -183,6 +183,7 @@ export interface IEnvironment {
 }
 
 export interface IEnvironmentVariable {
+  id: string;
   key: string;
   value: string;
   enabled: boolean;

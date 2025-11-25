@@ -60,7 +60,7 @@ const SidebarEnvironment = ({
   };
 
   const addVariable = () => {
-    setEditVariables([...editVariables, { key: "", value: "", enabled: true }]);
+    setEditVariables([...editVariables, { id: uuidv4(), key: "", value: "", enabled: true }]);
   };
 
   const updateVariable = (
@@ -106,7 +106,7 @@ const SidebarEnvironment = ({
                 />
                 <VariablesList>
                   {editVariables.map((v, i) => (
-                    <VariableRow key={i}>
+                    <VariableRow key={v.id}>
                       <input
                         value={v.key}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -262,8 +262,8 @@ const HistoryListWrapper = styled.div`
 
 const FolderHeader = styled.h3`
   padding: 0.5rem 1rem;
-  background-color: #252526;
-  color: #cccccc;
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
